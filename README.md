@@ -69,5 +69,5 @@ sudo ./server/install.sh
 
 ## License
 
-Free for noncommercial use under [PolyForm Noncommercial 1.0.0](LICENSE.md); small businesses under
-[PolyForm Small Business](LICENSE-SMALL-BUSINESS.md). See [LICENSING.md](LICENSING.md).
+Licensed under the [BranchChat License 2.0](LICENSE.md) (source-available): free for individuals, churches,
+approved nonprofits and small businesses; others need a paid license. See [LICENSING.md](LICENSING.md).
