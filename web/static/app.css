@@ -3841,5 +3841,17 @@ html.foot-b #foot-menu .side-act[hidden] { display: none; }
 .bug-fab:hover, .bug-fab:focus-visible { opacity: 1; }
 /* bugbtn-phone-fix (Luke, 26.10.13.13): on phones the floating bug button covered the top-right of the chat, so tapping
    your own top message opened Report a bug. Phones now use the "Report a bug" row in the hamburger menu (#menu-bug,
-   same dialog); the floating button stays on desktop widths unchanged. */
-@media (max-width: 800px) { .bug-fab { display: none !important; } #mute-bar { margin-right: 0; } }
+   same dialog). Luke, 26.10.13.13 follow-up: the floating button is removed on every width, desktop included; the
+   menu row is the one way in everywhere. */
+.bug-fab { display: none !important; }
+@media (max-width: 800px) { #mute-bar { margin-right: 0; } }
+/* uiscale-fullscreen-menus (Luke, 26.10.25): with Display size below/above 100% the phone full-screen menus came out
+   short (85%: 85% of the screen tall) or ran off the bottom (130%). body is zoomed, so 100dvh inside it is multiplied by
+   the zoom. Divide it back, like the other caps above; the menu's content still follows the chosen size. (The desktop
+   pop-over's position under the banner is fixed in menu.css.) */
+@media (max-width: 640px) {
+  html[data-ui-scale] #app-menu:not([hidden]), html[data-ui-scale] #profile-pop:not([hidden]),
+  html[data-ui-scale]:not(.no-chat) body:not(.pn-page) #app-menu:not([hidden]) {
+    width: calc(100vw / var(--ui-z, 1)) !important; height: calc(100dvh / var(--ui-z, 1)) !important;
+  }
+}

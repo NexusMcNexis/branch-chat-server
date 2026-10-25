@@ -306,18 +306,6 @@
           <p id="anim-demo-desc" class="vh">Preview: a sample menu slides in, pauses, then fades out at the selected speed.</p>
           <p class="anim-demo-rm">Preview paused because Reduce motion is on.</p>
           <p class="anim-note">Higher is faster: 2× means menu animations take half as long.</p>
-          <!-- Background fade speed (Oct 2026): how long the site background takes to cross-fade when you switch chats.
-               localStorage bc-bg-fade (0.25 / 0.5 / 1 / 2 / 4; 26.10.2: same five steps, labels and layout as Menu transition speed);
-               app.js reads it (BGX_FADE). Reduce motion always swaps at once. -->
-          <div id="bgfade-speed-label" class="menu-sub anim-label">Background fade speed</div>
-          <div id="bgfade-speed" class="seg" role="radiogroup" aria-labelledby="bgfade-speed-label">
-            <label class="seg-item"><input type="radio" name="bgfade-speed" value="0.25" aria-label="Quarter speed"><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">¼×</span></label>
-            <label class="seg-item"><input type="radio" name="bgfade-speed" value="0.5" aria-label="Half speed"><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">½×</span></label>
-            <label class="seg-item"><input type="radio" name="bgfade-speed" value="1" aria-label="Normal" checked><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">1×</span><span class="seg-sub" aria-hidden="true">Normal</span></label>
-            <label class="seg-item"><input type="radio" name="bgfade-speed" value="2" aria-label="Double speed"><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">2×</span></label>
-            <label class="seg-item"><input type="radio" name="bgfade-speed" value="4" aria-label="Four times speed"><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">4×</span></label>
-          </div>
-          <p class="anim-note">How gently the background fades from one chat's picture to the next.</p>
           <hr class="menu-sep notify-sep" aria-hidden="true">
           <!-- Delete animations (beta.8; "Message delete characters" in beta.7, the top-level "Snap character" row before). A plain heading
                (wand icon) with the picker right under it, no fold-out. Internal ids/keys keep the legacy spell/snap names

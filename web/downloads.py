@@ -148,8 +148,9 @@ import time
 import urllib.request
 
 LATEST_TTL = 600
+_TAG_RE = r"^v?[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$"   # 26.10.13.13: 4-part tags too
 _LATEST_FILE = os.path.join(STATE_DIR, "downloads-latest.json")
-_latest = {"tag": "", "at": 0.0, "busy": False}
+_latest = {"tag": "", "at": 0.0, "busy": False, "assets": None}  # assets: file names on that release
 
 
 def _api_url():
@@ -160,40 +161,46 @@ def _api_url():
 def _fetch_latest_tag():
     url = _api_url()
     if not url:
-        return ""
+        return "", None
     req = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json", "User-Agent": "BranchChat-server"})
     with urllib.request.urlopen(req, timeout=4) as r:
-        tag = str(json.load(r).get("tag_name", ""))
-    return tag if re.match(r"^v?[0-9]+\.[0-9]+\.[0-9]+$", tag) else ""
+        d = json.load(r)
+    tag = str(d.get("tag_name", ""))
+    if not re.match(_TAG_RE, tag):
+        return "", None
+    return tag, sorted(str(x.get("name", "")) for x in d.get("assets", []) if isinstance(x, dict))
 
 
 def _load_known():
     try:
         with open(_LATEST_FILE) as fh:
-            tag = str(json.load(fh).get("tag", ""))
-        return tag if re.match(r"^v?[0-9]+\.[0-9]+\.[0-9]+$", tag) else ""
+            d = json.load(fh)
+        tag = str(d.get("tag", ""))
+        assets = d.get("assets") if isinstance(d.get("assets"), list) else None
+        return (tag, assets) if re.match(_TAG_RE, tag) else ("", None)
     except (OSError, ValueError, AttributeError):
-        return ""
+        return "", None
 
 
 def _refresh():
     try:
-        tag = _fetch_latest_tag()
+        tag, assets = _fetch_latest_tag()
     except Exception:
-        tag = ""
+        tag, assets = "", None
     with _lock:
         _latest["busy"] = False
         _latest["at"] = time.time()   # failures also wait a TTL before the next try
         if tag:
-            changed = tag != _latest["tag"]
+            changed = tag != _latest["tag"] or assets != _latest["assets"]
             _latest["tag"] = tag
+            _latest["assets"] = assets
         else:
             changed = False
     if tag and changed:
         try:
             tmp = _LATEST_FILE + ".tmp"
             with open(tmp, "w") as fh:
-                json.dump({"tag": tag}, fh)
+                json.dump({"tag": tag, "assets": assets}, fh)
             os.replace(tmp, _LATEST_FILE)
         except OSError:
             pass
@@ -205,7 +212,7 @@ def latest_tag():
         return ""
     with _lock:
         if not _latest["tag"] and not _latest["at"]:
-            _latest["tag"] = _load_known()
+            _latest["tag"], _latest["assets"] = _load_known()
         first = not _latest["at"]
         stale = time.time() - _latest["at"] > LATEST_TTL
         start = stale and not _latest["busy"]
@@ -234,7 +241,19 @@ def release_file_url(suffix):
     tag = latest_tag() or (("v" + _VER) if re.match(r"^[0-9]+\.[0-9]+\.[0-9]+$", _VER) else "")
     if not tag:
         return ""
-    return "%s/releases/download/%s/BranchChat-%s%s" % (APP_RELEASES, tag, tag.lstrip("v"), suffix)
+    name = "BranchChat-%s%s" % (tag.lstrip("v"), suffix)
+    assets = _latest.get("assets")
+    if assets is not None and name not in assets:
+        return ""   # 26.10.13.13: only link files that are really on the Latest release (no dead .deb/.rpm links)
+    return "%s/releases/download/%s/%s" % (APP_RELEASES, tag, name)
+
+
+_WIN_ENV = bool(DESKTOP_URLS["windows"])
+
+
+def windows_url():
+    """BC_WINDOWS_URL, else the Windows installer (.exe) on the Latest release."""
+    return DESKTOP_URLS["windows"] if _WIN_ENV else release_file_url("-x64.exe")
 
 
 LINUX_URLS = _linux_urls()
@@ -245,7 +264,8 @@ if LINUX_URLS or _GH_LINUX:
 
 def _linux_now():
     if _GH_LINUX:
-        return {k: {a: release_file_url(sfx) for a, sfx in arches.items()} for k, arches in _GH_FILES.items()}
+        out = {k: {a: u for a, sfx in arches.items() for u in [release_file_url(sfx)] if u} for k, arches in _GH_FILES.items()}
+        return {k: v for k, v in out.items() if v}   # 26.10.13.13: formats not on the Latest release show "coming soon"
     return LINUX_URLS
 
 
@@ -340,7 +360,7 @@ def _items(a):
     out.append({"id": "appstore", "os": "ios", "icon": "i-phone", "title": "App Store", "sub": "iPhone and iPad" if APPSTORE_URL else "iPhone \u00b7 coming soon",
                 "url": APPSTORE_URL, "note": "The App Store app is coming soon. Sign in here in your browser for now."})
     for key, title, icon in (("windows", "Windows", "i-monitor"), ("macos", "macOS", "i-laptop"), ("linux", "Linux", "i-linux")):
-        url = DESKTOP_URLS[key]
+        url = windows_url() if key == "windows" else DESKTOP_URLS[key]
         out.append({"id": key, "os": key, "icon": icon, "title": title, "sub": "Desktop app" if url else soon, "url": url,
                     "note": "The %s app is coming soon. Sign in here in your browser for now." % title,
                     "menu": key == "linux"})

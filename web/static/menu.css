@@ -247,3 +247,13 @@ html[data-scheme="dark"] #app-menu { --notify-on: #5fe08f; }
   max-height: calc(100dvh - var(--bc-banner-bottom, 56px) - 8px - env(safe-area-inset-bottom, 0px)) !important;
   overflow-y: auto; overscroll-behavior: contain;
 }
+/* uiscale-fullscreen-menus (Luke, 26.10.25): menu.js measures --bc-banner-bottom / --bc-menu-right in real screen pixels,
+   but body is zoomed by Display size, so the values (and 100dvh) were zoomed again: at 130% the pop-over started too low
+   and ran past the bottom of the window. Divide them back by the zoom. Phones (<=640px) use the full-screen rules in app.css. */
+@media (min-width: 641px) {
+  html[data-ui-scale] #app-menu {
+    top: calc(var(--bc-banner-bottom, 56px) / var(--ui-z, 1)) !important; right: calc(var(--bc-menu-right, 8px) / var(--ui-z, 1)) !important;
+    max-height: calc((100vh - var(--bc-banner-bottom, 56px) - 8px) / var(--ui-z, 1)) !important;
+    max-height: calc((100dvh - var(--bc-banner-bottom, 56px) - 8px - env(safe-area-inset-bottom, 0px)) / var(--ui-z, 1)) !important;
+  }
+}

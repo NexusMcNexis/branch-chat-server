@@ -317,10 +317,23 @@ function ownName(name) {
   return (name && map[name]) || name || "";
 }
 
+/* presence-fix: Online = this page is visible AND focused. Only then do our requests carry X-Branch-Presence: fg;
+   background pulls, hidden tabs, the service worker and the Android notifier never mark anyone Online. */
+function presenceFg() {
+  try { return document.visibilityState === "visible" && document.hasFocus(); } catch (e) { return false; }
+}
+function withPresence(path, options) {
+  if (typeof path !== "string" || !path.startsWith("/api/") || !presenceFg()) return options;
+  const o = Object.assign({}, options || {});
+  const h = new Headers(o.headers || {});
+  h.set("X-Branch-Presence", "fg");
+  o.headers = h;
+  return o;
+}
 async function api(path, options) {
   let res;
   try {
-    res = await fetch(path, options);
+    res = await fetch(path, withPresence(path, options));
   } catch (err) {
     const error = new Error("The page could not reach BranchChat.");
     error.network = true;
@@ -11121,25 +11134,17 @@ function markBackground(active) {
 }
 
 /* Background cross-fade (Oct 18 2026, 5:34 PM PT). Each background is its own layer (.bgx) inside #chat-bg. A new
-   picture is loaded and decoded first, then its layer fades in on top of the old one over bgxMs() (the Background fade speed setting) on the app-wide laminar
+   picture is loaded and decoded first, then its layer fades in on top of the old one over bgxMs() (fixed 1.75 s) on the app-wide laminar
    curve (app.css), and the old layers are removed once it is fully in. So switching chats floats the new background in,
    with no flash of the default in between. Switching to "None" fades the picture out over the forest wallpaper. Rapid
    switching: only the newest request wins (bgxToken); a layer still fading in simply gets covered and removed.
    Reduced motion: an instant swap. Animated backgrounds live inside their layer, so they cross-fade the same way. */
-// Fade length from the "Background fade speed" setting (Animation section): ¼× 7 s, ½× 3.5 s, 1× 1.75 s, 2× 0.9 s, 4× 0.45 s.
-// 26.10.2: ¼× and 4× added so the row has the same five steps as Menu transition speed. Picks saved before (½×, 1×, 2×)
-// keep their old meaning. Reduce motion still swaps at once whatever the setting (bgxInstant).
-const BGX_FADE = {"0.25": 7000, "0.5": 3500, "1": 1750, "2": 900, "4": 450};
-function bgxMs() { let v = "1"; try { v = localStorage.getItem("bc-bg-fade") || "1"; } catch (err) { /* private mode */ } return BGX_FADE[v] || 1750; }
+// Fade length: fixed at the normal 1.75 s. The "Background fade speed" setting was removed (Oct 25 2026, Luke);
+// any old saved choice (localStorage bc-bg-fade) is ignored and cleared. Reduce motion still swaps at once (bgxInstant).
+const BGX_FADE_MS = 1750;
+function bgxMs() { return BGX_FADE_MS; }
 let bgxToken = 0, bgxCount = 0;
-(() => {   // the setting's radio row
-  const row = document.getElementById("bgfade-speed");
-  if (!row) return;
-  const paint = () => { let v = "1"; try { v = localStorage.getItem("bc-bg-fade") || "1"; } catch (err) { /* default */ } for (const r of row.querySelectorAll("input")) r.checked = r.value === (BGX_FADE[v] ? v : "1"); };
-  row.addEventListener("change", (ev) => { const r = ev.target; if (r && r.name === "bgfade-speed") { try { localStorage.setItem("bc-bg-fade", r.value); } catch (err) { /* private mode */ } } });
-  window.addEventListener("storage", (ev) => { if (ev.key === "bc-bg-fade") paint(); });
-  paint();
-})();
+try { localStorage.removeItem("bc-bg-fade"); } catch (err) { /* private mode */ }
 function bgxInstant() { return !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches); }
 function bgxRemove(el) { bgaDropFrom(el, true); el.remove(); bgxBakeSync(); }
 /* smooth-transitions (26.10.3): cheaper background cross-fades, same picture.
@@ -16106,6 +16111,27 @@ function lpKick() {   // visible again / back online: stop waiting and sync now
   if (lp.wake) lp.wake();
 }
 document.addEventListener("visibilitychange", () => { if (!document.hidden) lpKick(); });
+/* presence-fix: tell the server at once when we stop (or start) being the page in front, so the green dot follows
+   focus within seconds instead of a timeout. keepalive lets the "away" go out while the page is closing. */
+let presenceLast = null;
+function presenceSay() {
+  const fg = presenceFg();
+  const st = fg ? "here" : "away";
+  if (st === presenceLast) return;
+  presenceLast = st;
+  try {
+    fetch("/api/presence", {method: "POST", keepalive: true, credentials: "same-origin",
+      headers: fg ? {"Content-Type": "application/json", "X-Branch-Presence": "fg"} : {"Content-Type": "application/json"},
+      body: JSON.stringify({state: st})}).catch(() => {});
+  } catch (e) { /* offline */ }
+  if (fg) lpKick();
+}
+document.addEventListener("visibilitychange", presenceSay);
+window.addEventListener("blur", presenceSay);
+window.addEventListener("focus", presenceSay);
+window.addEventListener("pageshow", presenceSay);
+window.addEventListener("pagehide", () => { presenceLast = null; try { fetch("/api/presence", {method: "POST", keepalive: true,
+  credentials: "same-origin", headers: {"Content-Type": "application/json"}, body: JSON.stringify({state: "away"})}).catch(() => {}); } catch (e) {} });
 window.addEventListener("online", lpKick);
 let pullMore = false;
 async function syncLoop() {

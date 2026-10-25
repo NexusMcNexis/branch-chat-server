@@ -1897,18 +1897,40 @@ _active_seen = {}
 _active_lock = threading.Lock()
 
 
-PRESENCE_SECONDS = 90
+# 26.10.13.14 presence-fix: Online means a page/app that is visible AND focused right now. Only requests the page
+# marks "X-Branch-Presence: fg" count (it sends that only while visible + focused). Background tabs, the service
+# worker's push fetches (iOS/desktop web push), the Android MessageNotifier (X-Branch-Native: notify) and old clients
+# send no flag and never mark anyone Online. The page also POSTs /api/presence {"state":"away"} the moment it is
+# hidden, blurred or closed, so the dot goes grey within seconds; PRESENCE_SECONDS is only the backstop for a page
+# that vanished without saying so (the foreground long-poll re-arms it at least every ~25 s).
+PRESENCE_SECONDS = 45
 _presence = {}
 
 
+def is_foreground(handler):
+    """True only when the request says it comes from a visible, focused page/app (never a background check)."""
+    h = handler.headers
+    if (h.get("X-Branch-Native") or "").strip():
+        return False                      # native background notifier / notification reply
+    if (h.get("Service-Worker") or "").strip():
+        return False
+    return (h.get("X-Branch-Presence") or "").strip().lower() == "fg"
+
+
 def mark_present(user_key):
-    """In-memory heartbeat: any signed-in request (the page polls /api/sync every few seconds)."""
+    """In-memory heartbeat from a foreground request (see is_foreground)."""
     if user_key:
         now = time.time()
         was = _presence.get(user_key, 0)
         _presence[user_key] = now
         if now - was >= PRESENCE_SECONDS:
             bump_change()   # 26.10.8: someone came online; waiting browsers update their green dots now
+
+
+def mark_away(user_key):
+    """The page was hidden/blurred/closed: drop the dot now instead of waiting for the timeout."""
+    if user_key and _presence.pop(user_key, None) is not None:
+        bump_change()
 
 
 def _presence_ticker():
@@ -2122,7 +2144,7 @@ def receipts_view(viewer, groups):
 
 
 def online_names_now():
-    """Online means a request within the last 90 seconds, not merely an unexpired login."""
+    """Online means a foreground (visible + focused) request within PRESENCE_SECONDS, or none since an away."""
     cutoff = time.time() - PRESENCE_SECONDS
     disabled = accounts.disabled_keys()
     return [name_of(k) for k, ts in list(_presence.items()) if ts >= cutoff and k not in disabled]
@@ -3350,7 +3372,17 @@ class Handler(BaseHTTPRequestHandler):
         if not user:
             return
         touch_active(user["username_key"])
-        mark_present(user["username_key"])
+        if method == "POST" and path == "/api/presence":
+            body = self.read_json_body()
+            state = str((body or {}).get("state") or "") if isinstance(body, dict) else ""
+            if state == "away":
+                mark_away(user["username_key"])
+            elif state == "here" and is_foreground(self):
+                mark_present(user["username_key"])
+            self.send_json(200, {"ok": True})
+            return
+        if is_foreground(self):
+            mark_present(user["username_key"])
         if publicmode.ANY and publicmode.route_user(self, method, path, user):
             return
         if method == "GET" and path == "/api/users":

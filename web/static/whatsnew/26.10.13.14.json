@@ -1,0 +1,43 @@
+{
+  "version": "26.10.13.14",
+  "kicker": "What's new",
+  "title": "Steadier Android alerts and an honest Online dot",
+  "intro": "Hi there! This is a small update that makes BranchChat a little more dependable. Here’s what’s new.",
+  "sections": [
+    {
+      "heading": "Android",
+      "items": [
+        {
+          "icon": "🔋",
+          "title": "Alerts survive battery saver",
+          "text": "Messages keep arriving in the background, even with battery saver on. A quiet “Sync” notification keeps this working, and you can hide it from the notification settings step."
+        },
+        {
+          "icon": "💾",
+          "title": "Save to device just saves",
+          "text": "Save to device now only saves the file to your phone."
+        },
+        {
+          "icon": "🚀",
+          "title": "Faster first start after an update",
+          "text": "The app no longer sits on a grey screen the first time you open it after updating."
+        }
+      ]
+    },
+    {
+      "heading": "Everywhere",
+      "items": [
+        {
+          "icon": "🟢",
+          "title": "Accurate Online status",
+          "text": "You show as Online only while BranchChat is open and in front of you."
+        },
+        {
+          "icon": "🌅",
+          "title": "Simpler backgrounds",
+          "text": "The Background fade speed setting is gone; backgrounds always fade at the normal speed."
+        }
+      ]
+    }
+  ]
+}
