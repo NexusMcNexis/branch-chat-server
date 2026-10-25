@@ -1,0 +1,44 @@
+# BranchChat Server with Docker Compose.
+#   cd server && docker compose up -d                          # LAN / reverse proxy on 127.0.0.1:8766
+#   cd server && docker compose --profile tunnel up -d         # plus a Cloudflare Tunnel (needs TUNNEL_TOKEN)
+# Settings come from ./config.env (copy config.env.example, chmod 600). The installer writes it for you.
+# In the Cloudflare dashboard, point the tunnel's public hostname at  http://branch-chat:8766
+name: branch-chat
+
+services:
+  branch-chat:
+    image: ${BC_IMAGE:-branch-chat:local}
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./config.env
+    environment:
+      # Fixed inside the container; the host side is chosen with BC_PUBLISH below.
+      BC_HOST: 0.0.0.0
+      BC_PORT: "8766"
+      BC_STATE_DIR: /data
+      BC_APP_DIR: /app
+    ports:
+      - "${BC_PUBLISH:-127.0.0.1:8766}:8766"
+    volumes:
+      - ${BC_DATA:-./data}:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges=true
+    stop_grace_period: 20s
+
+  cloudflared:
+    profiles: ["tunnel"]
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}   # set in server/.env (chmod 600); only used with --profile tunnel
+    restart: unless-stopped
+    depends_on:
+      branch-chat:
+        condition: service_healthy

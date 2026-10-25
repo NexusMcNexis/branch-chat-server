@@ -1,0 +1,249 @@
+/* Branch Chat menu reorganization (v0.23.3-beta.6, order B): sun/moon Dark mode switch, Notifications / Audio / Colors and Themes /
+   Animation sections that open in place, Delete animation preview (legacy class names start with spell- and snap-), Patch notes + version row under Logout.
+   Loaded after app.css and motion.css. Every duration is multiplied by --bc-anim-scale (motion.js, Menu transition speed).
+   Never write a star followed by a slash inside this comment. It used to list the class names with wildcards, that pair ended
+   the comment early, and the browser dropped the .menu-top rule below, so the old app.css divider line (#menu-mode border-top)
+   showed as a thin light line along the top of the sun/moon switch. */
+#app-menu .menu-top { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 6px 8px; border: 0; margin: 0; position: static; }
+#app-menu .menu-sep { border: 0; border-top: 1px solid var(--line); margin: 6px 8px; height: 0; flex: none; width: auto; }
+
+/* Sun/moon pill switch. Same id as today (#mode-toggle) so existing JS hooks still resolve. */
+#app-menu #mode-toggle.sm-switch {
+  position: relative; width: 84px; height: 40px; padding: 0; margin: 0; flex: none;
+  border-radius: 999px; border: 1px solid color-mix(in srgb, var(--text) 16%, var(--line)) !important;
+  background: linear-gradient(180deg, #cfe6ff, #eaf4ff) !important;
+  display: inline-block; text-align: initial;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.18) !important;
+  transition: background-color calc(.28s * var(--bc-anim-scale, 1)) ease, border-color calc(.28s * var(--bc-anim-scale, 1)) ease;
+}
+#app-menu #mode-toggle.sm-switch .sm-knob {
+  position: absolute; top: 4px; left: 4px; width: 30px; height: 30px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.28);
+  transform: translateX(0); transition: transform calc(.28s * var(--bc-anim-scale, 1)) cubic-bezier(.4,0,.2,1), background-color calc(.28s * var(--bc-anim-scale, 1)) ease;
+}
+#app-menu #mode-toggle.sm-switch .sm-ico {
+  position: absolute; top: 9px; width: 20px; height: 20px; pointer-events: none;
+  transition: color calc(.28s * var(--bc-anim-scale, 1)) ease, opacity calc(.28s * var(--bc-anim-scale, 1)) ease;
+}
+#app-menu #mode-toggle.sm-switch .sm-sun { left: 9px; color: #e8930c; fill: currentColor; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+#app-menu #mode-toggle.sm-switch .sm-moon { right: 9px; color: #6b7a93; fill: currentColor; opacity: .75; }
+/* Dark: knob slides to the moon. */
+#app-menu #mode-toggle.sm-switch[aria-checked="true"] { background: linear-gradient(180deg, #121a33, #1f2a4d) !important; border-color: #3a4870 !important; }
+#app-menu #mode-toggle.sm-switch[aria-checked="true"] .sm-knob { transform: translateX(44px); background: #e9edf8; }
+#app-menu #mode-toggle.sm-switch[aria-checked="true"] .sm-sun { color: #7d88a3; opacity: .7; }
+#app-menu #mode-toggle.sm-switch[aria-checked="true"] .sm-moon { color: #2a3766; opacity: 1; }
+#app-menu #mode-toggle.sm-switch:hover { filter: brightness(1.04); }
+#app-menu #mode-toggle.sm-switch:focus { outline: none; }
+#app-menu #mode-toggle.sm-switch:focus-visible { outline: 3px solid var(--accent) !important; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  #app-menu #mode-toggle.sm-switch, #app-menu #mode-toggle.sm-switch * { transition: none !important; }
+}
+/* v2: Auto night mode stays under Color theme (today's spot); legacy rule kept harmless */
+#app-menu .auto-night-row { font-size: 13px; color: var(--muted); margin: 6px 0 2px; gap: 6px; }
+
+
+/* Notifications accordion */
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server).notify-acc { display: block; padding: 0; gap: 0; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-head {
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px var(--menu-row-pad); border-radius: 10px; text-align: left;
+}
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-head span { padding: 0; font-size: inherit; color: inherit; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-ico { width: 22px; height: 22px; flex: none; display: grid; place-items: center; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-ico svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-title { flex: 1 1 auto; font-weight: 600; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-state { color: var(--muted); font-size: 14px; white-space: nowrap; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-state.off { color: var(--owner-accent); }
+/* v0.23.3-beta.9: notifications ON -> the state word is green. --notify-on: dark green on light menus, light green on dark
+   ones; both >= 4.5:1 against the menu in every palette (checked in the 3-browser tests). Not-on states keep .off (owner accent). */
+#app-menu { --notify-on: #0e5a2b; }
+html[data-scheme="dark"] #app-menu { --notify-on: #5fe08f; }
+#app-menu #menu-notify .notify-state:not(.off) { color: var(--notify-on); }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-chev { width: 20px; height: 20px; flex: none; display: grid; place-items: center; color: var(--muted); transition: transform calc(.2s * var(--bc-anim-scale, 1)) ease; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-chev svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-head[aria-expanded="true"] .notify-chev { transform: rotate(180deg); }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-head:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-panel {
+  margin: 2px 4px 6px; padding: 6px 6px 8px; border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 6%, transparent); border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  display: flex; flex-direction: column; gap: 4px; animation: notifyIn calc(.2s * var(--bc-anim-scale, 1)) ease;
+}
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-panel[hidden] { display: none; }
+@keyframes notifyIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+#app-menu .notify-radios { display: flex; flex-direction: column; }
+#app-menu .radio-row { display: flex; align-items: center; gap: 10px; padding: 8px 8px; border-radius: 8px; cursor: pointer; }
+#app-menu .radio-row:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+#app-menu .radio-row input { width: 18px; height: 18px; margin: 0; padding: 0; flex: none; accent-color: var(--accent); }
+#app-menu .radio-row:has(input:checked) { font-weight: 600; }
+#app-menu .radio-row input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#app-menu .notify-sep { margin: 4px 4px; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-panel .menu-sub { padding: 2px 6px 0; color: var(--muted); font-size: 13px; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-panel .tone-row { padding: 0 2px; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-panel .vol-row { padding: 0 6px; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-panel .vol-range { width: calc(100% - 12px); margin: 4px 6px 4px; }
+#app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-panel .check-row { padding: 0 6px; margin: 4px 0 2px; }
+@media (prefers-reduced-motion: reduce) {
+  #app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-panel { animation: none; }
+  #app-menu :is(#menu-notify, #menu-audio, #menu-themes, #menu-anim, #menu-server) .notify-chev { transition: none; }
+}
+
+/* Ambient sounds: same pill + sliding knob as the Dark mode switch, without the sun/moon. */
+#app-menu .ambient-sec { padding: 0; }
+#app-menu .ambient-head { display: flex; align-items: center; gap: 10px; padding: 8px 12px; }
+#app-menu .ambient-head .notify-ico { width: 22px; height: 22px; flex: none; display: grid; place-items: center; }
+#app-menu .ambient-head .notify-ico svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#app-menu .ambient-title { flex: 1 1 auto; font-weight: 600; }
+#app-menu #ambient-toggle.amb-switch {
+  position: relative; width: 60px; height: 34px; padding: 0; margin: 0; flex: none; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--text) 16%, var(--line)) !important;
+  background: color-mix(in srgb, var(--text) 14%, var(--card)) !important;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.18) !important; transition: background-color calc(.28s * var(--bc-anim-scale, 1)) ease;
+}
+#app-menu #ambient-toggle.amb-switch .sm-knob {
+  position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.28); transform: translateX(0); transition: transform calc(.28s * var(--bc-anim-scale, 1)) cubic-bezier(.4,0,.2,1);
+}
+#app-menu #ambient-toggle.amb-switch[aria-checked="true"] { background: var(--accent) !important; border-color: transparent !important; }
+#app-menu #ambient-toggle.amb-switch[aria-checked="true"] .sm-knob { transform: translateX(26px); }
+#app-menu #ambient-toggle.amb-switch:focus { outline: none; }
+#app-menu #ambient-toggle.amb-switch:focus-visible { outline: 3px solid var(--accent) !important; outline-offset: 3px; }
+#app-menu .ambient-opts { display: flex; flex-direction: column; gap: 4px; margin: 0 4px 6px; padding: 6px 6px 4px; border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 6%, transparent); border: 1px solid color-mix(in srgb, var(--line) 70%, transparent); }
+#app-menu .ambient-opts[hidden] { display: none; }
+#app-menu .ambient-selects { display: flex; gap: 8px; }
+#app-menu .ambient-selects select { flex: 1 1 auto; min-width: 0; }
+#app-menu .ambient-selects #ambient-length { flex: 0 0 auto; }
+#app-menu .ambient-opts .vol-row { padding: 0 6px; }
+#app-menu .ambient-opts .vol-range { width: calc(100% - 12px); margin: 4px 6px; }
+#app-menu .ambient-note { margin: 0 6px 2px; font-size: 12px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) {
+  #app-menu #ambient-toggle.amb-switch, #app-menu #ambient-toggle.amb-switch * { transition: none !important; }
+}
+
+/* Audio section (same accordion pattern as Notifications) */
+#app-menu #menu-audio .ambient-head { padding: 6px 6px; }
+#app-menu #menu-audio .ambient-opts { margin: 0 0 4px; }
+/* Colors and Themes panel: inner rows sit flush in the panel */
+#app-menu #menu-themes .notify-panel .menu-label { padding: 6px 6px 4px; }
+#app-menu #menu-themes .notify-panel .choice-row { padding: 2px 2px 6px; }
+#app-menu #menu-themes .notify-panel #transp-row { padding: 0 6px; margin-top: 4px; }
+#app-menu #menu-themes .notify-panel #transp { width: calc(100% - 12px); margin: 4px 6px; }
+#app-menu #menu-themes .notify-panel #bg-note { margin: 2px 6px 4px; }
+#app-menu #menu-themes .notify-panel .check-row { padding: 0 6px; }
+#app-menu #menu-themes .notify-panel .palette-scope:empty { display: none; }
+/* Patch notes + version pair under Logout: one row, left-aligned with the menu row text (12px), 44px touch targets. */
+#app-menu .menu-pn-row { display: flex; align-items: center; gap: 12px; padding: 0 8px 6px 8px; margin-top: 8px; flex-wrap: wrap; flex: none; }
+/* 26.10.10c: menu rows never shrink in the scrolling column, so a row's hover highlight can't run under the footer. */
+#app-menu > * { flex-shrink: 0; }
+#app-menu a.menu-pn-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border-radius: 999px;
+  font-size: 15px; font-weight: 600; color: var(--text); text-decoration: none;
+  border: 1px solid color-mix(in srgb, var(--text) 18%, var(--line)); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+#app-menu a.menu-pn-btn::before { content: ""; width: 16px; height: 16px; flex: none; background: currentColor; opacity: .85;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 3h7l5 5v13H7z'/%3E%3Cpath d='M14 3v5h5M10 13h6M10 17h6'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 3h7l5 5v13H7z'/%3E%3Cpath d='M14 3v5h5M10 13h6M10 17h6'/%3E%3C/svg%3E") center/contain no-repeat; }
+#app-menu a.menu-pn-btn:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+#app-menu a.menu-pn-btn:focus { outline: none; }
+#app-menu a.menu-pn-btn:focus-visible { outline: 2px solid color-mix(in srgb, var(--accent) 55%, var(--text)); outline-offset: 2px; }
+#app-menu a.ver.menu-ver { display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; margin: 0; font-size: 14px; font-weight: 500;
+  letter-spacing: .02em; vertical-align: baseline; font-variant-numeric: tabular-nums; }
+#app-menu a.ver.menu-ver[hidden] { display: none; }
+
+/* Animation section: "Menu transition speed" as a 5-step segmented radiogroup. */
+#app-menu #menu-anim .anim-label { padding: 2px 6px 6px; color: var(--muted); font-size: 13px; font-weight: 600; }
+#app-menu .seg { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; padding: 4px;
+  border-radius: 14px; background: color-mix(in srgb, var(--text) 7%, transparent); border: 1px solid color-mix(in srgb, var(--line) 80%, transparent); }
+#app-menu .seg::before { content: ""; position: absolute; left: 22px; right: 22px; top: 20px; height: 2px; border-radius: 2px;
+  background: color-mix(in srgb, var(--text) 18%, transparent); }
+#app-menu .seg-item { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px;
+  min-height: 56px; min-width: 44px; padding: 7px 2px 5px; border-radius: 10px; cursor: pointer; text-align: center; }
+#app-menu .seg-item input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; opacity: 0; cursor: pointer; border: 0; }
+#app-menu .seg-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--card); border: 2px solid color-mix(in srgb, var(--text) 35%, var(--line));
+  transition: transform calc(.18s * var(--bc-anim-scale, 1)) ease, background-color calc(.18s * var(--bc-anim-scale, 1)); position: relative; z-index: 1; }
+#app-menu .seg-txt { font-size: 14px; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
+#app-menu .seg-sub { font-size: 10.5px; line-height: 1; color: var(--muted); }
+#app-menu .seg-item:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+#app-menu .seg-item:has(input:checked) { background: color-mix(in srgb, var(--accent) 20%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent); }
+#app-menu .seg-item:has(input:checked) .seg-dot { background: var(--accent); border-color: var(--accent); transform: scale(1.25);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+#app-menu .seg-item:has(input:checked) .seg-txt { color: color-mix(in srgb, var(--accent) 55%, var(--text)); }
+#app-menu .seg-item:has(input:focus-visible), #app-menu .seg.kb .seg-item:has(input:focus) { outline: 2px solid color-mix(in srgb, var(--accent) 55%, var(--text)); outline-offset: 1px; }
+#app-menu .anim-note { margin: 4px 6px 2px; font-size: 12px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { #app-menu .seg-dot { transition: none; } }
+
+/* Snap spell preview layer: fixed, non-blocking, transform/opacity only. */
+#snap-spell-layer { position: fixed; inset: 0; pointer-events: none; z-index: 40; overflow: hidden; contain: strict; }
+#snap-spell-layer * { pointer-events: none; }
+.spell-mini { position: fixed; width: 44px; height: 35px; opacity: 0; will-change: transform, opacity; transform-origin: 50% 100%; }
+.spell-mini img { width: 100%; height: 100%; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); }
+.spell-wand { position: absolute; width: 14px; height: 2.5px; border-radius: 2px; background: linear-gradient(90deg, #6b3b1c 70%, #fff6b0 70%);
+  top: 6px; transform-origin: 0 50%; opacity: 0; }
+.spell-spark { position: fixed; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; opacity: 0; will-change: transform, opacity;
+  background: radial-gradient(circle, #fffbe0 0 30%, #ffd54a 45%, rgba(255,213,74,0) 70%); border-radius: 50%; }
+.spell-spark.star { background: none; }
+.spell-spark.star::before { content: ""; position: absolute; inset: -2px; background: #ffe680;
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%); }
+#snap-label .sl-ch { display: inline-block; white-space: pre; will-change: transform, opacity; }
+/* Menu transition speed preview card (decorative; aria-hidden). */
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; margin: -1px; padding: 0; border: 0; }
+#app-menu .anim-demo { display: flex; justify-content: center; margin: 10px 0 2px; }
+#app-menu .anim-demo-screen { position: relative; width: 200px; height: 120px; border-radius: 16px; overflow: hidden;
+  background: color-mix(in srgb, var(--bg) 85%, var(--accent)); border: 3px solid color-mix(in srgb, var(--text) 22%, var(--line));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 3px 10px rgba(0,0,0,.18); contain: paint; }
+#app-menu .anim-demo i { display: block; position: absolute; border-radius: 4px; }
+#app-menu .anim-demo-top { position: absolute; left: 0; right: 0; top: 0; height: 22px; background: var(--card); border-bottom: 1px solid var(--line); }
+#app-menu .anim-demo-top .d-logo { left: 8px; top: 6px; width: 10px; height: 10px; border-radius: 3px; background: var(--accent); }
+#app-menu .anim-demo-top .d-title { left: 23px; top: 8px; width: 46px; height: 6px; background: color-mix(in srgb, var(--text) 45%, transparent); }
+#app-menu .anim-demo-top .d-burger { right: 8px; top: 5px; width: 14px; height: 12px; border-radius: 4px; background: linear-gradient(#f0b429 0 35%, #57b84a 35% 50%, #7a4324 50% 72%, #e39b16 72%); }
+#app-menu .anim-demo-chat .d-b { height: 12px; border-radius: 6px; }
+#app-menu .anim-demo-chat .d-l { left: 10px; top: 34px; width: 74px; background: color-mix(in srgb, var(--other) 90%, transparent); }
+#app-menu .anim-demo-chat .d-r { right: 10px; top: 54px; width: 64px; background: var(--mine); }
+#app-menu .anim-demo-chat .d-l.s { top: 74px; width: 52px; }
+#app-menu .anim-demo-menu { position: absolute; right: 6px; top: 26px; width: 92px; height: 84px; border-radius: 9px; background: var(--card);
+  border: 1px solid var(--line); box-shadow: 0 6px 14px rgba(0,0,0,.28); will-change: transform, opacity; transform-origin: 100% 0; }
+#app-menu .anim-demo-menu .d-pill { left: 30px; top: 7px; width: 30px; height: 12px; border-radius: 6px; background: linear-gradient(90deg, #ffd27a 50%, #1f2a4d 50%); }
+#app-menu .anim-demo-menu .d-row { left: 9px; width: 72px; height: 7px; background: color-mix(in srgb, var(--text) 30%, transparent); }
+#app-menu .anim-demo-menu .d-row:nth-child(2) { top: 29px; background: color-mix(in srgb, var(--accent) 55%, transparent); height: 10px; border-radius: 5px; }
+#app-menu .anim-demo-menu .d-row:nth-child(3) { top: 48px; width: 56px; }
+#app-menu .anim-demo-menu .d-row:nth-child(4) { top: 64px; }
+#app-menu .anim-demo-speed { position: absolute; left: 7px; bottom: 6px; font: 700 12px/1 system-ui, sans-serif; padding: 3px 6px; border-radius: 7px;
+  background: color-mix(in srgb, var(--accent) 85%, transparent); color: var(--on-accent); font-variant-numeric: tabular-nums; }
+#app-menu .anim-demo-rm { display: none; margin: 4px 6px 0; font-size: 12px; color: var(--muted); text-align: center; }
+@media (prefers-reduced-motion: reduce) { #app-menu .anim-demo-rm { display: block; } }
+
+/* v0.23.3-beta.8: "Delete animations" inside Animation, after Menu transition speed: a plain heading (wand icon) and the picker
+   right under it, no fold-out (beta.7 had a nested sub-section here). Legacy ids/classes: #menu-spell, #snap-label, .spell-*. */
+#app-menu #menu-anim .spell-sec { margin: 4px 0 0; padding: 0; }
+#app-menu #menu-anim .spell-heading { display: flex; align-items: center; gap: 8px; margin: 0; padding: 6px 6px 2px; font-weight: 600; font-size: 15px; line-height: 1.25; color: var(--text); }
+#app-menu #menu-anim .spell-ico { width: 18px; height: 18px; flex: none; display: grid; place-items: center; color: var(--muted); }
+#app-menu #menu-anim .spell-ico svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#app-menu #menu-anim .spell-sec .spell-note { margin: 2px 6px 0; font-size: 12px; color: var(--muted); }
+#app-menu #menu-anim .spell-sec .choice-row { padding: 6px 2px 4px; }
+/* 26.10.2: a small picture of each character in front of its name (Take turns gets a two-arrows cycle icon in the text
+   colour, so it suits light and dark). The icons are vector (crisp on 2x screens). A 22px icon with a 1px negative margin
+   above and below takes no more height than the text line, so the buttons keep their height; the row still wraps. */
+#app-menu #snapchar-choices .bubble-btn { display: inline-flex; align-items: center; gap: 6px; padding-left: 8px; }
+#app-menu #snapchar-choices .snap-ico { width: 22px; height: 22px; margin: -1px 0; flex: none; display: block; pointer-events: none;
+  filter: drop-shadow(0 0 .6px color-mix(in srgb, var(--text) 45%, transparent)); }
+#app-menu #snapchar-choices .snap-ico-turns { filter: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; padding: 1px; }
+
+/* v0.23.3-beta.8 menu top: no big empty band above the first row, and the sun/moon switch sits on the Text size row.
+   --menu-row-pad is the one inset shared by the section rows (their chevrons) and the switch, so their right edges line up. */
+#app-menu { --menu-row-pad: 12px; padding-top: 6px; }
+#app-menu > #menu-invite.menu-row { width: auto; margin: 2px 40px 4px 0; }   /* first row sits beside the close X (30px at top/right 10px), never under it */
+#app-menu .size-mode-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "label ." "sizes mode";
+  align-items: center; column-gap: 8px; padding: 0 var(--menu-row-pad) 0 0; margin: 0; }
+#app-menu .size-mode-row > .menu-label { grid-area: label; }
+#app-menu .size-mode-row > #text-size-choices { grid-area: sizes; flex-wrap: nowrap; min-width: 0; }
+#app-menu .size-mode-row > #menu-mode.menu-top { grid-area: mode; justify-self: end; align-self: center; padding: 0 0 3px; display: flex; }
+/* 84x40 switch keeps its look; an invisible 48px-tall hit area keeps the tap target >= 44px. */
+#app-menu #mode-toggle.sm-switch::after { content: "" !important; position: absolute; left: -2px; right: -2px; top: -4px; bottom: -4px; border-radius: 999px;
+  background: none !important; border: 0 !important; box-shadow: none !important; opacity: 0; display: block; transform: none; }
+
+/* v0.23.3-beta.8: the menu starts BELOW the top banner, never over or under it. menu.js keeps --bc-banner-bottom (banner's
+   bottom edge, safe-area included) and --bc-menu-right (under the burger) current. !important only to win over the older
+   position rules in app.css (absolute in the header, fixed at --menu-top in a phone chat). Height = the rest of the viewport. */
+#app-menu {
+  position: fixed !important; top: var(--bc-banner-bottom, 56px) !important; right: var(--bc-menu-right, 8px) !important; left: auto !important; bottom: auto !important;
+  max-height: calc(100vh - var(--bc-banner-bottom, 56px) - 8px) !important;
+  max-height: calc(100dvh - var(--bc-banner-bottom, 56px) - 8px - env(safe-area-inset-bottom, 0px)) !important;
+  overflow-y: auto; overscroll-behavior: contain;
+}

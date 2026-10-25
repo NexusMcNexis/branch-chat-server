@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="system" data-palette="huzz" data-scheme="dark">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Administrator</title>
+<script src="/static/scheme.js?v={{BC_ASSET}}"></script>
+<link rel="stylesheet" href="/static/app.css?v={{BC_ASSET}}">
+<link rel="stylesheet" href="/static/patch-notes.css?v={{BC_ASSET}}">
+<link rel="stylesheet" href="/static/admin.css?v={{BC_ASSET}}">
+<script src="/static/admin.js?v={{BC_ASSET}}" defer></script>
+</head>
+<!-- 0.23.3-beta.15 (Oct 18 2026): the Administrator page. Only the server owner can load it (the server answers
+     "not found" to everyone else), and every tool on it also needs a fresh 15-minute admin session from re-verification. -->
+<body class="pn-page admin-page">
+<header>
+  <div>
+    <div class="brand">
+      <span class="bc-icon"><img src="/favicon.png" alt="BranchChat icon" width="32" height="32"></span>
+      <strong><a class="home ap-leave-link" href="/" title="Back to BranchChat"><span class="bc-logo"><b>Branch</b><i>Chat</i><sup class="tm" aria-label="trademark">TM</sup></span></a> <a class="ver ap-leave-link" href="/patch-notes" title="Patch notes" aria-label="Version {{BC_VERSION_SPOKEN}}, view patch notes">v{{BC_VERSION}}</a></strong>
+    </div>
+  </div>
+</header>
+<main class="pn-panel ap-panel">
+  <h1>Administrator</h1>
+  <p class="lead">Settings and tools for this server. Only the server's owner can open this page.</p>
+
+  <!-- Step 1: prove it's really the owner (re-login, or approval from another verified device). -->
+  <section id="ap-gate" class="ap-card" hidden>
+    <h2>Confirm it's you</h2>
+    <p class="sub">For safety, the Administrator page asks again before it opens. It stays open for 15 minutes.</p>
+    <div class="ap-tabs" role="tablist">
+      <button id="ap-tab-pass" class="ap-tab is-on" type="button" role="tab" aria-selected="true">Sign in again</button>
+      <button id="ap-tab-approve" class="ap-tab" type="button" role="tab" aria-selected="false">Approve on another device</button>
+    </div>
+    <form id="ap-pass-form" class="ap-form" autocomplete="on">
+      <input type="text" id="ap-user" name="username" autocomplete="username" hidden>
+      <label for="ap-password">Password</label>
+      <input id="ap-password" type="password" autocomplete="current-password" maxlength="200" required>
+      <div class="actions"><button class="solid" type="submit">Continue</button></div>
+    </form>
+    <form id="ap-code-form" class="ap-form" hidden>
+      <label for="ap-code" id="ap-code-label">Code</label>
+      <input id="ap-code" inputmode="numeric" autocomplete="one-time-code" maxlength="16" required>
+      <div class="actions">
+        <button id="ap-code-resend" class="ghost" type="button" hidden>Email a new code</button>
+        <button id="ap-code-back" class="ghost" type="button">Back</button>
+        <button class="solid" type="submit">Confirm</button>
+      </div>
+    </form>
+    <div id="ap-approve-box" class="ap-form" hidden>
+      <p class="sub">Open BranchChat on a phone or computer where you're already signed in. It will ask you to approve this request. Check that it shows the same code.</p>
+      <div class="actions"><button id="ap-approve-start" class="solid" type="button">Send approval request</button></div>
+      <p id="ap-approve-code" class="ap-bigcode" hidden></p>
+      <p id="ap-approve-wait" class="sub" hidden>Waiting for approval…</p>
+    </div>
+    <p id="ap-gate-note" class="sub ap-note" role="status" aria-live="polite"></p>
+  </section>
+
+  <!-- Step 2: the page itself. -->
+  <div id="ap-main" hidden>
+    <div class="ap-session">
+      <span id="ap-session-text" class="sub">Verified</span>
+      <button id="ap-lock" class="ghost" type="button">Lock page</button>
+    </div>
+    <nav class="ap-nav" aria-label="Sections">
+      <a href="#ap-overview">Overview</a><a href="#ap-accounts">Accounts</a><a href="#ap-reports" id="ap-nav-reports" hidden>Reports</a><a href="#ap-directory">Directory</a><a href="#ap-settings">Settings</a>
+    </nav>
+
+    <section id="ap-overview" class="ap-card">
+      <h2>Server and updates</h2>
+      <dl id="ap-facts" class="ap-facts"></dl>
+      <p class="sub" id="ap-update-how"></p>
+      <p class="sub"><a class="ap-leave-link" href="/patch-notes">Patch notes</a></p>
+    </section>
+
+    <section id="ap-accounts" class="ap-card">
+      <h2>Accounts and invites</h2>
+      <div class="owner-invite ap-invite">
+        <input id="ap-invite-email" type="email" placeholder="Invite a new person by email" autocomplete="off" maxlength="200" aria-label="Email address to invite">
+        <select id="ap-invite-role" aria-label="Account type"><option value="member">Member</option><option value="admin">Admin</option></select>
+        <button id="ap-invite-send" class="solid" type="button">Invite</button>
+      </div>
+      <input id="ap-search" type="search" placeholder="Search registered users" autocomplete="off" aria-label="Search registered users">
+      <p id="ap-accounts-note" class="sub ap-note" role="status" aria-live="polite"></p>
+      <ul id="ap-users" class="ap-users"></ul>
+    </section>
+
+    <section id="ap-reports" class="ap-card" hidden>
+      <h2>Reports and blocks</h2>
+      <p class="sub">Messages people reported, newest first. Message text stays encrypted; you see who reported whom and why.</p>
+      <ul id="ap-report-list" class="ap-users"></ul>
+      <h3>Language filter mutes</h3>
+      <ul id="ap-mute-list" class="ap-users"></ul>
+      <p id="ap-reports-note" class="sub ap-note" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="ap-directory" class="ap-card">
+      <h2>Directory listing</h2>
+      <dl id="ap-dir-facts" class="ap-facts"></dl>
+      <div class="actions ap-left">
+        <button id="ap-dir-pause" class="ghost" type="button">Pause listing for 1 hour</button>
+        <button id="ap-dir-resume" class="ghost" type="button" hidden>Resume listing now</button>
+      </div>
+      <p class="sub">To turn listing on or off for good, use "List this server in the directory" under Settings.</p>
+      <p id="ap-dir-note" class="sub ap-note" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="ap-settings" class="ap-card">
+      <h2>Settings</h2>
+      <div class="ap-file">
+        <p>These are the settings in the server's settings file:</p>
+        <p><code id="ap-path"></code> <button id="ap-copy-path" class="ghost ap-mini" type="button">Copy path</button></p>
+        <p class="sub" id="ap-file-note"></p>
+      </div>
+      <p class="sub">Change anything below, then press <strong>Apply</strong> to save it to the file (the old file is backed up first) and restart the server, or <strong>Cancel</strong> to throw the changes away. An empty box means the built-in default.</p>
+      <div id="ap-groups"></div>
+      <details class="fold ap-backups"><summary>Earlier versions (backups)</summary><ul id="ap-backup-list" class="sub"></ul></details>
+    </section>
+    <div id="ap-bar" class="ap-bar" hidden>
+      <span id="ap-bar-text">1 change</span>
+      <button id="ap-cancel" class="ghost" type="button">Cancel</button>
+      <button id="ap-apply" class="solid" type="button">Apply</button>
+    </div>
+  </div>
+  <p id="ap-page-note" class="sub ap-note" role="status" aria-live="polite"></p>
+</main>
+
+<dialog id="ap-dialog" class="ap-dialog">
+  <h2 id="ap-dialog-title"></h2>
+  <div id="ap-dialog-body"></div>
+  <div class="ap-type" id="ap-dialog-typebox" hidden><label for="ap-dialog-type" id="ap-dialog-typelabel"></label><input id="ap-dialog-type" autocomplete="off"></div>
+  <div class="actions" id="ap-dialog-actions"></div>
+</dialog>
+
+<div id="ap-restart" class="ap-restart" hidden>
+  <div class="ap-card"><h2>Applying…</h2><p id="ap-restart-text" class="sub">Saving the settings file and restarting the server. This takes a few seconds; everyone stays signed in.</p></div>
+</div>
+
+<footer id="bc-footer" class="bc-mini">
+  <p class="legal">&copy; 2026 BranchChat. BranchChat&trade; is a trademark of BranchChat. <a class="bc-license-link" href="/license">License</a></p>
+</footer>
+</body>
+</html>

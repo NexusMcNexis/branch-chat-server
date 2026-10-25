@@ -1,0 +1,169 @@
+/* Branch Chat download section on the sign-in page (BC_DOWNLOAD_LINKS=1 only), v0.22.8-public.2.
+   Layout follows /workspace/mockups/branchchat-home: downloads left, sign-in right; stacked below 960px. */
+.bc-dl-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+.home { width: min(1040px, 100%); display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: 28px; align-items: center; }
+.home > .signin-wrap, .signin-wrap > form#login { width: 100%; }
+.signin-wrap { scroll-margin-top: 14px; }
+.dl { padding: 8px 4px; }
+.dl .eyebrow { margin: 0 0 6px; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: #7cc98c; }
+.dl h2 { margin: 0 0 10px; font-family: "BC Outfit", "Segoe UI", sans-serif; font-weight: 600; font-size: 40px; line-height: 1.1; letter-spacing: -.01em; text-shadow: 0 2px 10px rgba(0,0,0,.5); }
+.dl .lead { margin: 0 0 22px; font-size: 18px; max-width: 34em; text-shadow: 0 1px 4px rgba(0,0,0,.55); }
+.dl-primary { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: #07110c; background: var(--blue); border-radius: 14px; padding: 13px 22px 13px 18px; font-size: 18px; font-weight: 600; box-shadow: 0 8px 26px rgba(158,192,255,.28), inset 0 1px 0 rgba(255,255,255,.45); transition: transform .12s ease, box-shadow .12s ease; }
+.dl-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(158,192,255,.4), inset 0 1px 0 rgba(255,255,255,.45); }
+.dl-primary svg { width: 24px; height: 24px; flex: none; }
+.dl-primary .sub { display: block; font-size: 13px; font-weight: 500; opacity: .75; }
+.dl-primary.soon { background: color-mix(in srgb, var(--blue) 55%, #2a3442); color: #0b121b; box-shadow: none; }
+.dl-meta { margin: 10px 0 18px; font-size: 14px; color: var(--muted); }
+.plats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.plat { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 9px 12px; text-decoration: none; color: var(--text); border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: color-mix(in srgb, var(--card) 50%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: border-color .12s, background .12s; }
+.plat:hover { border-color: rgba(158,192,255,.55); background: color-mix(in srgb, var(--card) 70%, transparent); }
+.plat svg { width: 22px; height: 22px; flex: none; color: var(--blue); }
+.plat b { display: block; font-weight: 600; font-size: 15px; line-height: 1.2; }
+.plat small { display: block; font-size: 12px; color: var(--muted); line-height: 1.25; }
+.plat.soon { opacity: .62; border-style: dashed; }
+.plat.soon svg { color: var(--muted); }
+.plat.soon:hover { opacity: .85; }
+.plat.current { border-color: rgba(124,201,140,.6); box-shadow: 0 0 0 1px rgba(124,201,140,.25) inset; }
+.pill { display: inline-block; margin-left: 4px; padding: 0 6px; border-radius: 999px; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; vertical-align: 1px; border: 1px solid currentColor; opacity: .85; }
+.soon-note { margin: 12px 0 0; padding: 8px 12px; border-radius: 10px; font-size: 14px; color: #dfe9f7; background: rgba(158,192,255,.14); border: 1px solid rgba(158,192,255,.35); }
+@keyframes bc-flash { 0% { box-shadow: 0 0 0 0 rgba(158,192,255,.7), 0 10px 34px rgba(0,0,0,.4); } 100% { box-shadow: 0 0 0 14px rgba(158,192,255,0), 0 10px 34px rgba(0,0,0,.4); } }
+form#login.flash { animation: bc-flash .9s ease-out 1; }
+@media (max-width: 960px) {
+  .home { grid-template-columns: minmax(0, 1fr); max-width: 440px; gap: 16px; }
+  .dl { padding: 0; }
+  .dl .eyebrow { display: none; }
+  .dl h2 { font-size: 26px; margin-bottom: 6px; }
+  .dl .lead { font-size: 15px; margin-bottom: 14px; }
+  .dl-primary { display: flex; width: 100%; justify-content: center; font-size: 17px; }
+  .dl-meta { margin: 8px 0 12px; font-size: 13px; text-align: center; }
+  .plats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .plat { flex-direction: column; justify-content: center; text-align: center; gap: 4px; min-height: 64px; padding: 8px 4px; }
+  .plat b { font-size: 13px; }
+  .plat small { font-size: 11px; }
+  .pill { display: none; }
+}
+@media (max-width: 480px) { body { padding: 16px 14px; } }
+
+@media (max-width: 960px) { .home { margin-top: 14px; } }
+
+/* Phone: drop the "Not your device?" line; add "or log in here" ghost button under the tiles. */
+.login-jump { display: none; }
+.ghost-btn { display: inline-block; font: inherit; font-size: 15px; color: var(--text); text-decoration: none; border: 1px solid var(--line); border-radius: 12px; padding: 7px 16px; background: color-mix(in srgb, var(--card) 35%, transparent); }
+.ghost-btn:hover { border-color: rgba(158,192,255,.55); }
+.ghost-btn:focus-visible { outline: 3px solid #7cc98c; outline-offset: 3px; }
+@media (max-width: 960px) {
+  .dl-meta { display: none; }
+  .dl-primary { margin-bottom: 14px; }
+  .login-jump { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 14px 0 0; font-size: 14px; color: var(--muted); }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* Production additions. */
+.home:has(#login[hidden]) .signin-wrap { display: none; }
+html:not([data-signup]) .home:has(#login[hidden]) { display: none; }
+.signin-wrap:focus { outline: none; }
+.dl a { text-decoration: none; }
+.dl-primary.soon .sub { opacity: .85; }
+.plat > span { min-width: 0; }
+.plat b, .plat small { overflow-wrap: anywhere; }
+.soon-note { margin: 0 0 12px; }
+.soon-note[hidden] { display: none; }
+.dl-web { margin: 14px 0 0; font-size: 13px; line-height: 1.4; color: var(--muted); }
+.dl-web a { color: var(--blue); text-decoration: underline; text-underline-offset: 2px; }
+.dl-sha { margin: 6px 0 0; font-size: 11px; line-height: 1.35; color: var(--muted); overflow-wrap: anywhere; opacity: .85; }
+.dl-sha code { font-size: 10.5px; }
+@media (max-width: 960px) { .dl-web { font-size: 12.5px; } }
+@media (prefers-reduced-motion: reduce) { .dl-primary, .plat { transition: none; } form#login.flash { animation: none; } }
+
+/* Light scheme (same palette as the public-mode sign-in page). */
+html[data-bc-dl][data-scheme="light"] { --bg:#eef2f6; --card:#ffffff; --line:#c9d3df; --text:#16202b; --muted:#4a5868; --blue:#2f6fd6; --red:#c62828; color-scheme: light; }
+html[data-bc-dl][data-scheme="light"] body::before { background-image: url("/static/forest-bg-light.webp?v=1"); }
+html[data-bc-dl][data-scheme="light"] body::after { background: radial-gradient(ellipse at 50% 40%, rgba(238,242,246,.35), rgba(238,242,246,.72) 75%); }
+html[data-bc-dl][data-scheme="light"] form { background: color-mix(in srgb, #fff 86%, transparent); border-color: rgba(0,0,0,.08); box-shadow: 0 10px 30px rgba(0,0,0,.12); }
+html[data-bc-dl][data-scheme="light"] input { background-color: rgba(255,255,255,.85); color: var(--text); }
+html[data-bc-dl][data-scheme="light"] button { color: #fff; }
+html[data-bc-dl][data-scheme="light"] button.ghost { color: var(--text); }
+html[data-bc-dl][data-scheme="light"] button.linkish { color: var(--blue); }
+html[data-bc-dl][data-scheme="light"] .dl h2, html[data-bc-dl][data-scheme="light"] .dl .lead { text-shadow: 0 1px 3px rgba(255,255,255,.6); }
+html[data-bc-dl][data-scheme="light"] .dl .eyebrow { color: #2e7d48; }
+html[data-bc-dl][data-scheme="light"] .dl-primary { color: #fff; box-shadow: 0 8px 22px rgba(47,111,214,.25); }
+html[data-bc-dl][data-scheme="light"] .dl-primary.soon { background: #c9d6ea; color: #16202b; }
+html[data-bc-dl][data-scheme="light"] .plat { background: rgba(255,255,255,.78); border-color: #c9d3df; }
+html[data-bc-dl][data-scheme="light"] .plat:hover { background: #fff; }
+html[data-bc-dl][data-scheme="light"] .plat.soon { opacity: .7; }
+html[data-bc-dl][data-scheme="light"] .plat.current { border-color: #2e9d55; box-shadow: 0 0 0 1px rgba(46,157,85,.35) inset; }
+html[data-bc-dl][data-scheme="light"] .ghost-btn { background: rgba(255,255,255,.7); }
+html[data-bc-dl][data-scheme="light"] .soon-note { color: var(--text); background: rgba(47,111,214,.1); border-color: rgba(47,111,214,.35); }
+/* v0.22.8-public.4: "Branch Chat" in the heading is the real wordmark (.bc-logo from gate.css: font, weights, colours,
+   letter-spacing, TM). Only its size follows the heading so "Get" and the wordmark share one line height. */
+.dl h2 .bc-logo { font-size: 1em; }
+
+/* v0.22.8-public.6: Linux format menu. Desktop: inline panel under the tiles. Phone: bottom sheet over a backdrop. */
+.lx { margin: 12px 0 0; padding: 14px 16px 12px; border-radius: 14px; border: 1px solid rgba(158,192,255,.35); background: color-mix(in srgb, var(--card) 88%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 14px 40px rgba(0,0,0,.35); max-height: min(70vh, 620px); overflow: auto; overscroll-behavior: contain; color: var(--text); }
+.lx[hidden] { display: none; }
+.lx[hidden]:target { display: block; }            /* no JavaScript: #bc-linux still shows the menu */
+.lx:focus { outline: none; }
+.lx-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.lx-top h3 { margin: 0; font-size: 18px; font-weight: 600; }
+.lx-close { flex: none; width: 34px; height: 34px; padding: 0; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--text); font-size: 22px; line-height: 1; cursor: pointer; box-shadow: none; }
+.lx-close:focus-visible, .lx a:focus-visible, .lx button:focus-visible, .lx summary:focus-visible { outline: 3px solid #7cc98c; outline-offset: 2px; }
+.lx-lead { margin: 4px 0 10px; font-size: 14px; color: var(--muted); }
+.lx-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.lx-opt { padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: color-mix(in srgb, var(--card) 55%, transparent); }
+.lx-opt.soon { border-style: dashed; }
+.lx-opt.soon .lx-head h3, .lx-opt.soon .lx-req { opacity: .75; }
+.lx-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; }
+.lx-head h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.lx-head small { font-size: 12px; color: var(--muted); }
+.lx-soon { margin-left: auto; font-size: 11px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.lx-btns { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 2px; }
+.lx-dl { display: inline-block; padding: 6px 12px; border-radius: 10px; background: var(--blue); color: #07110c; font-weight: 600; font-size: 14px; }
+.lx-dl span { font-weight: 500; opacity: .8; }
+.lx-req { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 2px 10px; margin: 8px 0 0; font-size: 12.5px; }
+.lx-req dt { color: var(--muted); }
+.lx-req dd { margin: 0; overflow-wrap: anywhere; }
+.lx-how { margin: 8px 0 0; font-size: 13px; }
+.lx-how summary { cursor: pointer; color: var(--blue); }
+.lx-steps { margin: 6px 0 0; padding-left: 20px; display: grid; gap: 6px; }
+.lx-steps > li > span { display: block; margin-bottom: 2px; }
+.lx-code { position: relative; }
+.lx-code pre { margin: 0; padding: 8px 64px 8px 10px; border-radius: 8px; background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.08); overflow-x: auto; font-size: 12px; line-height: 1.45; }
+.lx-code code { font-family: ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace; white-space: pre; }
+.lx-copy { position: absolute; top: 5px; right: 5px; padding: 3px 9px; font-size: 12px; border-radius: 7px; border: 1px solid var(--line); background: color-mix(in srgb, var(--card) 85%, transparent); color: var(--text); cursor: pointer; box-shadow: none; width: auto; margin: 0; }
+.lx-fine { margin: 6px 0 0; font-size: 12px; color: var(--muted); }
+.lx-web a { display: flex; align-items: center; gap: 10px; color: var(--text); }
+.lx-web svg { width: 22px; height: 22px; color: var(--blue); flex: none; }
+.lx-web b { display: block; font-size: 15px; font-weight: 600; }
+.lx-web small { display: block; font-size: 12px; color: var(--muted); }
+.lx-backdrop { display: none; }
+html.lx-open, html.lx-open body { overflow: hidden; }
+@media (max-width: 960px) {
+  .lx { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1001; margin: 0; max-height: 85vh; border-radius: 18px 18px 0 0; padding: 14px 14px calc(14px + env(safe-area-inset-bottom)); text-align: left; }
+  .lx-backdrop:not([hidden]) { display: block; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,.5); }
+  html.lx-open, html.lx-open body { overscroll-behavior: none; }
+}
+html[data-bc-dl][data-scheme="light"] .lx { background: rgba(255,255,255,.96); border-color: #c9d3df; box-shadow: 0 14px 40px rgba(0,0,0,.18); }
+html[data-bc-dl][data-scheme="light"] .lx-opt { background: rgba(255,255,255,.8); border-color: #c9d3df; }
+html[data-bc-dl][data-scheme="light"] .lx-code pre { background: #f2f5f9; border-color: #d6dde6; }
+html[data-bc-dl][data-scheme="light"] .lx-dl { color: #fff; }
+html[data-bc-dl][data-scheme="light"] .lx-backdrop:not([hidden]) { background: rgba(22,32,43,.35); }
+@media (prefers-reduced-motion: reduce) { .lx { scroll-behavior: auto; } }
+.lx-list > li, .lx-steps > li, .lx-code, .lx-how { min-width: 0; }
+.lx-steps { grid-template-columns: minmax(0, 1fr); }
+.lx-list { grid-template-columns: minmax(0, 1fr); }
+.lx-code pre { max-width: 100%; }
+/* 26.10.3: one quiet line for the platforms that aren't ready yet (replaces the row of "Coming soon" tiles). */
+.dl-later { margin: 12px 0 0; font-size: 13px; line-height: 1.45; color: var(--muted); text-align: center; }
+/* 26.10.3 (tester feedback, iPhone): the empty error line and empty note no longer leave a tall blank gap in the
+   sign-in card; they take space again as soon as they have text. */
+#login > .error:empty, #login > #error:empty, #login > .login-note:empty, #login > #login-note:empty { display: none; }
+
+/* Mockup v3: /get page = the download column only, Linux formats open in the page. */
+html[data-bc-get] .home { grid-template-columns: minmax(0, 1fr); max-width: 640px; }
+html[data-bc-get] .signin-wrap, html[data-bc-get] .login-jump { display: none !important; }
+.lx.lx-inline { position: static; max-height: none; overflow: visible; box-shadow: none; border-radius: 14px; margin: 14px 0 0; padding: 14px 16px 12px; z-index: auto; }
+.lx.lx-inline .lx-close { display: none; }
+
+/* 26.10.13.2: Bazzite (Gear Lever) steps under the Linux formats; same size as the other install steps. */
+#bc-bazzite .lx-steps { margin-top: 8px; font-size: 13px; }

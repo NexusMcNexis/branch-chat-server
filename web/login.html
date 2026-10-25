@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/static/icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon-180.png">
+<link rel="manifest" href="/manifest.webmanifest?v={{BC_ASSET}}">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BranchChat">
+<!-- 26.10.5: Apple/mobile PWA meta so Add-to-Home-Screen opens standalone (chromeless) on iPad/iPhone. This is the only way to get full screen there, because iOS has no web Fullscreen API. -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>BranchChat</title>
+<meta property="og:site_name" content="BranchChat">
+<meta property="og:title" content="BranchChat">
+<meta property="og:description" content="A private, invite-only chat for family and friends.">
+<meta property="og:type" content="website">
+<!-- 26.10.3: link previews need a full address; the server swaps in its own (BC_PUBLIC_URL). -->
+<meta property="og:image" content="http://localhost:8766/static/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="BranchChat: private chat for family and friends">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BranchChat">
+<meta name="twitter:image" content="http://localhost:8766/static/og-image.jpg">
+<meta name="description" content="A private, invite-only chat for family and friends.">
+<link rel="stylesheet" href="/static/gate.css?v={{BC_ASSET}}">
+</head>
+<body>
+<form id="login">
+  <div class="brand">
+    <span class="bc-icon"><img src="/favicon.png" alt="" width="48" height="48"></span>
+    <h1><span class="bc-logo"><b>Branch</b><i>Chat</i><sup class="tm" aria-label="trademark">TM</sup></span> <a class="ver" href="/patch-notes" title="Patch notes" aria-label="Version {{BC_VERSION_SPOKEN}}, view patch notes">v{{BC_VERSION}}</a></h1>
+  </div>
+  <!--bc-org-->
+  <p class="secure"><span id="secure-led" class="led"></span><span id="secure-text">Not a secure connection</span></p>
+  <p>Sign in with your BranchChat account.</p>
+  <label for="username">Username (not your display name)</label>
+  <input id="username" name="username" autocomplete="username" required>
+  <label for="password">Password</label>
+  <input id="password" name="password" type="password" autocomplete="current-password" required>
+  <button type="submit">Sign in</button>
+  <button id="forgot" class="linkish" type="button">Forgot password?</button>
+  <div class="msg" id="error" role="alert"></div>
+  <p class="ok" id="login-note" role="status"></p>
+  <div class="new-here" id="new-here">
+    <p><strong>New here?</strong> BranchChat is invite-only. Ask someone in your family to send you an invite link.</p>
+    <p><strong>Got an invite link?</strong> Open it on this phone or computer and it will walk you through making your account.</p>
+  </div>
+</form>
+<form id="factor" hidden>
+  <div class="brand">
+    <span class="bc-icon"><img src="/favicon.png" alt="" width="48" height="48"></span>
+    <h1><span class="bc-logo"><b>Branch</b><i>Chat</i><sup class="tm" aria-label="trademark">TM</sup></span> <a class="ver" href="/patch-notes" title="Patch notes" aria-label="Version {{BC_VERSION_SPOKEN}}, view patch notes">v{{BC_VERSION}}</a></h1>
+  </div>
+  <p>Enter the 6-digit code from your authenticator app, or one backup code.</p>
+  <label for="factor-code">Authenticator or backup code</label>
+  <input id="factor-code" autocomplete="one-time-code" required>
+  <button type="submit">Continue</button>
+  <button id="factor-back" class="ghost" type="button">Back</button>
+  <div class="msg" id="factor-error" role="alert"></div>
+</form>
+<form id="reset" hidden novalidate>
+  <div class="brand">
+    <span class="bc-icon"><img src="/favicon.png" alt="" width="48" height="48"></span>
+    <h1><span class="bc-logo"><b>Branch</b><i>Chat</i><sup class="tm" aria-label="trademark">TM</sup></span> <a class="ver" href="/patch-notes" title="Patch notes" aria-label="Version {{BC_VERSION_SPOKEN}}, view patch notes">v{{BC_VERSION}}</a></h1>
+  </div>
+  <p>Enter your username. If that account can receive email, BranchChat sends a code to set a new password. The code expires in 10 minutes.</p>
+  <label for="reset-user">Username (not your display name)</label>
+  <input id="reset-user" autocomplete="username" required>
+  <div id="reset-next" hidden>
+    <label for="reset-code">6-digit code</label>
+    <input id="reset-code" inputmode="numeric" autocomplete="one-time-code" maxlength="20">
+    <label for="reset-pass">New password</label>
+    <input id="reset-pass" type="password" autocomplete="new-password" maxlength="200" aria-describedby="reset-pass-hint">
+    <p class="hint" id="reset-pass-hint">At least 8 characters (up to 200).</p>
+    <label for="reset-again">Repeat new password</label>
+    <input id="reset-again" type="password" autocomplete="new-password" maxlength="200">
+    <label for="reset-factor">Authenticator or backup code, if you use one</label>
+    <input id="reset-factor" autocomplete="one-time-code">
+    <p class="ok">Your message key backup was sealed with the old password, so it was removed. Sign in on a device you already use first and it is saved again with the new password. On a new device, older messages may not open.</p>
+  </div>
+  <button id="reset-send" type="submit">Email a reset code</button>
+  <button id="reset-back" class="ghost" type="button">Back to sign in</button>
+  <div class="msg" id="reset-error" role="alert"></div>
+  <p class="ok" id="reset-note" role="status"></p>
+</form>
+<form id="unlock" hidden>
+  <div class="brand">
+    <span class="bc-icon"><img src="/favicon.png" alt="" width="48" height="48"></span>
+    <h1><span class="bc-logo"><b>Branch</b><i>Chat</i><sup class="tm" aria-label="trademark">TM</sup></span> <a class="ver" href="/patch-notes" title="Patch notes" aria-label="Version {{BC_VERSION_SPOKEN}}, view patch notes">v{{BC_VERSION}}</a></h1>
+  </div>
+  <p id="unlock-lead">A BranchChat code was emailed to this account. Enter it to finish signing in. It expires in 10 minutes. The code also unlocks a saved key backup.</p>
+  <label for="code">6-digit code</label>
+  <input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="20" required>
+  <button type="submit">Finish signing in</button>
+  <button id="send-code" class="ghost" type="button">Email the code again</button>
+  <div class="msg" id="unlock-error" role="alert"></div>
+</form>
+<!-- Footer: only the small trademark line here, in very small print (Oct 18 2026). The full footer with the
+     1 John 1:7 verse and the memorial line now appears on the About page only, so the other pages stay uncluttered. -->
+<footer id="bc-footer" class="bc-mini">
+  <p class="legal">&copy; 2026 BranchChat. BranchChat&trade; is a trademark of BranchChat. <a class="bc-license-link" href="/license">License</a></p>
+</footer>
+<script type="module" src="/static/login.js?v={{BC_ASSET}}"></script>
+</body>
+</html>

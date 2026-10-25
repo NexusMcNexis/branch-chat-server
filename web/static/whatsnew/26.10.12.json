@@ -1,0 +1,92 @@
+{
+  "version": "26.10.12",
+  "kicker": "What's new",
+  "title": "Photos, search, read receipts and more",
+  "intro": "Hi there! This update lets you pick how sharp your photos and videos are, touch them up before you send, search your chats, and see when your messages are read. Here’s what’s new.",
+  "sections": [
+    {
+      "heading": "Photos and videos",
+      "items": [
+        {
+          "icon": "🎚️",
+          "title": "Choose the quality",
+          "text": "Every photo and video you add has a little tag in the corner: Original, HD (1080p) or SD (720p). Tap it to switch. Original sends it exactly as it is, HD is sharp but quicker, and SD is the fastest and smallest. BranchChat remembers your last choice. Very big files show a heads-up, and anything over 256 MB needs HD or SD."
+        },
+        {
+          "icon": "🔍",
+          "title": "Zoom in on photos",
+          "text": "Open a photo full screen and pinch to zoom in, then drag to look around. Double-tap to zoom in or back out. On a computer, use your mouse wheel or trackpad."
+        },
+        {
+          "icon": "✂️",
+          "title": "Edit photos before sending",
+          "text": "Tap the ✎ on a photo before you send it to crop it (freely, or square, 4:3, 16:9 and more), rotate it, and adjust brightness, contrast and color."
+        },
+        {
+          "icon": "🎬",
+          "title": "Trim videos before sending",
+          "text": "Tap the ✎ on a video to cut off the start or the end, and turn off its sound if you like. Only the part you keep gets sent."
+        }
+      ]
+    },
+    {
+      "heading": "Chatting",
+      "items": [
+        {
+          "icon": "✓",
+          "title": "Read receipts",
+          "text": "Your newest message shows Sent, Delivered or Seen. In groups you'll see who has seen it. Don't want to share? Turn off Read receipts in the menu. Then you won't see anyone else's either."
+        },
+        {
+          "icon": "🔎",
+          "title": "Search your chats",
+          "text": "Tap the magnifying glass at the top of a chat to search it, or switch to All chats. Tap a result to jump right to that message. Your messages are end-to-end encrypted, so the search happens on your own device."
+        },
+        {
+          "icon": "🤖",
+          "title": "Get the Android app",
+          "text": "Using BranchChat in a browser on an Android phone? Pick Get the Android app in the menu for a short step-by-step guide to download and install it."
+        },
+        {
+          "icon": "🔔",
+          "title": "Android app setup",
+          "text": "The new Android app (in Check for updates, or v26.10.11.4 on GitHub) walks you through setup the first time you open it. One-tap buttons let you allow notifications, set battery to Unrestricted, and change phone-specific settings on Samsung, Xiaomi, OnePlus and others. Each step checks off when it's done."
+        },
+        {
+          "icon": "🔗",
+          "title": "Links open in your browser",
+          "text": "Tapping a link in a chat on Android or desktop now opens it in your browser."
+        },
+        {
+          "icon": "🚪",
+          "title": "A tidier front page",
+          "text": "On branchchat.app, Create account now asks which server you're joining first (or pick I don't have a server), and the sign-in form stays tucked away until you tap Sign in on web."
+        }
+      ]
+    },
+    {
+      "heading": "Also new",
+      "items": [
+        {
+          "icon": "🗂️",
+          "title": "What's new, any time",
+          "text": "What's new in the menu now opens this pop-up. Use the ← and → arrows at the bottom to look back at earlier updates."
+        },
+        {
+          "icon": "🔑",
+          "title": "Clearer sign-in",
+          "text": "The sign-in and forgot-password forms now say Username (not your display name)."
+        },
+        {
+          "icon": "💻",
+          "title": "Smoother desktop updates",
+          "text": "The desktop app (v26.10.11.4) reopens properly after it updates. If your Linux computer is missing FUSE, it still opens and shows the one command to fix it."
+        }
+      ]
+    }
+  ],
+  "apps": "It works on the web, in the Android app and in the desktop app, with no new download needed.",
+  "thanks": "Thank you for being part of this little community. It means a lot to have you here.",
+  "signoff": "God bless, and happy chatting!",
+  "signer": "Luke"
+}

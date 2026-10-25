@@ -1,0 +1,21 @@
+/* 26.10.12: read receipts, search, Android app setup */
+.msg.mine .receipt{font-size:11px;opacity:.7;text-align:right;margin:2px 6px 0}
+.msg.mine .receipt.seen{opacity:.95;font-weight:600}
+#search-btn{background:none;border:0;color:inherit;padding:6px;cursor:pointer;display:inline-flex;align-items:center}
+#search-dialog{width:min(560px,94vw);max-height:86vh}
+#search-dialog .search-row{display:flex;gap:8px}
+#search-q{flex:1;min-width:0;font-size:16px;padding:8px}
+#search-results{list-style:none;margin:6px 0;padding:0;max-height:52vh;overflow:auto}
+.search-hit{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid rgba(127,127,127,.25);padding:8px 4px;color:inherit;cursor:pointer}
+.search-hit .sh-head{display:block;font-size:12px;opacity:.7}
+.search-hit .sh-text{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.search-note{font-size:12px}
+#apk-dialog{width:min(520px,94vw);font-size:18px;line-height:1.4}
+#apk-dialog h2{font-size:21px}
+#apk-dialog .apk-progress{display:flex;gap:8px;list-style:none;padding:0;margin:8px 0}
+#apk-dialog .apk-progress li{flex:1;text-align:center;border-radius:99px;padding:2px 0;background:rgba(127,127,127,.2);font-size:14px}
+#apk-dialog .apk-progress li.now{background:#2f7d4f;color:#fff}
+#apk-dialog .apk-progress li.done{background:rgba(47,125,79,.45);color:#fff}
+#apk-dialog .apk-brands{font-size:15px}
+#apk-dialog .actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+#apk-dialog button{font-size:17px;padding:10px 16px}

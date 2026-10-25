@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.branchchat.android",
+      "sha256_cert_fingerprints": [
+        "B0:FC:AD:0B:0F:14:74:17:67:B5:83:7F:F3:BC:AA:A0:13:2D:62:2D:5E:9D:02:03:66:F1:C6:1B:EA:38:ED:7E"
+      ]
+    }
+  }
+]

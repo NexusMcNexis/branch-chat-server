@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" type="image/png" href="/favicon.png">
+<title>Join on BranchChat</title>
+<!-- 26.10.3: link preview card (full image address filled in by the server). -->
+<meta property="og:site_name" content="BranchChat">
+<meta property="og:title" content="Join on BranchChat">
+<meta property="og:description" content="You have been invited to a BranchChat group. Open the link to join.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="http://localhost:8766/static/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="BranchChat: private chat for family and friends">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Join on BranchChat">
+<meta name="twitter:image" content="http://localhost:8766/static/og-image.jpg">
+<link rel="stylesheet" href="/static/dir.css?v={{BC_ASSET}}">
+<script src="/static/vt-quiet.js?v={{BC_ASSET}}"></script>
+</head>
+<body class="dir-body">
+<main class="join-card" id="join" aria-live="polite">
+  <!-- Small BranchChat wordmark above the invite card (bold "Branch", green "Chat", TM; styles in dir.css). -->
+  <p class="dir-kicker"><img src="/favicon.png" alt="" width="20" height="20"> <span class="bc-logo"><b>Branch</b><i>Chat</i><sup class="tm" aria-label="trademark">TM</sup></span></p>
+  <div class="org">
+    <span class="org-icon"><img id="org-icon" src="/favicon.png" alt="" width="64" height="64"></span>
+    <div>
+      <p class="org-lead" id="org-lead">You're invited to</p>
+      <h1 id="org-name">a BranchChat server</h1>
+    </div>
+  </div>
+  <p class="server-line"><span class="lock" aria-hidden="true">&#128274;</span> Server: <b id="server-host">…</b> <span class="badge" id="badge"></span></p>
+  <p class="note" id="invited-by" hidden></p>
+  <div class="alert" id="alert" role="alert" hidden></div>
+  <form id="join-form" novalidate>
+    <label for="username">Choose a username</label>
+    <input id="username" autocomplete="username" autocapitalize="off" spellcheck="false" minlength="3" maxlength="32" required aria-describedby="user-hint">
+    <p class="hint" id="user-hint">3–32 letters, numbers, dots, dashes or underscores. You set your password on the server's own page next.</p>
+    <div class="buttons">
+      <button type="submit" id="create" data-mode="create">Create account</button>
+      <button type="submit" id="signin" class="ghost" data-mode="signin">Sign in</button>
+    </div>
+    <p class="msg" id="msg" role="status"></p>
+  </form>
+  <p class="fine">branchchat.app never sees your password or your invite code. <a href="/directory">Browse the directory</a></p>
+</main>
+<div class="modal" id="hand" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="hand-title">
+    <span class="org-icon big"><img id="hand-icon" src="/favicon.png" alt="" width="72" height="72"></span>
+    <p class="hand-name" id="hand-name"></p>
+    <h2 id="hand-title" aria-live="polite" aria-atomic="true">Loading sign-in page</h2>
+    <p class="hand-host" id="hand-host"></p>
+    <span class="spinner" aria-hidden="true"></span>
+  </div>
+</div>
+<script src="/static/joinhome.js?v={{BC_ASSET}}"></script>
+<!-- Footer: just the small trademark line, in very small print (Oct 18 2026: the full footer is on About only;
+     every page, including the directory, carries this one line at the bottom). -->
+<footer id="bc-footer" class="bc-mini dir-mini">
+  <p class="legal">&copy; 2026 BranchChat. BranchChat&trade; is a trademark of BranchChat. <a class="bc-license-link" href="/license">License</a></p>
+</footer>
+</body>
+</html>

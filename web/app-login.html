@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Open in BranchChat</title>
+<link rel="stylesheet" href="/static/gate.css?v={{BC_ASSET}}">
+</head>
+<body>
+<!-- 26.10.10: browser -> Android app sign-in hand-off.
+     On the home (branchchat.app): /app-login?s=<server>#h=<token>. The app catches this verified link; the page shows the
+     server and, after a tap, opens <server>/app-login#h=<token> in the app. In a browser it just goes to <server>/.
+     On the server itself: /app-login#h=<token>; inside the app the token is traded for a session (single use, 2 min). -->
+<form id="applogin" novalidate>
+  <div class="brand">
+    <img src="/favicon.png" alt="" width="48" height="48">
+    <h1><span class="bc-logo"><b>Branch</b><i>Chat</i><sup class="tm" aria-label="trademark">TM</sup></span></h1>
+  </div>
+  <p id="lead">Opening BranchChat&hellip;</p>
+  <p class="ok" id="host" hidden></p>
+  <button type="submit" id="go" hidden>Continue</button>
+  <div class="msg" id="msg" role="status"></div>
+</form>
+<script src="/static/applogin.js?v={{BC_ASSET}}"></script>
+</body>
+</html>

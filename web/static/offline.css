@@ -1,0 +1,8 @@
+/* 26.10.6: offline page (shown by the service worker). BranchChat dark palette. */
+html, body { margin: 0; min-height: 100%; background: #10141a; color: #f2f6fb; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.off { max-width: 420px; margin: 0 auto; padding: 18vh 24px 24px; text-align: center; }
+.off img { border-radius: 22px; }
+.off h1 { font-size: 24px; margin: 18px 0 8px; font-weight: 600; }
+.off h1 b { font-weight: 700; } .off h1 i { font-style: normal; color: #9ec0ff; }
+.off p { color: #c4cfdc; margin: 8px 0; }
+.off-retry { display: inline-block; margin-top: 14px; padding: 10px 26px; border-radius: 999px; background: #1a212b; border: 1px solid #9ec0ff; color: #9ec0ff; font-weight: 600; text-decoration: none; }

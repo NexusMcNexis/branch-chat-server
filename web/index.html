@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="system" data-palette="huzz" data-scheme="dark">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/static/icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon-180.png">
+<link rel="manifest" href="/manifest.webmanifest?v={{BC_ASSET}}">
+<!-- 0.22.7 Add to Home Screen: catch the install prompt early -->
+<script src="/static/a2hs-early.js?v=1"></script>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BranchChat">
+<!-- 26.10.5: Apple/mobile PWA meta so Add-to-Home-Screen opens standalone (chromeless) on iPad/iPhone. This is the only way to get full screen there, because iOS has no web Fullscreen API. -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>BranchChat</title>
+<meta property="og:site_name" content="BranchChat">
+<meta property="og:title" content="BranchChat">
+<meta property="og:description" content="A private, invite-only chat for family and friends.">
+<meta property="og:type" content="website">
+<!-- 26.10.3: link previews need a full address; the server swaps in its own (BC_PUBLIC_URL). -->
+<meta property="og:image" content="http://localhost:8766/static/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="BranchChat: private chat for family and friends">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BranchChat">
+<meta name="twitter:image" content="http://localhost:8766/static/og-image.jpg">
+<meta name="description" content="A private, invite-only chat for family and friends.">
+<script src="/static/scheme.js?v={{BC_ASSET}}"></script>
+<link rel="stylesheet" href="/static/app.css?v={{BC_ASSET}}">
+<link rel="stylesheet" href="/static/kofi-modal.css?v={{BC_ASSET}}">
+<script defer src="/static/kofi-modal.js?v={{BC_ASSET}}"></script>
+<link rel="stylesheet" href="/static/whatsnew.css?v={{BC_ASSET}}">
+<link rel="stylesheet" href="/static/motion.css?v={{BC_ASSET}}">
+<link rel="stylesheet" href="/static/menu.css?v={{BC_ASSET}}">
+<link rel="stylesheet" href="/static/sendanim.css?v={{BC_ASSET}}">
+<script src="/static/vt-quiet.js?v={{BC_ASSET}}"></script>
+</head>
+<body>
+<header>
+  <div>
+    <div class="brand">
+      <span class="bc-icon" data-tip="BranchChat" tabindex="0"><img src="/favicon.png" alt="BranchChat icon" width="32" height="32"></span>
+      <strong><span class="bc-logo"><b>Branch</b><i>Chat</i><sup class="tm" aria-label="trademark">TM</sup></span> <a class="ver" href="/patch-notes" title="Patch notes" aria-label="Version {{BC_VERSION_SPOKEN}}, view patch notes">v{{BC_VERSION}}</a></strong>
+    </div>
+    <div id="who"></div>
+    <div id="secure"><span id="secure-led" class="led"></span><span id="secure-text">Not encrypted</span></div>
+    <p id="notify-setup" class="sub" hidden></p>
+  </div>
+  <div class="header-actions">
+    <button id="menu-open" class="burger-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="app-menu">
+      <span class="burger" aria-hidden="true">
+        <span class="bun-top"></span>
+        <span class="lettuce"></span>
+        <span class="patty"></span>
+        <span class="bun-bottom"></span>
+      </span>
+    </button>
+    <div id="app-menu" data-bc-motion="menu" hidden>
+      <button id="menu-invite" class="menu-row" type="button"><span class="menu-row-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="9.5" cy="8" r="3.6"/><path d="M3 20c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2"/><path d="M19 7.5v6M16 10.5h6"/></svg></span><span class="menu-row-label">Invite friend or family to BranchChat</span><span class="menu-row-chev" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M9 5.5l6.5 6.5L9 18.5"/></svg></span></button>
+      <!-- Notifications accordion. One row with the current state; expands in place. Replaces the old dropdown block. -->
+      <div id="menu-notify" class="notify-acc">
+        <button id="notify-head" class="notify-head" type="button" aria-expanded="false" aria-controls="notify-panel">
+          <span class="notify-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 10a6 6 0 0 1 12 0c0 4.6 1.6 6.4 2.4 7.2H3.6C4.4 16.4 6 14.6 6 10z"/><path d="M10 20.2a2.2 2.2 0 0 0 4 0"/></svg></span>
+          <span class="notify-title">Notifications</span>
+          <span id="notify-state" class="notify-state">On</span>
+          <span class="notify-chev" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 9.5l6 6 6-6"/></svg></span>
+        </button>
+        <div id="notify-panel" class="notify-panel" role="region" aria-labelledby="notify-head" hidden>
+          <div id="notify-mute" class="notify-radios" role="radiogroup" aria-label="Notifications">
+            <label class="radio-row"><input type="radio" name="notify-mute" value="on" checked> Always on</label>
+            <label class="radio-row"><input type="radio" name="notify-mute" value="30"> Off for 30 minutes</label>
+            <label class="radio-row"><input type="radio" name="notify-mute" value="45"> Off for 45 minutes</label>
+            <label class="radio-row"><input type="radio" name="notify-mute" value="60"> Off for 1 hour</label>
+            <label class="radio-row"><input type="radio" name="notify-mute" value="until"> Off until I turn them back on</label>
+          </div>
+        <button id="notify-enable" type="button" hidden>Enable notifications</button>
+        <p id="notify-hint" hidden></p>
+        <label id="desktop-autostart-row" class="radio-row" hidden><input type="checkbox" id="desktop-autostart"> Start BranchChat when I log in</label>
+        <label id="desktop-close-row" class="radio-row" hidden>When closing the window: <select id="desktop-close"><option value="ask">Ask</option><option value="tray">Minimize to tray</option><option value="quit">Quit</option></select></label>
+        </div>
+      </div>
+      <!-- Then today's order (Add to Home Screen only shows when the phone offers it). Recovery file removed. -->
+      <!-- 0.22.7 Add to Home Screen -->
+      <button id="menu-a2hs" type="button" hidden>Add to Home Screen</button>
+      <!-- 26.10.10c: inside the installed apps (desktop / Android bridge with an update check) this replaces Add to Home Screen -->
+      <button id="menu-update" type="button" hidden>Check for updates</button>
+      <button id="menu-get-android" type="button" hidden>Get the Android app</button>
+      <!-- 26.10.10d: installed apps only (bridge with listServers/openServer). Collapsible like Audio: saved servers, current marked -->
+      <div id="menu-server" class="notify-acc" hidden>
+        <button id="server-head" class="notify-head" type="button" aria-expanded="false" aria-controls="switch-server-panel">
+          <span class="notify-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="4" y="4.5" width="16" height="6" rx="1.5"/><rect x="4" y="13.5" width="16" height="6" rx="1.5"/><path d="M7.5 7.5h.01M7.5 16.5h.01"/></svg></span>
+          <span class="notify-title">Server</span>
+          <span id="server-state" class="notify-state"></span>
+          <span class="notify-chev" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 9.5l6 6 6-6"/></svg></span>
+        </button>
+        <div id="switch-server-panel" class="notify-panel" role="region" aria-labelledby="server-head" hidden>
+          <ul id="switch-server-list" role="list"></ul>
+          <div class="switch-server-actions"><button id="switch-server-add" type="button" hidden>Add a server…</button><button id="switch-server-manage" type="button" hidden>Rename or remove…</button></div>
+        </div>
+      </div>
+      <!-- beta.8: Text size on the left, the sun/moon Dark mode switch on the right of the same row. The switch's right edge lines up
+           with the section chevrons (shared --menu-row-pad). Tab order: text sizes, then the switch. -->
+      <div id="menu-size-row" class="size-mode-row">
+        <span class="menu-label">Text size</span>
+        <div id="text-size-choices" class="choice-row" role="group" aria-label="Text size">
+          <button type="button" class="bubble-btn size-btn" data-size="small" aria-pressed="false" aria-label="Small">
+            <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M14 14h12M15 20h10M16 26h8"/></svg>
+          </button>
+          <button type="button" class="bubble-btn size-btn" data-size="medium" aria-pressed="true" aria-label="Medium">
+            <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M10 13h20M11 20h18M12 27h16"/></svg>
+          </button>
+          <button type="button" class="bubble-btn size-btn" data-size="large" aria-pressed="false" aria-label="Large">
+            <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 12h28M7 20h26M8 28h24"/></svg>
+          </button>
+        </div>
+        <div id="menu-mode" class="menu-top">
+          <button id="mode-toggle" class="sm-switch" type="button" role="switch" aria-checked="false" aria-label="Dark mode">
+            <span class="sm-knob" aria-hidden="true"></span>
+            <svg class="sm-ico sm-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+            <svg class="sm-ico sm-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.2 14.6A8.4 8.4 0 0 1 9.4 3.8a8.4 8.4 0 1 0 10.8 10.8z"/></svg>
+          </button>
+        </div>
+      </div>
+      <!-- Audio section: every sound setting in one collapsible place (collapsed by default). -->
+      <div id="menu-audio" class="notify-acc">
+        <button id="audio-head" class="notify-head" type="button" aria-expanded="false" aria-controls="audio-panel">
+          <span class="notify-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg></span>
+          <span class="notify-title">Audio</span>
+          <span id="audio-state" class="notify-state">Chime · 80%</span>
+          <span class="notify-chev" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 9.5l6 6 6-6"/></svg></span>
+        </button>
+        <div id="audio-panel" class="notify-panel" role="region" aria-labelledby="audio-head" hidden>
+        <label for="notify-tone" class="menu-sub">Notification tone</label>
+        <div class="tone-row">
+          <select id="notify-tone" aria-label="Notification tone">
+            <option value="chime">Chime</option>
+            <option value="bell">Bell</option>
+            <option value="pop">Pop</option>
+            <option value="marimba">Marimba</option>
+            <option value="ping">Soft ping</option>
+            <option value="off">Off</option>
+          </select>
+          <button id="tone-preview" type="button" aria-label="Preview tone">Preview</button>
+        </div>
+        <label id="tone-vol-row" class="vol-row" for="tone-vol">Tone volume <output id="tone-vol-val" for="tone-vol">80%</output></label>
+        <input id="tone-vol" class="vol-range" type="range" min="0" max="100" step="1" value="80">
+        <label class="check-row"><input id="sfx-toggle" type="checkbox" checked> Sound effects</label>
+        <!-- 26.10.3: sound options, shown only while Sound effects is on (app.js). Saved per account. Button sound is built
+             like the Notification tone picker; the two sliders set the Button sounds and Character sounds volumes. -->
+        <div id="sfx-opts" class="sfx-opts">
+          <label for="click-set" class="menu-sub">Button sound</label>
+          <div class="tone-row">
+            <select id="click-set" aria-label="Button sound">
+              <option value="classic">Classic</option>
+              <option value="soft">Soft tap</option>
+              <option value="wood">Wood knock</option>
+              <option value="bubble">Bubble pop</option>
+              <option value="chime">Gentle chime</option>
+              <option value="click">Click</option>
+            </select>
+            <button id="click-preview" type="button" aria-label="Preview button sound">Preview</button>
+          </div>
+          <label class="vol-row" for="vol-ui"><span class="vol-name"><svg class="vol-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg> Button sounds</span> <output id="vol-ui-val" for="vol-ui">100%</output></label>
+          <input id="vol-ui" class="vol-range" type="range" min="0" max="100" step="1" value="100">
+          <label class="vol-row" for="vol-char"><span class="vol-name"><svg class="vol-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg> Character sounds</span> <output id="vol-char-val" for="vol-char">100%</output></label>
+          <input id="vol-char" class="vol-range" type="range" min="0" max="100" step="1" value="100">
+        </div>
+        <label class="check-row" title="Type #joke in a message and it turns into a random joke before it is sent"><input id="joker-toggle" type="checkbox" checked> Joker bot</label>
+        <label class="check-row" title="Turns :) :( :D &lt;3 and similar into emoji as you type"><input id="emo-toggle" type="checkbox" checked> Convert :) to emoji</label>
+        <!-- 26.10.11: saved per account. On = messages other people delete just go, with no delete animation or sound. -->
+        <label class="check-row" title="Messages other people delete just disappear, with no delete animation or sound. Your own deletes keep theirs."><input id="quietdel-toggle" type="checkbox"> Don&rsquo;t show animations on other people&rsquo;s deletes</label>
+        <!-- 26.10.11: "What's new" emails for this account (server flag; the email's Unsubscribe link changes the same switch). -->
+        <label class="check-row" title="Emails about new BranchChat features. Sign-in codes and invites always arrive."><input id="featmail-toggle" type="checkbox" checked> Feature update emails</label>
+          <hr class="menu-sep notify-sep" aria-hidden="true">
+          <!-- Ambient sounds (existing feature: app.js "bc-ambient" keys). Pill switch like Dark mode; its options show when on. -->
+      <div id="menu-ambient" class="ambient-sec">
+        <div class="ambient-head">
+          <span class="notify-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 15c3-1 4-5 8-5s5 4 8 5"/><path d="M4 19c3-1 4-4 8-4s5 3 8 4"/><path d="M12 3v4M9 5.5l3-2.5 3 2.5"/></svg></span>
+          <span id="ambient-label" class="ambient-title">Ambient sounds</span>
+          <button id="ambient-toggle" class="sm-switch amb-switch" type="button" role="switch" aria-checked="false" aria-labelledby="ambient-label"><span class="sm-knob" aria-hidden="true"></span></button>
+        </div>
+        <div id="ambient-opts" class="ambient-opts" hidden>
+          <div class="ambient-selects">
+            <select id="ambient-track" aria-label="Ambient sound"><option value="forest-wind">Forest wind</option><option value="leaves-birds">Leaves and birds</option><option value="campfire">Campfire</option><option value="elevator">Elevator music</option></select>
+            <select id="ambient-length" aria-label="Ambient length"><option value="short">Short</option><option value="long">Long</option><option value="repeat">Repeat</option></select>
+          </div>
+          <label class="vol-row" for="ambient-vol">Nature volume <output id="ambient-vol-val">40%</output></label>
+          <input type="range" id="ambient-vol" class="vol-range" min="0" max="100" step="1" value="40">
+          <p class="ambient-note">Plays only while Sound effects is on.</p>
+        </div>
+      </div>
+        </div>
+      </div>
+      <!-- Colors and Themes: color theme, auto night, this chat's background and its transparency (collapsed by default). -->
+      <div id="menu-themes" class="notify-acc">
+        <button id="themes-head" class="notify-head" type="button" aria-expanded="false" aria-controls="themes-panel">
+          <span class="notify-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 2-.8 2-1.8 0-.5-.2-.9-.5-1.3-.3-.3-.5-.8-.5-1.2 0-1 .8-1.7 1.8-1.7H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10" cy="7" r="1.2"/><circle cx="15" cy="7.2" r="1.2"/></svg></span>
+          <span class="notify-title">Colors and Themes</span>
+          <span id="themes-state" class="notify-state">Huzz</span>
+          <span class="notify-chev" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 9.5l6 6 6-6"/></svg></span>
+        </button>
+        <div id="themes-panel" class="notify-panel" role="region" aria-labelledby="themes-head" hidden>
+      <span class="menu-label">Color theme</span>
+      <div id="palette-choices" class="choice-row end" role="group" aria-label="Color theme">
+        <button type="button" class="bubble-btn palette-btn" data-palette="huzz"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Huzz</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="glacier"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Glacier</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="nebula"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Nebula</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="lagoon"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Lagoon</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="bubble"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Bubble</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="aubergine"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Aubergine</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="vinyl"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Vinyl</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="graphite"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Graphite</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="forest"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Forest</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="ocean"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Ocean</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="sunset"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Sunset</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="lavender"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Lavender</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="ember"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Ember</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="midnight"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Midnight</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="rose"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Rose</button>
+        <button type="button" class="bubble-btn palette-btn" data-palette="mint"><span class="swatches" aria-hidden="true"><i></i><i></i><i></i></span>Mint</button>
+      </div>
+      <p id="palette-scope" class="palette-scope"></p>
+      <button type="button" id="palette-all" class="bubble-btn palette-all" hidden>Use this theme for all chats</button>
+      <label class="check-row"><input id="auto-night" type="checkbox"> Auto night mode (dark 7pm to 7am)</label>
+          <hr class="menu-sep notify-sep" aria-hidden="true">
+      <!-- 26.10.4 Emoji style: how emoji look for you (messages, reactions, the picker). Device = your phone or computer's
+           own emoji; the others are free, openly licensed sets served from this server (credits on the About page). -->
+      <span id="emoji-style-label" class="menu-label">Emoji style</span>
+      <div id="emoji-style-choices" class="choice-row" role="group" aria-labelledby="emoji-style-label">
+        <button type="button" class="bubble-btn es-btn" data-estyle="system" aria-pressed="true"><span class="es-sample es-native" aria-hidden="true">😀</span>Device</button>
+        <button type="button" class="bubble-btn es-btn" data-estyle="twemoji" aria-pressed="false"><img class="es-sample" src="/static/emoji/twemoji/1f600.svg?v=1" alt="" width="20" height="20" loading="lazy" decoding="async">Twemoji</button>
+        <button type="button" class="bubble-btn es-btn" data-estyle="noto" aria-pressed="false"><img class="es-sample" src="/static/emoji/noto/1f600.svg?v=1" alt="" width="20" height="20" loading="lazy" decoding="async">Noto</button>
+        <button type="button" class="bubble-btn es-btn" data-estyle="fluent" aria-pressed="false"><img class="es-sample" src="/static/emoji/fluent/1f600.svg?v=1" alt="" width="20" height="20" loading="lazy" decoding="async">Fluent</button>
+      </div>
+      <p class="palette-scope es-note">Only changes how emoji look to you, on every device you sign in to.</p>
+          <hr class="menu-sep notify-sep" aria-hidden="true">
+      <span id="bg-label" class="menu-label">This chat's background</span>
+      <div id="bg-choices" class="choice-row" role="group" aria-label="This chat's background">
+        <button type="button" class="bubble-btn bg-btn" data-bg="none" aria-pressed="true">None</button>
+        <button type="button" class="bubble-btn bg-btn" data-bg="dusk" aria-label="Dusk"><span class="bg-swatch"></span>Dusk</button>
+        <button type="button" class="bubble-btn bg-btn" data-bg="tide" aria-label="Tide"><span class="bg-swatch"></span>Tide</button>
+        <button type="button" class="bubble-btn bg-btn" data-bg="linen" aria-label="Linen"><span class="bg-swatch"></span>Linen</button>
+        <button type="button" class="bubble-btn bg-btn" data-bg="pines" aria-label="Pines"><span class="bg-swatch"></span>Pines</button>
+        <button type="button" class="bubble-btn bg-btn" data-bg="ember" aria-label="Ember"><span class="bg-swatch"></span>Ember</button>
+        <button type="button" class="bubble-btn bg-btn" data-bg="mist" aria-label="Mist"><span class="bg-swatch"></span>Mist</button>
+        <button type="button" class="bubble-btn bg-btn" data-bg="night" aria-label="Night"><span class="bg-swatch"></span>Night</button>
+        <button type="button" class="bubble-btn bg-btn" data-bg="meadow" aria-label="Meadow"><span class="bg-swatch"></span>Meadow</button>
+        <button type="button" class="bubble-btn bg-btn" data-bg="valentine" aria-label="Valentine’s Day"><span class="bg-swatch"></span>Valentine’s Day</button>
+        <button type="button" class="bubble-btn bg-btn" data-bg="easter" aria-label="Easter"><span class="bg-swatch"></span>Easter</button>
+        <button type="button" class="bubble-btn bg-btn" data-bg="fourth-july" aria-label="Fourth of July"><span class="bg-swatch"></span>Fourth of July</button>
+        <button id="bg-upload" type="button" class="bubble-btn bg-btn" data-bg="upload">Upload</button>
+      </div>
+      <input id="bg-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+      <!-- Animated backgrounds (Oct 2026): one switch for every chat on this device (localStorage bc-bg-anim, off by default).
+           Backgrounds that have a moving version (Pines first) drift very slowly; the rest stay still. app.js wires it up. -->
+      <div id="bganim-row" class="bganim-row">
+        <span id="bganim-label" class="bganim-title">Animated backgrounds</span>
+        <button id="bganim-toggle" class="sm-switch bganim-switch" type="button" role="switch" aria-checked="false" aria-labelledby="bganim-label" aria-describedby="bganim-help bganim-note"><span class="sm-knob" aria-hidden="true"></span></button>
+      </div>
+      <p id="bganim-help" class="sub bganim-help">Backgrounds move very slowly. Uses a little more battery and data. Moving now: Pines, Ember, Dusk, Mist, Meadow, Tide, Linen, Night and Fourth of July.</p>
+      <p id="bganim-note" class="sub bganim-help" role="status"></p>
+      <!-- 26.10.8: Lite mode (localStorage bc-lite; unset = automatic on slower devices). scheme.js sets html.lite early. -->
+      <div id="lite-row" class="bganim-row">
+        <span id="lite-label" class="bganim-title">Lite mode</span>
+        <button id="lite-toggle" class="sm-switch bganim-switch" type="button" role="switch" aria-checked="false" aria-labelledby="lite-label" aria-describedby="lite-help"><span class="sm-knob" aria-hidden="true"></span></button>
+      </div>
+      <p id="lite-help" class="sub bganim-help">Smoother on older phones: no live blur behind panels and messages, and moving backgrounds draw at 30 frames a second. <span id="lite-auto"></span></p>
+      <label id="transp-row" for="transp">Transparency <output id="transp-val" for="transp">50%</output></label>
+      <input id="transp" type="range" min="0" max="90" step="1" value="50">
+      <p id="bg-note" class="sub">Behind the messages, for this chat on this device.</p>
+      <!-- 26.10.2: same idea as "Use this theme for all chats": shown only inside a chat that has its own background. -->
+      <button type="button" id="bg-all" class="bubble-btn palette-all" hidden>Use this background for all chats</button>
+        </div>
+      </div>
+      <!-- Animation section. "Menu transition speed": 5 steps (radiogroup), stored as bc-anim-speed; --bc-anim-scale = 1 / speed. -->
+      <div id="menu-anim" class="notify-acc">
+        <button id="anim-head" class="notify-head" type="button" aria-expanded="false" aria-controls="anim-panel">
+          <span class="notify-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 12h9"/><path d="M4 7h5M4 17h6"/><path d="M14 6l6 6-6 6"/></svg></span>
+          <span class="notify-title">Animation</span>
+          <span id="anim-state" class="notify-state">1× Normal</span>
+          <span class="notify-chev" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 9.5l6 6 6-6"/></svg></span>
+        </button>
+        <div id="anim-panel" class="notify-panel" role="region" aria-labelledby="anim-head" hidden>
+          <div id="anim-speed-label" class="menu-sub anim-label">Menu transition speed</div>
+          <div id="anim-speed" class="seg" role="radiogroup" aria-label="Menu transition speed" aria-describedby="anim-demo-desc">
+            <label class="seg-item"><input type="radio" name="anim-speed" value="0.25" aria-label="Quarter speed"><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">¼×</span></label>
+            <label class="seg-item"><input type="radio" name="anim-speed" value="0.5" aria-label="Half speed"><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">½×</span></label>
+            <label class="seg-item"><input type="radio" name="anim-speed" value="1" aria-label="Normal" checked><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">1×</span><span class="seg-sub" aria-hidden="true">Normal</span></label>
+            <label class="seg-item"><input type="radio" name="anim-speed" value="2" aria-label="Double speed"><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">2×</span></label>
+            <label class="seg-item"><input type="radio" name="anim-speed" value="4" aria-label="Four times speed"><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">4×</span></label>
+          </div>
+          <div id="anim-demo" class="anim-demo" aria-hidden="true">
+            <div class="anim-demo-screen">
+              <div class="anim-demo-top"><i class="d-logo"></i><i class="d-title"></i><i class="d-burger"></i></div>
+              <div class="anim-demo-chat"><i class="d-b d-l"></i><i class="d-b d-r"></i><i class="d-b d-l s"></i></div>
+              <div class="anim-demo-menu"><i class="d-pill"></i><i class="d-row"></i><i class="d-row s"></i><i class="d-row"></i></div>
+              <span id="anim-demo-speed" class="anim-demo-speed">1×</span>
+            </div>
+          </div>
+          <p id="anim-demo-desc" class="vh">Preview: a sample menu slides in, pauses, then fades out at the selected speed.</p>
+          <p class="anim-demo-rm">Preview paused because Reduce motion is on.</p>
+          <p class="anim-note">Higher is faster: 2× means menu animations take half as long.</p>
+          <!-- Background fade speed (Oct 2026): how long the site background takes to cross-fade when you switch chats.
+               localStorage bc-bg-fade (0.25 / 0.5 / 1 / 2 / 4; 26.10.2: same five steps, labels and layout as Menu transition speed);
+               app.js reads it (BGX_FADE). Reduce motion always swaps at once. -->
+          <div id="bgfade-speed-label" class="menu-sub anim-label">Background fade speed</div>
+          <div id="bgfade-speed" class="seg" role="radiogroup" aria-labelledby="bgfade-speed-label">
+            <label class="seg-item"><input type="radio" name="bgfade-speed" value="0.25" aria-label="Quarter speed"><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">¼×</span></label>
+            <label class="seg-item"><input type="radio" name="bgfade-speed" value="0.5" aria-label="Half speed"><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">½×</span></label>
+            <label class="seg-item"><input type="radio" name="bgfade-speed" value="1" aria-label="Normal" checked><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">1×</span><span class="seg-sub" aria-hidden="true">Normal</span></label>
+            <label class="seg-item"><input type="radio" name="bgfade-speed" value="2" aria-label="Double speed"><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">2×</span></label>
+            <label class="seg-item"><input type="radio" name="bgfade-speed" value="4" aria-label="Four times speed"><span class="seg-dot" aria-hidden="true"></span><span class="seg-txt" aria-hidden="true">4×</span></label>
+          </div>
+          <p class="anim-note">How gently the background fades from one chat's picture to the next.</p>
+          <hr class="menu-sep notify-sep" aria-hidden="true">
+          <!-- Delete animations (beta.8; "Message delete characters" in beta.7, the top-level "Snap character" row before). A plain heading
+               (wand icon) with the picker right under it, no fold-out. Internal ids/keys keep the legacy spell/snap names
+               (menu-spell, snap-label, snapchar-choices, data-snapchar, localStorage snapChar) so saved picks survive.
+               Tapping a character plays its preview at the heading (menu.js).
+               26.10.2: each option starts with a small icon of its character (static/snap/icon/, the same art as the
+               preview, cropped square); Take turns has a two-arrows "cycle" icon drawn in the text colour. -->
+          <div id="menu-spell" class="spell-sec">
+            <p class="spell-heading"><span class="spell-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 20L15 9"/><path d="M17 3v3M15.5 4.5h3M20 8v2M19 9h2M11 4v2M10 5h2"/></svg></span><span id="snap-label">Delete animations</span></p>
+            <p class="spell-note">Who plays the animation when you delete a message. Tap one to preview it.</p>
+            <div id="snapchar-choices" class="choice-row" role="group" aria-labelledby="snap-label">
+              <button type="button" class="bubble-btn" data-snapchar="treant" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/treant.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Treant</span></button>
+              <button type="button" class="bubble-btn" data-snapchar="fox" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/fox.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Forest fox</span></button>
+              <button type="button" class="bubble-btn" data-snapchar="owl" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/owl.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Owl</span></button>
+              <button type="button" class="bubble-btn" data-snapchar="badger" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/badger.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Badger</span></button>
+              <button type="button" class="bubble-btn" data-snapchar="bunny" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/bunny.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Bunny</span></button>
+              <button type="button" class="bubble-btn" data-snapchar="painter" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/painter.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Painter</span></button>
+              <button type="button" class="bubble-btn" data-snapchar="robot" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/robot.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Robot</span></button>
+              <button type="button" class="bubble-btn" data-snapchar="fisherman" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/fisherman.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Fisherman</span></button>
+              <button type="button" class="bubble-btn" data-snapchar="turtle" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/turtle.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Turtle-dragon</span></button>
+              <!-- NEW-SNAPS -->
+              <button type="button" class="bubble-btn" data-snapchar="crane" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/crane.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Origami crane</span></button>
+              <button type="button" class="bubble-btn" data-snapchar="snail" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/snail.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Snail mail</span></button>
+              <button type="button" class="bubble-btn" data-snapchar="otter" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/otter.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Otter chef</span></button>
+              <button type="button" class="bubble-btn" data-snapchar="beaver" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/beaver.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Beaver builder</span></button>
+              <!-- /NEW-SNAPS -->
+              <button type="button" class="bubble-btn" data-snapchar="alt" aria-pressed="true"><svg class="snap-ico snap-ico-turns" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 9a8 8 0 0 1 14-3l2 2"/><path d="M20 4v4h-4"/><path d="M20 15a8 8 0 0 1-14 3l-2-2"/><path d="M4 20v-4h4"/></svg><span class="snap-name">Take turns</span></button>
+              <button type="button" class="bubble-btn" data-snapchar="off" aria-pressed="false"><span class="snap-name">Off</span></button>
+            </div>
+          </div>
+          <!-- 26.10.11 (send-anim): Send animations, mirroring Delete animations (picker + tap to preview). Sounds follow
+               Sound effects and the Character sounds volume, like the delete characters. Saved per account (/api/account/prefs "send_anim"). -->
+          <div id="menu-sendanim" class="spell-sec">
+            <p class="spell-heading"><span class="spell-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 11l18-8-8 18-2-8z"/></svg></span><span id="sendanim-label">Send animations</span></p>
+            <p class="spell-note">Who delivers your message when you press Send. Tap one to preview it. Each has a soft, quiet sound that follows Sound effects.</p>
+            <!-- 26.10.13 (Luke): both pickers list the styles, then Take turns, then Off LAST (order only). -->
+            <div id="sendanim-choices" class="choice-row" role="group" aria-labelledby="sendanim-label">
+              <button type="button" class="bubble-btn" data-sendanim="robot" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/robot.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Robot printer</span></button>
+              <button type="button" class="bubble-btn" data-sendanim="crane" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/crane.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Origami airmail</span></button>
+              <button type="button" class="bubble-btn" data-sendanim="snail" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/snail.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Snail express</span></button>
+              <button type="button" class="bubble-btn" data-sendanim="beaver" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/beaver.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Beaver builder</span></button>
+              <button type="button" class="bubble-btn" data-sendanim="turtle" aria-pressed="false"><img class="snap-ico" src="/static/snap/icon/turtle.svg?v=1" width="24" height="24" alt="" aria-hidden="true" draggable="false"><span class="snap-name">Turtle dragon</span></button>
+              <button type="button" class="bubble-btn" data-sendanim="sparkle" aria-pressed="false"><span class="snap-name">Sparkles</span></button>
+              <button type="button" class="bubble-btn" data-sendanim="alt" aria-pressed="false"><span class="snap-name">Take turns</span></button>
+              <button type="button" class="bubble-btn" data-sendanim="" aria-pressed="true"><span class="snap-name">Off</span></button>
+            </div>
+            <!-- 26.10.13: Speed (duration multiplier, 0.2 = fast .. 2 = slow, default 0.75). Tap the label to reset. -->
+            <label class="vol-row" for="sendanim-speed"><button type="button" id="sendanim-speed-reset" class="link-btn" title="Tap to reset to the default">Speed</button> <output id="sendanim-speed-val" for="sendanim-speed">1.33×</output></label>
+            <div class="vol-row" aria-hidden="true" style="margin-top:0"><span>Fast</span><span>Slow</span></div>
+            <input id="sendanim-speed" class="vol-range" type="range" min="0.2" max="2" step="0.05" value="0.75" aria-label="Send animation speed, fast to slow">
+            <p class="spell-note">Sparkles always plays at normal speed.</p>
+          </div>
+        </div>
+      </div>
+      <span class="menu-label" hidden>Profile picture</span>
+      <!-- Moved: profile picture lives in Profile settings (#profile-pop). Kept hidden so existing JS ids still resolve. -->
+      <div id="menu-profile-picture" hidden>
+        <img id="menu-photo" alt="" width="72" height="72" src="/static/maple-leaf.svg?v=1">
+        <button id="menu-profile-change" class="text-link" type="button">Change profile picture</button>
+        <div id="menu-profile-actions" class="actions" hidden>
+          <button id="menu-profile-cancel" class="ghost" type="button">Cancel</button>
+          <button id="menu-profile-apply" class="solid" type="button">Apply</button>
+        </div>
+        <p id="menu-profile-note" class="sub" role="status"></p>
+      </div>
+      <hr class="menu-sep" aria-hidden="true">
+      <!-- Bottom group, where the old dark-mode button was -->
+      <button id="menu-profile" type="button">Profile settings</button>
+      <button id="menu-bug" class="menu-row" type="button"><span class="menu-row-ico bug-ico" aria-hidden="true"></span><span class="menu-row-label">Report a bug</span></button>
+      <a id="menu-about" class="menu-link" href="/about">About BranchChat</a>
+      <a id="menu-license" class="menu-link menu-license" href="/license">License</a>
+      <!-- Optional tip jar (Ko-fi). Plain link, opens a new tab; no badges or prompts. -->
+      <a id="menu-support" class="menu-link menu-support" href="https://ko-fi.com/branchchat" target="_blank" rel="noopener noreferrer">Support BranchChat <span class="menu-support-heart" aria-hidden="true">&#9829;</span><span class="vh"> (opens Ko-fi in a new tab)</span></a>
+      <button id="menu-whatsnew" type="button">What's new</button>
+      <button id="menu-logout" type="button">Logout</button>
+      <!-- Patch notes + version pair under Logout. Version text and label are filled at runtime from the header version (menu.js). -->
+      <div id="menu-pn-row" class="menu-pn-row">
+        <a id="menu-patch-notes" class="menu-pn-btn" href="/patch-notes">Patch notes</a>
+        <a id="menu-ver" class="ver menu-ver" href="/patch-notes" title="Patch notes" hidden></a>
+        <!-- TEMPORARY TEST (26.10.5 hotfix): full-screen toggle, icon only, bottom right of the menu. Remove this button,
+             the "fs-test" block in app.js and the #fs-test rules in app.css to take it out. -->
+        <button id="fs-test" class="fs-test" type="button" aria-label="Full screen" aria-pressed="false" title="Full screen">
+          <svg class="fs-enter" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg>
+          <svg class="fs-exit" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M20 10h-6V4M14 10l7-7M4 14h6v6M10 14l-7 7"/></svg>
+        </button>
+      </div>
+      <p id="fs-hint" class="fs-hint" hidden>On iPhone, use Share &rarr; Add to Home Screen to open BranchChat without the browser bars.</p>
+    </div>
+  </div>
+</header>
+<div id="shell">
+  <aside id="sidebar">
+    <!-- chatlist-pin-reorder: the "Conversations" title row is gone; the collapse toggle is a round button on the panel edge (desktop). -->
+    <button id="side-collapse" type="button" aria-label="Collapse sidebar" title="Collapse sidebar"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M14.5 6l-6 6 6 6"/></svg></button>
+    <div id="share-pick" role="status" hidden>
+      <div class="share-pick-text"><strong>Choose where to share</strong><span id="share-pick-link"></span></div>
+      <button id="share-pick-cancel" class="ghost" type="button">Cancel</button>
+    </div>
+    
+    <div id="people">
+      <!-- chatlist-pin-reorder: ONE scroll container. Lobby, groups and one-to-one chats share one list (#friends);
+           pinned chats come first, "Archived Chats" is the last row. The archived view swaps this list in place. -->
+      <div id="arch-head" hidden><button id="arch-back" type="button" aria-label="Back to conversations"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M14.5 6l-6 6 6 6"/></svg><span>Back</span></button><strong>Archived Chats</strong></div>
+      <div id="requests"></div>
+      <div id="friends"></div>
+      <button id="lobby-row" class="row active" type="button">
+        <span id="lobby-led" class="led" title="Not encrypted" aria-label="Not encrypted"></span>
+        <strong>Lobby</strong>
+        <span class="sub" id="lobby-sub">Opt in to the family room</span>
+      </button>
+    </div>
+    <!-- 26.10.2: New group and Add friend moved from the top of the list to a small footer just above the account bar line. -->
+    <div id="side-actions">
+      <button id="new-group" class="row side-act" type="button" aria-label="New group" title="New group">
+        <span class="ng-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zm0 2c-3.3 0-7 1.6-7 4v2h10.3a6 6 0 0 1-.3-2c0-1.3.4-2.5 1-3.5-1.2-.3-2.5-.5-4-.5zm9-1v-3h-2v3h-3v2h3v3h2v-3h3v-2h-3z"/></svg></span>
+        <span class="ng-text">New group</span>
+      </button>
+      <button id="add-friend-row" class="row side-act" type="button" aria-label="Add friend" title="Add friend">
+        <span class="ng-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M10 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3.6 0-8 1.8-8 4.5V20h11.1a6.5 6.5 0 0 1 3.6-6.3C15 13.2 12.6 13 10 13zm8.5-1a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm.7 2v1.8H21v1.4h-1.8V19h-1.4v-1.8H16v-1.4h1.8V14h1.4z"/></svg></span>
+        <span class="ng-text">Add friend</span>
+      </button>
+    </div>
+    <div id="me-dock">
+      <div id="me-bar">
+        <button id="me-open" type="button" aria-expanded="false" aria-controls="profile-pop">
+          <img id="me-photo" alt="" width="40" height="40" src="/static/maple-leaf.svg?v=1">
+          <span id="me-name">Account</span>
+        </button>
+        <button id="me-gear" type="button" aria-label="Profile settings">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M19.4 13.5a7.7 7.7 0 0 0 .1-1.5 7.7 7.7 0 0 0-.1-1.5l2-1.6-2-3.4-2.4 1a7.4 7.4 0 0 0-2.6-1.5L14 2h-4l-.4 2.5a7.4 7.4 0 0 0-2.6 1.5l-2.4-1-2 3.4 2 1.6a7.7 7.7 0 0 0-.1 1.5 7.7 7.7 0 0 0 .1 1.5l-2 1.6 2 3.4 2.4-1a7.4 7.4 0 0 0 2.6 1.5L10 22h4l.4-2.5a7.4 7.4 0 0 0 2.6-1.5l2.4 1 2-3.4-2-1.6zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+  <button id="side-expand" type="button" aria-label="Expand sidebar" title="Expand sidebar">&rsaquo;</button>
+  <main>
+    <div id="welcome" aria-live="polite">
+      <h2 class="welcome-title">Welcome to <span class="bc-logo"><b>Branch</b><i>Chat</i><sup class="tm" aria-label="trademark">TM</sup></span></h2>
+      <p class="welcome-sub">Select a chat to start messaging.</p>
+      <p class="welcome-sub-empty">Your chats will show up here once you add someone.</p>
+      <div id="first-chat" class="first-chat">
+        <strong>Start your first chat</strong>
+        <p class="sub">Invite someone new with a link, or add a person who already has a BranchChat account.</p>
+      </div>
+      <!-- 26.10.13.10: same Ko-fi link as under the composer, centered under the welcome text -->
+      <p id="welcome-support"><a href="https://ko-fi.com/branchchat" target="_blank" rel="noopener noreferrer" aria-label="Support BranchChat.app on Ko-fi (opens in a new tab)">Support BranchChat.app <span class="cs-heart" aria-hidden="true">&#10084;&#65039;</span></a></p>
+    </div>
+    <div id="thread-head">
+      <!-- Back arrow beside the chat picture. Shown on every screen size since 26.10.2: closes the chat (app.js goHome);
+           wide screens then show the welcome pane beside the list, phones go back to the list. -->
+      <button id="chat-back" type="button" aria-label="Back to chats" title="Back to chats"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20z"/></svg></button>
+      <span id="thread-pic" aria-hidden="true"></span>
+      <div class="thread-text">
+        <strong id="thread-title">Lobby</strong>
+        <span class="sub" id="thread-sub"></span>
+      </div>
+      <div id="thread-actions"></div>
+      <button id="search-btn" type="button" aria-label="Search messages" title="Search messages"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg></button>
+      <button id="chat-menu" class="burger-btn" type="button" aria-label="Menu" title="Menu" aria-controls="app-menu"><span class="burger" aria-hidden="true"><span class="bun-top"></span><span class="lettuce"></span><span class="patty"></span><span class="bun-bottom"></span></span></button>
+    </div>
+    <!-- 26.10.11: slim reminder while this device's notifications are Off (app.js paintMuteBar). Dismissible for the session. -->
+    <div id="mute-bar" role="status" hidden><span id="mute-bar-text">&#x1F515; Notifications are off</span><button id="mute-bar-on" type="button">Turn on</button><button id="mute-bar-x" type="button" aria-label="Hide this reminder" title="Hide">&times;</button></div>
+    <div id="transcript">
+      <div id="chat-bg" hidden></div>
+      <!-- 26.10.13: pinned bar (latest pin; tap = jump, "N pinned" = list of all pins) -->
+      <div id="pin-bar" hidden><button id="pin-jump" type="button" class="pin-jump"><span aria-hidden="true">📌</span> <span id="pin-text"></span></button><button id="pin-list-btn" type="button" class="ghost small"></button><div id="pin-list" role="list" hidden></div></div>
+      <div id="log"></div>
+    </div>
+    <form id="composer">
+      <div id="attach-name"></div>
+      <div id="send-note" role="status"></div>
+      <div id="tray" role="list" aria-label="Attachments" hidden></div>
+      <div id="reply-bar" role="group" aria-label="Replying to" hidden><button id="reply-bar-quote" class="rq" type="button" title="Show the original message"></button><button id="reply-cancel" type="button" aria-label="Cancel reply" title="Cancel reply (Esc)">&times;</button></div>
+      <div id="typing-line" role="status" aria-live="polite" hidden><span class="typing-dots" aria-hidden="true"><i></i><i></i><i></i></span><span id="typing-text"></span></div>
+      <div id="composer-row">
+        <button id="file-btn" type="button" aria-label="Attach photos, files or a location" title="Attach" aria-haspopup="dialog" aria-expanded="false" aria-controls="attach-sheet"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg></button>
+        <input id="file" type="file" hidden>
+        <div id="msg-bar">
+          <button id="emoji-btn" class="bar-btn" type="button" aria-label="Emoji and GIFs" title="Emoji and GIFs" aria-controls="picker" aria-expanded="false">
+            <svg class="ico-smile" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18.2a8.2 8.2 0 1 1 0-16.4 8.2 8.2 0 0 1 0 16.4zM8.6 10.8a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8zm6.8 0a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8zM12 17.4c2.3 0 4.2-1.4 5-3.4H7c.8 2 2.7 3.4 5 3.4z"/></svg>
+            <span class="ico-gif" aria-hidden="true">GIF</span>
+            <svg class="ico-kb" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M20 5H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 12H4V7h16v10zM6 8h2v2H6V8zm3 0h2v2H9V8zm3 0h2v2h-2V8zm3 0h2v2h-2V8zm-9 3h2v2H6v-2zm3 0h2v2H9v-2zm3 0h2v2h-2v-2zm3 0h2v2h-2v-2zM8 14h8v2H8v-2z"/></svg>
+          </button>
+          <!-- 26.10.3: its own GIF button, so people find GIFs (opens the same panel on the GIF tab) -->
+          <button id="gif-btn" class="bar-btn" type="button" aria-label="GIFs" title="GIFs" aria-controls="picker" aria-expanded="false"><span class="ico-gif" aria-hidden="true">GIF</span></button>
+          <textarea id="text" rows="1" maxlength="2000" placeholder="Message"></textarea>
+          <button id="send" type="submit" aria-label="Send" title="Send"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg></button>
+        </div>
+      </div>
+      <!-- kofi-topbar (Oct 21 2026): small Ko-fi tip link under the composer, right-aligned under Send. New tab. -->
+      <p id="composer-support"><a href="https://ko-fi.com/branchchat" target="_blank" rel="noopener noreferrer" aria-label="Support BranchChat.app on Ko-fi (opens in a new tab)">Support BranchChat.app <span class="cs-heart" aria-hidden="true">&#10084;&#65039;</span></a></p>
+    </form>
+    <div id="picker" data-bc-motion="menu" hidden>
+      <!-- 26.10.3: the Emoji / GIF tabs sit at the top, above the search box (it searches whichever tab is showing) -->
+      <div id="picker-tabs" role="tablist" aria-label="Emoji, GIFs or stickers">
+        <button id="tab-emoji" type="button" role="tab" data-tab="emoji" aria-selected="true" aria-controls="emoji-pop" tabindex="0">Emoji</button>
+        <button id="tab-gif" type="button" role="tab" data-tab="gif" aria-selected="false" aria-controls="gif-pop" tabindex="-1">GIF</button>
+        <button id="tab-stickers" type="button" role="tab" data-tab="stickers" aria-selected="false" aria-controls="sticker-pop" tabindex="-1">Stickers</button>
+      </div>
+      <div id="picker-search-row"><input id="picker-search" type="search" placeholder="Search emoji" aria-label="Search emoji" autocomplete="off" enterkeyhint="search"></div>
+      <div id="emoji-pop" class="picker-pane" role="tabpanel" aria-label="Emoji"></div>
+      <div id="gif-pop" class="picker-pane" role="tabpanel" aria-label="GIFs" hidden>
+        <div id="gif-grid"></div>
+        <p id="gif-note" class="sub" role="status" aria-live="polite"></p>
+        <p id="gif-credit" class="sub">GIFs powered by KLIPY</p>
+      </div>
+      <!-- 26.10.4: stickers (stickers.js fills this: pack shortcuts, Recently used, then each pack) -->
+      <div id="sticker-pop" class="picker-pane" role="tabpanel" aria-label="Stickers" hidden></div>
+    </div>
+  </main>
+</div>
+<!-- Footer: only the small trademark line here, in very small print (Oct 18 2026). The full footer with the
+     1 John 1:7 verse and the memorial line now appears on the About page only, so the other pages stay uncluttered. -->
+<footer id="bc-footer" class="bc-mini">
+  <p class="legal">&copy; 2026 BranchChat. BranchChat&trade; is a trademark of BranchChat. <a class="bc-license-link" href="/license">License</a></p>
+</footer>
+<div id="react-pop" data-bc-motion="menu" role="menu" aria-label="Message actions" hidden>
+  <div id="react-quick" role="group" aria-label="React"></div>
+  <div id="react-extra" hidden>
+    <input id="react-search" placeholder="Search emoji" autocomplete="off" enterkeyhint="search">
+    <div id="react-grid"></div>
+  </div>
+  <div id="react-card">
+    <div id="react-who" role="list" aria-label="Reactions" hidden></div>
+    <p id="react-note" class="sub" role="status"></p>
+    <button id="react-reply" type="button" role="menuitem" hidden><svg class="rp-ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 6 6v5"/></svg><span class="rp-label">Reply</span></button>
+    <button id="react-copy" type="button" role="menuitem" hidden><svg class="rp-ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v11H9zM5 15V4h10"/></svg><span class="rp-label">Copy text</span></button>
+    <button id="react-forward" type="button" role="menuitem" hidden><svg class="rp-ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="m15 14 5-5-5-5M20 9H10a6 6 0 0 0-6 6v5"/></svg><span class="rp-label">Forward</span></button>
+    <button id="react-pin" type="button" role="menuitem" hidden><svg class="rp-ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 4h6l-1 6 3 3H7l3-3zM12 13v7"/></svg><span class="rp-label">Pin</span></button>
+    <button id="react-stash" type="button" role="menuitem" hidden><img class="stash-icon rp-ic" src="/static/stash-chest.svg?v={{BC_ASSET}}" alt="" width="18" height="18"><span class="rp-label">Save to My Stash</span></button>
+    <button id="react-edit" type="button" role="menuitem" hidden><svg class="rp-ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 20h4L19 9l-4-4L4 16zM13 7l4 4"/></svg><span class="rp-label">Edit message</span></button>
+    <button id="react-download" type="button" role="menuitem" hidden><svg class="rp-ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg><span class="rp-label">Download</span></button>
+    <button id="react-delete" type="button" role="menuitem" hidden><svg class="rp-ic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg><span class="rp-label">Delete message</span></button>
+    <div id="react-foot" aria-live="off"></div>
+  </div>
+</div>
+<div id="attach-scrim" hidden></div>
+<section id="attach-sheet" role="dialog" aria-modal="true" aria-label="Attach" hidden>
+  <div id="ad-grab" aria-hidden="true"><span></span></div>
+  <div id="ad-body">
+    <div id="ad-pane-gallery" class="ad-pane" role="tabpanel" aria-label="Gallery">
+      <div id="ad-gal-grid" class="ad-grid">
+        <div id="ad-cam-tile" class="ad-tile">
+          <video id="ad-cam-live" muted playsinline autoplay hidden></video>
+          <button id="ad-cam-open" type="button" aria-label="Open the camera"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path fill="currentColor" d="M9.2 3.5 7.6 5.5H4.5A2.5 2.5 0 0 0 2 8v10a2.5 2.5 0 0 0 2.5 2.5h15A2.5 2.5 0 0 0 22 18V8a2.5 2.5 0 0 0-2.5-2.5h-3.1l-1.6-2zM12 8.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.8a2.7 2.7 0 1 0 0 5.4 2.7 2.7 0 0 0 0-5.4z"/></svg><span id="ad-cam-label">Camera</span></button>
+          <button id="ad-cam-flip" type="button" aria-label="Switch camera" title="Switch camera" hidden><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M9.2 3.5 7.6 5.5H4.5A2.5 2.5 0 0 0 2 8v10a2.5 2.5 0 0 0 2.5 2.5h15A2.5 2.5 0 0 0 22 18V8a2.5 2.5 0 0 0-2.5-2.5h-3.1l-1.6-2zM12 8a5 5 0 0 1 4.6 3H18l-2.5 3-2.5-3h1.5a3 3 0 0 0-5.3-.6L8 9.2A5 5 0 0 1 12 8zm-4 4.9L10.5 16H9a3 3 0 0 0 5.3.6l1.2 1.2A5 5 0 0 1 7.4 16H6z"/></svg></button>
+        </div>
+        <label id="ad-gal-choose" class="ad-tile ad-choose" for="ad-gal-input" role="button" tabindex="0"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path fill="currentColor" d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 16H5V5h14v14zm-5.1-6.7-3 3.9-2.1-2.6L6 17h12l-4.1-4.7zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg><span>Choose photos &amp; videos</span></label>
+      </div>
+      <p id="ad-gal-hint" class="ad-hint">Your browser only shows BranchChat the photos and videos you pick. They stay on this device until you send them.</p>
+    </div>
+    <div id="ad-pane-file" class="ad-pane" role="tabpanel" aria-label="File" hidden>
+      <label id="ad-file-choose" class="ad-choose ad-choose-row" for="ad-file-input" role="button" tabindex="0"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2zm1 7h2v3h3v2h-3v3h-2v-3H8v-2h3v-3z"/></svg><span>Choose files</span></label>
+      <ul id="ad-file-list"></ul>
+      <p class="ad-hint">Any kind of file, up to 256 MB each. Files are end-to-end encrypted before they leave this device.</p>
+    </div>
+    <div id="ad-pane-location" class="ad-pane" role="tabpanel" aria-label="Location" hidden>
+      <div class="ad-loc">
+        <span class="ad-loc-pin" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></span>
+        <p id="ad-loc-text">Send where you are right now as a map link. It is end-to-end encrypted like any message, and BranchChat does not look it up or make a preview of it.</p>
+        <p id="ad-loc-coords" hidden></p>
+        <div class="ad-loc-actions">
+          <button id="ad-loc-find" class="solid" type="button">Find my location</button>
+          <button id="ad-loc-send" class="solid" type="button" hidden>Send this location</button>
+          <button id="ad-loc-cancel" class="ghost" type="button" hidden>Cancel</button>
+        </div>
+        <p id="ad-loc-note" class="ad-hint" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+  <div id="ad-sendbar" hidden>
+    <span id="ad-sendbar-text">Add to the message, then press Send</span>
+    <button id="ad-send" type="button" aria-label="Add to the message"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg><span id="ad-send-n">1</span></button>
+  </div>
+  <div id="ad-tabs" role="tablist" aria-label="Attach">
+    <button id="ad-tab-gallery" type="button" role="tab" data-tab="gallery" aria-selected="true" aria-controls="ad-pane-gallery"><span class="ad-tab-ico"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-5.1 9.3-3 3.9-2.1-2.6L6 17h12l-4.1-4.7zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg></span><span>Gallery</span></button>
+    <button id="ad-tab-camera" type="button" role="tab" data-tab="camera" aria-selected="false"><span class="ad-tab-ico"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M9.2 3.5 7.6 5.5H4.5A2.5 2.5 0 0 0 2 8v10a2.5 2.5 0 0 0 2.5 2.5h15A2.5 2.5 0 0 0 22 18V8a2.5 2.5 0 0 0-2.5-2.5h-3.1l-1.6-2zM12 8.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.8a2.7 2.7 0 1 0 0 5.4 2.7 2.7 0 0 0 0-5.4z"/></svg></span><span>Camera</span></button>
+    <button id="ad-tab-file" type="button" role="tab" data-tab="file" aria-selected="false" aria-controls="ad-pane-file"><span class="ad-tab-ico"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg></span><span>File</span></button>
+    <button id="ad-tab-location" type="button" role="tab" data-tab="location" aria-selected="false" aria-controls="ad-pane-location"><span class="ad-tab-ico"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></span><span>Location</span></button>
+  </div>
+  <input id="ad-gal-input" class="pick-input" type="file" accept="image/*,video/*" multiple tabindex="-1" aria-hidden="true">
+  <input id="ad-file-input" class="pick-input" type="file" multiple tabindex="-1" aria-hidden="true">
+  <input id="ad-cap-input" type="file" accept="image/*" capture="environment" hidden>
+</section>
+<div id="cam-view" role="dialog" data-bc-motion="fade" aria-modal="true" aria-label="Camera" hidden>
+  <video id="cam-video" muted playsinline autoplay></video>
+  <img id="cam-shot" alt="The photo you just took" hidden>
+  <video id="cam-clip" playsinline loop controls aria-label="The video you just recorded" hidden></video>
+  <div id="cam-stage" aria-hidden="true"></div>
+  <span id="cam-focus" aria-hidden="true" hidden></span>
+  <button id="cam-close" type="button" aria-label="Close the camera" title="Close"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7l1.4-1.4 6.3 6.3 6.3-6.3z"/></svg></button>
+  <div id="cam-top">
+    <button id="cam-flash" type="button" data-mode="auto" aria-label="Flash" title="Flash" hidden><svg class="cf-off" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M3.3 2.3 2 3.6l5 5V13h3v9l3.6-6.2 4.8 4.8 1.3-1.3zM17 10h-4l4-8H7v1.2l8.6 8.6z"/></svg><svg class="cf-auto" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" hidden><path fill="currentColor" d="M3 2v11h3v9l7-12H9l4-8zm13.3 0-3.1 9h2l.6-2h3.4l.6 2h2l-3.1-9zm.1 5.4 1.1-3.3 1.1 3.3z"/></svg><svg class="cf-on" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" hidden><path fill="currentColor" d="M7 2v11h3v9l7-12h-4l4-8z"/></svg><svg class="cf-torch" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" hidden><path fill="currentColor" d="M6 2h12v5l-2 3v12H8V10L6 7zm2 2v1h8V4zm4 8a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg><span id="cam-flash-txt">Auto</span></button>
+    <button id="cam-ev-btn" type="button" aria-label="Brightness" title="Brightness" aria-expanded="false" aria-controls="cam-ev" hidden><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2v6a3 3 0 0 1 0-6zM11 1h2v3h-2zm0 19h2v3h-2zM3.5 4.9l1.4-1.4 2.1 2.1-1.4 1.4zm13.1 13.1 1.4-1.4 2.1 2.1-1.4 1.4zM1 11h3v2H1zm19 0h3v2h-3zM3.5 19.1l2.1-2.1 1.4 1.4-2.1 2.1zM16.6 6l2.1-2.1 1.4 1.4L18 7.4z"/></svg></button>
+  </div>
+  <div id="cam-timer" role="timer"><span class="cam-dot" aria-hidden="true"></span><span id="cam-timer-txt">0:00</span><span id="cam-timer-max"> / 1:00</span></div>
+  <p id="cam-note" role="status" aria-live="polite"></p>
+  <div id="cam-ev" hidden>
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/></svg>
+    <input id="cam-ev-range" type="range" min="-2" max="2" step="0.1" value="0" aria-label="Brightness (exposure)">
+    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM11 1h2v3h-2zm0 19h2v3h-2zM1 11h3v2H1zm19 0h3v2h-3zM3.5 4.9l1.4-1.4 2.1 2.1-1.4 1.4zm13.1 13.1 1.4-1.4 2.1 2.1-1.4 1.4zM3.5 19.1l2.1-2.1 1.4 1.4-2.1 2.1zM16.6 6l2.1-2.1 1.4 1.4L18 7.4z"/></svg>
+    <button id="cam-ev-val" type="button" title="Back to 0" aria-label="Reset brightness">0.0</button>
+  </div>
+  <div id="cam-controls">
+    <button id="cam-zoom" type="button" aria-label="Zoom" hidden>1&#xD7;</button>
+    <span class="cam-spacer"></span>
+    <span id="cam-shutter-wrap">
+      <span id="cam-lock" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3z"/></svg><svg class="cam-lock-up" viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="m12 6-6 6 1.4 1.4 4.6-4.6 4.6 4.6L18 12z"/></svg></span>
+      <svg id="cam-ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke-width="5" class="cam-ring-bg"/><circle id="cam-ring-fg" cx="50" cy="50" r="46" fill="none" stroke-width="5" transform="rotate(-90 50 50)"/></svg>
+      <button id="cam-shutter" type="button" aria-label="Take a photo. Hold to record a video." title="Tap for a photo, hold for a video"></button>
+    </span>
+    <button id="cam-flip" type="button" aria-label="Switch camera" title="Switch camera"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M9.2 3.5 7.6 5.5H4.5A2.5 2.5 0 0 0 2 8v10a2.5 2.5 0 0 0 2.5 2.5h15A2.5 2.5 0 0 0 22 18V8a2.5 2.5 0 0 0-2.5-2.5h-3.1l-1.6-2zM12 8a5 5 0 0 1 4.6 3H18l-2.5 3-2.5-3h1.5a3 3 0 0 0-5.3-.6L8 9.2A5 5 0 0 1 12 8zm-4 4.9L10.5 16H9a3 3 0 0 0 5.3.6l1.2 1.2A5 5 0 0 1 7.4 16H6z"/></svg></button>
+    <p id="cam-hint">Tap for a photo, hold for a video</p>
+  </div>
+  <div id="cam-screen-flash" aria-hidden="true" hidden></div>
+  <div id="cam-review" hidden>
+    <button id="cam-retake" class="ghost" type="button">Retake</button>
+    <button id="cam-lift" class="ghost" type="button" aria-pressed="true" hidden><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2v6a3 3 0 0 1 0-6z"/></svg><span id="cam-lift-txt">Brightened</span></button>
+    <button id="cam-send" class="solid" type="button" aria-label="Use this photo"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg><span id="cam-send-txt">Use photo</span></button>
+  </div>
+</div>
+<dialog id="upload-dialog">
+  <h2>You can not upload this file because:</h2>
+  <p id="upload-reason"></p>
+  <div class="actions"><button id="upload-close" class="solid" type="button">Close</button></div>
+</dialog>
+<dialog id="friend-dialog">
+  <!-- 26.10.6 invite rework: the no-email invite LINK + QR is the primary path, at the top. The person who opens it types
+       their own name and email on the new-account page. Then "Pending invites". Inviting by email is a smaller,
+       secondary option at the very bottom. -->
+  <h2>Invite friend or family to BranchChat</h2>
+  <section class="friend-primary" aria-labelledby="friend-primary-head">
+    <h3 id="friend-primary-head" class="friend-primary-head">Share an invite link</h3>
+    <p class="sub friend-code-lead">Send the link any way you like, or let them scan the QR code. They open it and type their own name and email. It works once and lasts 72 hours.</p>
+    <button id="friend-code-make" class="solid friend-code-make" type="button">Create invite link</button>
+    <div id="friend-invite-linkbox" class="friend-code-box" hidden>
+      <input id="friend-invite-link" readonly aria-label="Invite link">
+      <div class="friend-link-actions">
+        <button id="friend-invite-share" class="solid share-btn" type="button">Share link</button>
+        <button id="friend-invite-copy" class="ghost" type="button">Copy link</button>
+        <button id="friend-invite-qr" class="ghost qr-btn" type="button">Show QR code</button>
+      </div>
+      <canvas id="friend-qr-inline" class="friend-qr-inline" role="img" aria-label="QR code for this invite link"></canvas>
+    </div>
+    <p id="friend-invite-note" class="sub" role="status" aria-live="polite"></p>
+  </section>
+  <!-- 26.10.2: invites still waiting to be used. Members see the ones they sent; admins and the owner see everyone's.
+       Each row has Cancel (the link stops working at once). Filled by app.js loadPendingInvites(). -->
+  <section id="friend-pending" class="friend-pending" hidden>
+    <h3 class="friend-pending-head">Pending invites</h3>
+    <ul id="friend-pending-list" class="friend-pending-list"></ul>
+    <p id="friend-pending-note" class="sub" role="status" aria-live="polite"></p>
+  </section>
+  <section class="friend-email" aria-labelledby="friend-email-head">
+    <h3 id="friend-email-head" class="friend-email-head">Or invite by email instead</h3>
+    <div class="friend-email-row">
+      <input id="friend-invite" type="email" placeholder="Email address" aria-label="Email address" autocomplete="email" maxlength="200">
+      <button id="friend-invite-send" class="ghost" type="button">Send invite</button>
+    </div>
+    <p id="friend-email-note" class="sub" role="status" aria-live="polite"></p>
+    <div class="actions friend-email-actions"><button id="friend-invite-resend" class="ghost" type="button" hidden>Resend</button></div>
+  </section>
+  <div class="actions">
+    <button id="friend-invite-cancel" class="ghost" type="button">Close</button>
+  </div>
+</dialog>
+<dialog id="addfriend-dialog" aria-labelledby="addfriend-title">
+  <h2 id="addfriend-title">Add friend</h2>
+  <p class="sub">Find someone who already has a BranchChat account. They get a friend request, and you can chat once they accept.</p>
+  <form id="add-friend">
+    <div id="friend-pick-wrap">
+    <input id="friend-name" placeholder="Username or email" aria-label="Username or email" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="200" aria-autocomplete="list" aria-controls="friend-pick" aria-expanded="false">
+    </div>
+    <button id="friend-send" class="solid" type="submit" disabled>Send request</button>
+  </form>
+  <ul id="friend-pick" role="listbox" aria-label="Matching people" data-bc-motion="menu" hidden></ul>
+  <div id="af-notfound" class="af-notfound" hidden>
+    <p><strong>Not on BranchChat yet?</strong></p>
+    <p class="sub">Send them an invite link instead. They make an account and you're friends right away.</p>
+  </div>
+  <p id="friend-note" class="sub" role="status" aria-live="polite"></p>
+  <div id="friend-name-linkbox" class="invite-linkbox has-qr" hidden>
+    <input id="friend-name-link" readonly aria-label="Invite link">
+    <button id="friend-name-copy" class="solid share-btn" type="button">Copy link</button>
+    <button id="friend-name-qr" class="ghost qr-btn" type="button">Show QR code</button>
+  </div>
+  <div class="actions">
+    <button id="friend-name-resend" class="ghost" type="button" hidden>Resend</button>
+  </div>
+</dialog>
+<!-- 26.10.5: Report a bug. The small floating bug button (every screen) and the menu row both open this. -->
+<button id="bug-fab" class="bug-fab bug-ico" type="button" aria-label="Report a bug" title="Report a bug" aria-haspopup="dialog"></button>
+<dialog id="bug-dialog" aria-labelledby="bug-title">
+  <form id="bug-form" method="dialog">
+    <h2 id="bug-title">Report a bug</h2>
+    <p class="sub">Tell us what went wrong. We read every report.</p>
+    <label class="bug-lab" for="bug-desc">What did you see?</label>
+    <textarea id="bug-desc" rows="4" maxlength="4000" required placeholder="For example: the Send button does nothing after I attach a photo."></textarea>
+    <label class="bug-lab" for="bug-steps">What were you doing just before? <span class="sub">(optional)</span></label>
+    <textarea id="bug-steps" rows="2" maxlength="4000" placeholder="Opened a chat, tapped +, picked a photo..."></textarea>
+    <label class="bug-lab">Screenshots <span class="sub">(optional, up to 4)</span></label>
+    <input id="bug-files" type="file" accept="image/*,image/heic,image/heif,.heic,.heif" multiple hidden>
+    <div class="bug-shots"><button id="bug-add" class="ghost" type="button">Add screenshot</button><span id="bug-list" class="sub"></span></div>
+    <p id="bug-status" class="sub" role="status" aria-live="polite"></p>
+    <div class="actions"><button id="bug-cancel" class="ghost" type="button">Cancel</button><button id="bug-send" class="solid" type="submit">Send report</button></div>
+  </form>
+</dialog>
+<dialog id="mute-dialog" aria-labelledby="mute-title">
+  <h2 id="mute-title">Mute this chat</h2>
+  <p id="mute-who" class="mute-who"></p>
+  <p class="sub">No sounds, alerts or phone notifications from this chat, on all your devices. New messages still show an unread count.</p>
+  <div id="mute-opts" class="mute-opts" role="radiogroup" aria-labelledby="mute-title">
+    <label class="mute-opt"><input type="radio" name="mute-for" value="off"><span>Not muted</span></label>
+    <label class="mute-opt"><input type="radio" name="mute-for" value="1h"><span>For 1 hour</span></label>
+    <label class="mute-opt"><input type="radio" name="mute-for" value="8h"><span>For 8 hours</span></label>
+    <label class="mute-opt"><input type="radio" name="mute-for" value="1w"><span>For 1 week</span></label>
+    <label class="mute-opt"><input type="radio" name="mute-for" value="forever"><span>Until I turn it back on</span></label>
+  </div>
+  <p id="mute-status" class="sub mute-status" role="status" aria-live="polite"></p>
+</dialog>
+<div id="profile-pop" data-bc-motion="menu" hidden>
+  <div id="profile-head"><span>Profile Settings</span></div>
+  <hr class="profile-rule">
+  <div id="profile-block">
+    <div class="profile-row">
+      <div class="profile-main">
+        <img id="profile-photo" class="profile-photo" alt="Profile picture" width="112" height="112" src="/static/maple-leaf.svg?v=1">
+        <button id="profile-change" class="text-link" type="button">Change profile picture</button>
+        <input id="profile-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+      </div>
+      <div class="profile-scales" aria-hidden="true">
+        <figure class="scale-fig"><img id="profile-scale-a" alt="" width="72" height="72" src="/static/maple-leaf.svg?v=1"><figcaption>72px</figcaption></figure>
+        <figure class="scale-fig"><img id="profile-scale-b" alt="" width="48" height="48" src="/static/maple-leaf.svg?v=1"><figcaption>48px</figcaption></figure>
+        <figure class="scale-fig"><img id="profile-scale-c" alt="" width="32" height="32" src="/static/maple-leaf.svg?v=1"><figcaption>32px</figcaption></figure>
+      </div>
+      <div class="profile-namebox">
+        <span id="profile-dname" class="dname profile-dname"></span>
+        <button id="dname-edit" class="dname-edit" type="button" aria-label="Edit display name" title="Edit display name"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.2 4.3a2 2 0 0 1 2.8 0l1.7 1.7a2 2 0 0 1 0 2.8L9.4 19.1 4 20l.9-5.4L15.2 4.3zm-8.4 11.3-.4 2 2-.4 8.4-8.4-1.6-1.6-8.4 8.4z"/></svg></button>
+      </div>
+    </div>
+    <div id="profile-actions" class="actions" hidden>
+      <button id="profile-cancel" class="ghost" type="button">Cancel</button>
+      <button id="profile-apply" class="solid" type="button">Apply</button>
+    </div>
+    <p id="profile-note" class="sub" role="status"></p>
+  </div>
+  <div id="key-backup-ui" hidden>
+  <h3>Message keys</h3>
+  <p class="sub">Save a backup on a device that already opens your old messages. A new device unlocks that backup when you sign in. Saving replaces the older backup.</p>
+  <label for="backup-password">Password</label>
+  <input id="backup-password" type="password" autocomplete="current-password">
+  <div class="actions"><button id="backup-save" class="solid" type="button">Save key backup</button></div>
+  <p id="backup-note" class="sub" role="status"></p>
+  </div>
+  <details id="totp-fold" class="fold">
+  <summary>Two-factor authentication</summary>
+  <p id="totp-status" class="sub">Off. Sign-in uses your password only.</p>
+  <div id="totp-off">
+    <div class="actions"><button id="totp-start" class="solid" type="button">Set up an authenticator app</button></div>
+  </div>
+  <div id="totp-setup" hidden>
+    <p class="sub">Add an account in your authenticator app by hand. BranchChat does not make a QR code, so this secret stays on this page. It expires in 10 minutes.</p>
+    <p>Account name: BranchChat</p>
+    <p>Secret: <code id="totp-secret"></code></p>
+    <div class="actions"><button id="totp-copy" class="ghost" type="button">Copy secret</button></div>
+    <p class="sub" id="totp-uri"></p>
+    <label for="totp-confirm-code">6-digit code</label>
+    <input id="totp-confirm-code" inputmode="numeric" autocomplete="one-time-code" maxlength="8">
+    <div class="actions">
+      <button id="totp-setup-cancel" class="ghost" type="button">Cancel</button>
+      <button id="totp-confirm" class="solid" type="button">Turn on two-factor</button>
+    </div>
+  </div>
+  <div id="totp-on" hidden>
+    <p class="sub">Sign-in asks for a code from your authenticator app after the password. A backup code works once if you do not have that app.</p>
+    <label for="totp-off-code">Current code</label>
+    <input id="totp-off-code" inputmode="text" autocomplete="one-time-code" maxlength="16">
+    <div class="actions">
+      <button id="totp-regen" class="ghost" type="button">New backup codes</button>
+      <button id="totp-disable" class="danger" type="button">Turn off two-factor</button>
+    </div>
+  </div>
+  <p id="totp-note" class="sub" role="status"></p>
+  </details>
+  <details id="export-fold" class="fold">
+  <summary>Download your chats</summary>
+  <p class="sub">This file is the text this device can open. Locked messages are marked. Removed messages say they were removed. File bytes and private keys are not included.</p>
+  <div class="actions"><button id="export-chats" class="solid" type="button">Download chats</button></div>
+  <p id="export-note" class="sub" role="status"></p>
+  </details>
+  <details id="password-fold" class="fold">
+    <summary>Change password</summary>
+    <label for="pass-current">Current password</label>
+    <input id="pass-current" type="password" autocomplete="current-password">
+    <label for="pass-new">New password</label>
+    <input id="pass-new" type="password" autocomplete="new-password" maxlength="200" aria-describedby="pass-new-hint">
+    <p id="pass-new-hint" class="sub">At least 8 characters (up to 200).</p>
+    <label for="pass-again">Repeat new password</label>
+    <input id="pass-again" type="password" autocomplete="new-password">
+    <div class="actions"><button id="pass-save" class="solid" type="button">Change password</button></div>
+    <p id="pass-note" class="sub" role="status"></p>
+  </details>
+  <details id="delete-fold" class="fold">
+    <summary>Delete account</summary>
+    <p>This removes the login. Messages already saved on other phones stay there. If you are in the lobby, the room key changes for everyone still in it.</p>
+    <label for="delete-password">Password</label>
+    <input id="delete-password" type="password" autocomplete="current-password">
+    <label for="delete-name">Type your username to confirm</label>
+    <input id="delete-name" autocomplete="off" maxlength="32">
+    <div class="actions"><button id="delete-account" class="danger" type="button">Delete account</button></div>
+    <p id="delete-note" class="sub" role="status"></p>
+  </details>
+  <div class="actions" hidden><button id="account-close" class="ghost" type="button" hidden>Close</button></div>
+  <section id="owner-tools" hidden>
+    <!-- 26.10.2: the profile pop-up has no admin tools any more. Invites, the account list and reports all live on
+         the Administrator page; this one button (owner only; the section stays hidden for everyone else) opens it. -->
+    <!-- 0.23.3-beta.15: second way in, at the very bottom of the profile menu. This whole section is hidden unless you are the owner. -->
+    <a id="profile-admin" class="profile-admin-link" href="/admin"><span aria-hidden="true">&#9881;</span> Administrator</a>
+  </section>
+</div>
+<dialog id="dname-dialog">
+  <h2>Display name</h2>
+  <label for="dname-input" class="dname-label">Display name</label>
+  <input id="dname-input" type="text" maxlength="32" autocomplete="nickname">
+  <div id="dname-palette" class="dname-palette" role="group" aria-label="Name color"></div>
+  <div class="dname-preview-bubble"><p class="sub">Preview</p>
+  <div id="dname-preview" class="dname dname-preview"></div></div>
+  <label for="dname-phone">Phone number</label>
+  <input id="dname-phone" type="tel" maxlength="32" autocomplete="tel" placeholder="Optional">
+  <label class="check-row"><input id="dname-show-phone" type="checkbox"> Display phone number</label>
+  <label class="check-row"><input id="dname-show-email" type="checkbox"> Display email address</label>
+  <p class="sub">People you chat with see what you turn on here, next to your name.</p>
+  <p id="dname-note" class="sub" role="status"></p>
+  <div class="actions">
+    <button id="dname-cancel" class="ghost" type="button">Cancel</button>
+    <button id="dname-apply" class="solid" type="button">Apply</button>
+  </div>
+</dialog>
+<dialog id="edit-msg-dialog">
+  <h2>Edit message</h2>
+  <label for="edit-msg-text">Message</label>
+  <textarea id="edit-msg-text" maxlength="2000"></textarea>
+  <p id="edit-msg-lead" class="sub">Everyone in this chat sees the new text. The message shows that it was edited.</p>
+  <p id="edit-msg-note" class="sub" role="status"></p>
+  <div class="actions">
+    <button id="edit-msg-cancel" class="ghost" type="button">Cancel</button>
+    <button id="edit-msg-go" class="solid" type="button">Save</button>
+  </div>
+</dialog>
+<dialog id="backup-codes-dialog">
+  <h2>Backup codes</h2>
+  <p>Save these now. Each code works once if you do not have your authenticator app. BranchChat will not show them again.</p>
+  <ul id="backup-codes"></ul>
+  <div class="actions"><button id="backup-codes-close" class="solid" type="button">I saved these codes</button></div>
+</dialog>
+<dialog id="fwd-dialog" aria-labelledby="fwd-title">
+  <h2 id="fwd-title">Forward to</h2>
+  <p id="fwd-preview" class="sub"></p>
+  <div id="fwd-list" role="group" aria-label="Chats"></div>
+  <p id="fwd-note" class="sub" role="status"></p>
+  <div class="actions">
+    <button id="fwd-cancel" class="ghost" type="button">Cancel</button>
+    <button id="fwd-go" type="button" disabled>Send</button>
+  </div>
+</dialog>
+<div id="toast" role="status" data-bc-motion="toast" aria-live="polite" hidden></div>
+<!-- 26.10.13.4: "new version" pop-up (app.js updatePrompt). Shown when this server's /api/version differs from the
+     version this page loaded with. Refresh reloads the page in place; Later hides it for an hour or until the next version. -->
+<div id="update-prompt" role="status" aria-live="polite" hidden>
+  <span class="up-text">A new version of BranchChat is available</span>
+  <button type="button" id="update-later" class="up-later">Later</button>
+  <button type="button" id="update-refresh" class="up-refresh">Refresh</button>
+</div>
+<dialog id="logout-dialog" aria-labelledby="logout-title" aria-describedby="logout-body">
+  <h2 id="logout-title">Are you sure?</h2>
+  <p id="logout-body">You'll be logged out of BranchChat on this device.</p>
+  <div class="lo-actions">
+    <button type="button" id="logout-cancel" class="lo-cancel">Cancel</button>
+    <button type="button" id="logout-go" class="lo-go">Log out</button>
+  </div>
+</dialog>
+<dialog id="group-dialog" aria-labelledby="group-title">
+  <h2 id="group-title">New group</h2>
+  <label for="group-name">Group name</label>
+  <input id="group-name" maxlength="48" autocomplete="off" placeholder="Family, Camping trip, ...">
+  <div class="group-preview"><span id="group-preview-pic"></span><span class="sub">Group icon: the people in it, together.</span></div>
+  <p class="sub group-lead">Add friends. The group name and messages are end-to-end encrypted.</p>
+  <div id="group-pick" class="group-list" role="group" aria-label="Friends"></div>
+  <p id="group-count" class="sub"></p>
+  <p id="group-note" class="sub" role="status"></p>
+  <div class="actions">
+    <button id="group-cancel" class="ghost" type="button">Cancel</button>
+    <button id="group-go" class="solid" type="button" disabled>Create group</button>
+  </div>
+</dialog>
+<dialog id="ginfo-dialog" aria-labelledby="ginfo-title">
+  <div id="ginfo-head">
+    <span id="ginfo-pic"></span>
+    <div class="ginfo-headtext">
+      <div class="ginfo-titlerow"><h2 id="ginfo-title">Group</h2><button id="ginfo-rename" class="ghost small icon-btn" type="button" aria-label="Rename group" title="Rename group"><svg viewBox="0 0 16 16" aria-hidden="true" class="pencil"><path d="M11.3 1.6a1.6 1.6 0 0 1 2.3 0l.8.8a1.6 1.6 0 0 1 0 2.3l-8.2 8.2-3.6 1 1-3.6 7.7-8.7zm-.6 2.3-6.2 6.3-.5 1.8 1.8-.5 6.3-6.2-1.4-1.4z"/></svg></button></div>
+      <p id="ginfo-sub" class="sub"></p>
+    </div>
+  </div>
+  <div id="ginfo-rename-box" hidden>
+    <label for="ginfo-name">Group name</label>
+    <input id="ginfo-name" maxlength="48" autocomplete="off">
+    <div class="ginfo-rename-actions">
+      <button id="ginfo-name-cancel" class="ghost small" type="button">Cancel</button>
+      <button id="ginfo-name-save" class="solid small" type="button" disabled>Save name</button>
+    </div>
+  </div>
+  <!-- 26.10.4: this dialog is the group's gear (settings) menu. Invite and Members moved here from the chat header,
+       which now shows icons only. First row: invite people with a group link (owners/admins, or everyone when allowed). -->
+  <button id="ginfo-link" class="invite-cta" type="button"><span class="cta-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="9.5" cy="8" r="3.6"/><path d="M3 20c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2"/><path d="M19 7.5v6M16 10.5h6"/></svg></span><span class="cta-label">Invite people<span class="cta-sub">Share a link or QR code to this group</span></span><span class="cta-chev" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M9 5.5l6.5 6.5L9 18.5"/></svg></span></button>
+  <!-- Members: everyone in the group, with roles and Remove buttons (was the header's "Members" button). -->
+  <h3 id="ginfo-members-head" class="ginfo-section"><span class="ginfo-section-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 19.5c0-3.4 2.8-5.9 6.2-5.9s6.2 2.5 6.2 5.9"/><path d="M15.8 4.9a3.2 3.2 0 0 1 0 6.2M17.6 13.9c2.2.7 3.6 2.7 3.6 5.6"/></svg></span>Members <span id="ginfo-members-count" class="ginfo-count"></span></h3>
+  <div id="ginfo-members" class="group-list" role="list" aria-labelledby="ginfo-members-head"></div>
+  <div id="ginfo-add-box">
+    <p class="sub group-lead">Add friends</p>
+    <div id="ginfo-add" class="group-list" role="group" aria-label="Friends to add"></div>
+    <button id="ginfo-add-go" class="solid" type="button" disabled>Add</button>
+  </div>
+  <p id="ginfo-ro" class="sub" hidden>Only the group owner can change the name, picture, members and invite link. You can still view everything here, or leave the group.</p>
+  <p id="ginfo-note" class="sub" role="status"></p>
+  <div class="actions">
+    <button id="ginfo-leave" class="danger" type="button">Leave group</button>
+    <button id="ginfo-close" class="ghost" type="button">Close</button>
+  </div>
+</dialog>
+<dialog id="delete-msg-dialog" class="bubble-confirm" aria-labelledby="delete-msg-q">
+  <!-- 26.10.5: speech-bubble "Are you sure?" that rises from the Delete button and settles in the middle of the screen. -->
+  <p id="delete-msg-q" class="bubble-q">Are you sure?</p>
+  <p class="bubble-sub">This deletes the message for everyone.</p>
+  <div class="bubble-actions">
+    <button id="delete-msg-cancel" class="bubble-btn bubble-no" type="button" aria-label="Cancel, keep the message" title="Cancel"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg></button>
+    <button id="delete-msg-go" class="bubble-btn bubble-yes" type="button" aria-label="Yes, delete the message" title="Delete"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5.5 12.5l4.2 4.2L18.5 7.8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+  </div>
+</dialog>
+<dialog id="invite-dialog">
+  <h2>Invite someone</h2>
+  <label for="invite-email">Email</label>
+  <input id="invite-email" type="email" autocomplete="off">
+  <label for="invite-role">Account</label>
+  <select id="invite-role">
+    <option value="member">Member</option>
+    <option value="admin">Admin</option>
+  </select>
+  <div id="invite-list"></div>
+  <p id="invite-note" role="status"></p>
+  <div id="invite-linkbox" class="invite-linkbox has-qr" hidden>
+    <input id="invite-link" readonly aria-label="Invite link">
+    <button id="invite-copy" class="solid share-btn" type="button">Copy link</button>
+    <button id="invite-qr" class="ghost qr-btn" type="button">Show QR code</button>
+  </div>
+  <div class="actions">
+    <button id="invite-cancel" class="ghost" type="button">Close</button>
+    <button id="invite-send" class="solid" type="button">Send invite</button>
+  </div>
+</dialog>
+<dialog id="owner-confirm">
+  <h2 id="owner-confirm-title"></h2>
+  <p id="owner-confirm-body"></p>
+  <div id="owner-confirm-typebox" hidden>
+    <label for="owner-confirm-type" id="owner-confirm-typelabel"></label>
+    <input id="owner-confirm-type" autocomplete="off" autocapitalize="off" spellcheck="false">
+  </div>
+  <div class="actions">
+    <button id="owner-confirm-cancel" class="ghost" type="button" autofocus>Cancel</button>
+    <button id="owner-confirm-go" class="danger" type="button"></button>
+  </div>
+</dialog>
+<!-- 26.10.5: friend profile card. Picture, name, then email and phone only if the friend shares them. -->
+<dialog id="friend-card" aria-labelledby="friend-card-name" tabindex="-1">
+  <div id="friend-card-photo" class="fc-photo"></div>
+  <button id="friend-card-close" type="button" class="x-close" aria-label="Close" title="Close"><svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></button>
+  <h2 id="friend-card-name" class="fc-name"></h2>
+  <p id="friend-card-real" class="fc-real" hidden></p>
+  <p id="friend-card-status" class="fc-status"></p>
+  <ul id="friend-card-contact" class="fc-contact"></ul>
+  <p id="friend-card-none" class="fc-none" hidden>No contact info shared.</p>
+  <div class="fc-nick">
+    <button id="friend-card-nick-view" type="button" class="fc-nick-view"><span class="k">Nickname</span><span id="friend-card-nick-val" class="v"></span><span class="chev" aria-hidden="true">&rsaquo;</span></button>
+    <form id="friend-card-nick-edit" class="fc-nick-edit" hidden>
+      <label for="friend-card-nick-input" class="k">Nickname</label>
+      <input id="friend-card-nick-input" type="text" maxlength="32" autocomplete="off">
+      <p class="sub">Only you see this. Leave it empty to use their own name.</p>
+      <p id="friend-card-nick-err" class="fc-err" role="alert"></p>
+      <div class="actions"><button id="friend-card-nick-cancel" class="ghost" type="button">Cancel</button><button class="solid" type="submit">Save</button></div>
+    </form>
+  </div>
+  <button id="friend-card-remove" type="button" class="fc-remove">Remove friend</button>
+</dialog>
+<dialog id="remove-dialog">
+  <h2 id="remove-title">Remove this friend?</h2>
+  <p id="remove-who"></p>
+  <label class="check" for="remove-ack">
+    <input id="remove-ack" type="checkbox">
+    <span id="remove-ack-text">You are about to remove this friend. Only proceed if that is your intention. There is no undoing this. It is permanent.</span>
+  </label>
+  <div class="actions">
+    <button id="remove-cancel" class="ghost" type="button">Cancel</button>
+    <button id="remove-go" class="danger" type="button" disabled>Remove friend</button>
+  </div>
+</dialog>
+<dialog id="leave-dialog">
+  <h2>Leave the lobby?</h2>
+  <p>You will stop reading new lobby messages. Messages already on this device stay here. The room key changes for everyone who is still in it.</p>
+  <div class="actions">
+    <button id="leave-cancel" class="ghost" type="button">Stay</button>
+    <button id="leave-go" class="solid" type="button">Leave</button>
+  </div>
+</dialog>
+<!-- 0.22.7 Add to Home Screen: START -->
+<dialog id="a2hs-dialog" aria-labelledby="a2hs-title" aria-describedby="a2hs-lead">
+  <h2 id="a2hs-title">Add BranchChat to your Home Screen</h2>
+  <div id="a2hs-art" class="a2hs-art" aria-hidden="true" hidden></div>
+  <p id="a2hs-lead"></p>
+  <ol id="a2hs-steps" class="a2hs-steps"></ol>
+  <div id="a2hs-extra" class="a2hs-extra" hidden>
+    <p id="a2hs-note"></p>
+    <div class="invite-linkbox">
+      <input id="a2hs-link" readonly aria-label="BranchChat link">
+      <button id="a2hs-copy" class="ghost" type="button">Copy link</button>
+    </div>
+    <p id="a2hs-copy-note" class="sub" role="status"></p>
+  </div>
+  <div class="actions">
+    <button id="a2hs-ok" class="solid" type="button">Got it</button>
+  </div>
+</dialog>
+<!-- 0.22.7 Add to Home Screen: END -->
+<!-- 0.23.1 invite pack: group invite link, QR code, join-by-link -->
+<dialog id="glink-dialog" aria-labelledby="glink-title">
+  <h2 id="glink-title">Invite to group</h2>
+  <p id="glink-sub" class="sub">Anyone with this link can join until it expires or you reset it. New members see messages from when they join.</p>
+  <div id="glink-active" hidden>
+    <div class="invite-linkbox has-qr">
+      <input id="glink-link" readonly aria-label="Group invite link">
+      <button id="glink-share" class="solid share-btn" type="button">Copy link</button>
+      <button id="glink-qr" class="ghost qr-btn" type="button">Show QR code</button>
+    </div>
+    <p id="glink-status" class="sub"></p>
+  </div>
+  <p id="glink-locked" class="sub" hidden></p>
+  <fieldset id="glink-make" class="glink-make">
+    <legend id="glink-make-title">New invite link</legend>
+    <label class="glink-field"><span>Link stops working</span>
+      <select id="glink-expiry">
+        <option value="1d">After 1 day</option>
+        <option value="7d" selected>After 7 days</option>
+        <option value="never">Never</option>
+      </select>
+    </label>
+    <label class="glink-field"><span>Number of people who can use it</span>
+      <select id="glink-uses">
+        <option value="0" selected>No limit (up to the group size)</option>
+        <option value="1">1 person</option>
+        <option value="5">5 people</option>
+        <option value="10">10 people</option>
+      </select>
+    </label>
+    <button id="glink-create" class="solid" type="button">Create invite link</button>
+  </fieldset>
+  <p id="glink-note" class="sub" role="status" aria-live="polite"></p>
+  <div class="actions">
+    <button id="glink-off" class="danger" type="button" hidden>Turn off link</button>
+    <button id="glink-close" class="ghost" type="button">Close</button>
+  </div>
+</dialog>
+<dialog id="qr-dialog" class="qr-dialog" aria-labelledby="qr-title">
+  <h2 id="qr-title">Scan to join</h2>
+  <p id="qr-sub" class="sub"></p>
+  <div class="qr-card"><canvas id="qr-canvas" width="296" height="296" role="img" aria-label="QR code for the invite link"></canvas></div>
+  <p class="sub qr-hint">Point a phone camera at the code. Anyone who scans it can use this invite, so only show it to people you mean to invite.</p>
+  <div class="actions">
+    <button id="qr-close" class="solid" type="button">Done</button>
+  </div>
+</dialog>
+<dialog id="join-dialog" aria-labelledby="join-title">
+  <h2 id="join-title">Join group?</h2>
+  <p id="join-sub" class="sub"></p>
+  <p id="join-note" class="sub" role="status" aria-live="polite"></p>
+  <div class="actions">
+    <button id="join-cancel" class="ghost" type="button">Not now</button>
+    <button id="join-go" class="solid" type="button">Join group</button>
+  </div>
+</dialog>
+<dialog id="search-dialog" aria-labelledby="search-title">
+  <h2 id="search-title">Search messages</h2>
+  <div class="search-row"><input id="search-q" type="search" placeholder="Search" autocomplete="off" enterkeyhint="search"><select id="search-scope" aria-label="Where to search"><option value="room">This chat</option><option value="all">All chats</option></select></div>
+  <p id="search-status" class="sub" role="status"></p>
+  <ul id="search-results"></ul>
+  <button id="search-more" type="button" hidden>Search older messages</button>
+  <p class="sub search-note">Messages are end-to-end encrypted, so search runs on this device over the messages it has. Older messages from before this device was set up can't be searched.</p>
+  <div class="actions"><button id="search-close" type="button">Close</button></div>
+</dialog>
+<dialog id="apk-dialog" aria-labelledby="apk-title">
+  <h2 id="apk-title">Would you like to download the app for your Android device?</h2>
+  <ol class="apk-progress" aria-hidden="true"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+  <p id="apk-stepno" class="sub" role="status">Step 1 of 4</p>
+  <section class="apk-step" data-step="1"><h3>1. Download</h3><p>Get the latest BranchChat app.</p><button id="apk-yes" type="button" class="primary">Yes, download</button><p id="apk-status" class="sub" role="status"></p></section>
+  <section class="apk-step" data-step="2" hidden><h3>2. Install</h3><ol class="apk-steps">
+    <li>Open the downloaded <b>BranchChat</b> APK from the notification or your Downloads.</li>
+    <li>If Android asks, allow <b>Install unknown apps</b> for your browser.</li>
+    <li>Tap <b>Install</b>.</li></ol></section>
+  <section class="apk-step" data-step="3" hidden><h3>3. Open BranchChat and sign in</h3><p>Tap <b>Open</b> after installing, or find BranchChat on your home screen, then sign in.</p></section>
+  <section class="apk-step" data-step="4" hidden><h3>4. The app will finish setup</h3><p>After you open the app, it&rsquo;ll walk you through these with one-tap buttons:</p>
+    <ul class="apk-steps"><li>Allow notifications</li><li>Battery: <b>Unrestricted</b> (runs in the background, best for notifications; Optimized may delay them, Restricted blocks them)</li><li>Extras for your phone brand</li></ul>
+    <details><summary>More phones</summary><ul class="apk-brands">
+      <li><b>Samsung:</b> take BranchChat out of Sleeping / Deep sleeping apps (or add to Never sleeping).</li>
+      <li><b>Xiaomi / Redmi / POCO:</b> Battery saver: No restrictions, and Autostart on.</li>
+      <li><b>OnePlus / OPPO / Realme:</b> Allow background activity, Optimize off.</li></ul></details></section>
+  <div class="actions"><button id="apk-no" type="button">Not now</button><button id="apk-back" type="button" hidden>Back</button><button id="apk-next" type="button">Next</button></div>
+</dialog>
+<dialog id="lightbox">
+  <img id="light-img" alt="" hidden>
+  <video id="light-video" controls playsinline hidden></video>
+  <div id="prepare" hidden>
+    <p id="prepare-label">Downloading 0%</p>
+    <progress id="prepare-bar" max="100" value="0"></progress>
+    <button id="prepare-cancel" class="ghost" type="button">Cancel</button>
+  </div>
+  <p id="prepare-fallback" hidden></p>
+  <div class="actions">
+    <a id="light-download" class="ghost" hidden>Download</a>
+    <button id="light-full" class="ghost" type="button" hidden>Full screen</button>
+    <button id="light-close" class="solid" type="button">Close</button>
+  </div>
+</dialog>
+<script src="/vendor/mp4box.all.min.js" defer></script>
+<script src="/static/motion.js?v={{BC_ASSET}}" defer></script>
+<link rel="stylesheet" href="/static/social.css?v={{BC_ASSET}}">
+<script type="module" src="/static/app.js?v={{BC_ASSET}}"></script>
+<script type="module" src="/static/whatsnew.js?v={{BC_ASSET}}"></script>
+<script src="/static/menu.js?v={{BC_ASSET}}" defer></script>
+<div id="snap-spell-layer" aria-hidden="true"></div>
+</body>
+</html>

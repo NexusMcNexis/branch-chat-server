@@ -1,0 +1,983 @@
+{
+ "version": 1,
+ "packs": [
+  {
+   "id": "friends",
+   "name": "BranchChat Friends",
+   "stickers": [
+    {
+     "id": "hi",
+     "alt": "Bunny waving a dandelion: Hi!",
+     "file": "friends/hi.webp",
+     "thumb": "friends/hi.t.webp",
+     "tags": [
+      "hello",
+      "wave",
+      "hey"
+     ],
+     "motion": "wave"
+    },
+    {
+     "id": "love-you",
+     "alt": "Owl hugging a heart: Love you!",
+     "file": "friends/love-you.webp",
+     "thumb": "friends/love-you.t.webp",
+     "tags": [
+      "heart",
+      "love"
+     ],
+     "motion": "beat"
+    },
+    {
+     "id": "blessings",
+     "alt": "Treant with sparkles: Blessings!",
+     "file": "friends/blessings.webp",
+     "thumb": "friends/blessings.t.webp",
+     "tags": [
+      "bless",
+      "god",
+      "sparkle"
+     ],
+     "motion": "float"
+    },
+    {
+     "id": "thank-you",
+     "alt": "Fox smiling: Thank you!",
+     "file": "friends/thank-you.webp",
+     "thumb": "friends/thank-you.t.webp",
+     "tags": [
+      "thanks"
+     ]
+    },
+    {
+     "id": "good-night",
+     "alt": "Owl in a nightcap, asleep: Good night",
+     "file": "friends/good-night.webp",
+     "thumb": "friends/good-night.t.webp",
+     "tags": [
+      "sleep",
+      "sleepy",
+      "night",
+      "bed",
+      "tired"
+     ],
+     "motion": "float"
+    },
+    {
+     "id": "praying",
+     "alt": "Bunny with paws folded in prayer: Praying for you",
+     "file": "friends/praying.webp",
+     "thumb": "friends/praying.t.webp",
+     "tags": [
+      "pray",
+      "prayer",
+      "praying",
+      "hands"
+     ]
+    },
+    {
+     "id": "yay",
+     "alt": "Turtle dragon in a party hat: Yay!",
+     "file": "friends/yay.webp",
+     "thumb": "friends/yay.t.webp",
+     "tags": [
+      "party",
+      "celebrate",
+      "hooray",
+      "birthday"
+     ],
+     "motion": "bounce"
+    },
+    {
+     "id": "oops",
+     "alt": "Badger with a sweat drop: Oops!",
+     "file": "friends/oops.webp",
+     "thumb": "friends/oops.t.webp",
+     "tags": [
+      "sorry",
+      "mistake"
+     ]
+    },
+    {
+     "id": "sounds-good",
+     "alt": "Robot showing a check mark: Sounds good!",
+     "file": "friends/sounds-good.webp",
+     "thumb": "friends/sounds-good.t.webp",
+     "tags": [
+      "ok",
+      "okay",
+      "yes",
+      "check"
+     ],
+     "motion": "bounce"
+    },
+    {
+     "id": "on-my-way",
+     "alt": "Fisherman speeding in his boat: On my way!",
+     "file": "friends/on-my-way.webp",
+     "thumb": "friends/on-my-way.t.webp",
+     "tags": [
+      "coming",
+      "omw",
+      "boat"
+     ],
+     "motion": "bounce"
+    },
+    {
+     "id": "miss-you",
+     "alt": "Painter holding a painted heart: Miss you!",
+     "file": "friends/miss-you.webp",
+     "thumb": "friends/miss-you.t.webp",
+     "tags": [
+      "heart",
+      "miss"
+     ]
+    },
+    {
+     "id": "good-morning",
+     "alt": "Badger with a warm mug at sunrise: Good morning!",
+     "file": "friends/good-morning.webp",
+     "thumb": "friends/good-morning.t.webp",
+     "tags": [
+      "morning",
+      "coffee",
+      "sun"
+     ]
+    }
+   ],
+   "icon": "friends/hi.t.webp"
+  },
+  {
+   "id": "badger",
+   "name": "Badger reactions",
+   "stickers": [
+    {
+     "id": "lol",
+     "alt": "Badger laughing out loud",
+     "file": "badger/lol.webp",
+     "thumb": "badger/lol.t.webp",
+     "tags": [
+      "laugh",
+      "laughing",
+      "lol",
+      "haha",
+      "funny",
+      "badger"
+     ],
+     "motion": "shake"
+    },
+    {
+     "id": "giggle",
+     "alt": "Badger giggling",
+     "file": "badger/giggle.webp",
+     "thumb": "badger/giggle.t.webp",
+     "tags": [
+      "giggle",
+      "hehe",
+      "funny",
+      "badger"
+     ],
+     "motion": "wiggle"
+    },
+    {
+     "id": "love",
+     "alt": "Badger full of love",
+     "file": "badger/love.webp",
+     "thumb": "badger/love.t.webp",
+     "tags": [
+      "love",
+      "heart",
+      "badger"
+     ],
+     "motion": "beat"
+    },
+    {
+     "id": "thumbs-up",
+     "alt": "Badger giving a thumbs up",
+     "file": "badger/thumbs-up.webp",
+     "thumb": "badger/thumbs-up.t.webp",
+     "tags": [
+      "yes",
+      "like",
+      "good",
+      "ok",
+      "agree",
+      "thumbs",
+      "badger"
+     ],
+     "motion": "bounce"
+    },
+    {
+     "id": "thumbs-down",
+     "alt": "Badger giving a thumbs down",
+     "file": "badger/thumbs-down.webp",
+     "thumb": "badger/thumbs-down.t.webp",
+     "tags": [
+      "no",
+      "nope",
+      "dislike",
+      "thumbs",
+      "badger"
+     ]
+    }
+   ],
+   "icon": "badger/lol.t.webp"
+  },
+  {
+   "id": "owl",
+   "name": "Owl reactions",
+   "stickers": [
+    {
+     "id": "lol",
+     "alt": "Owl laughing out loud",
+     "file": "owl/lol.webp",
+     "thumb": "owl/lol.t.webp",
+     "tags": [
+      "laugh",
+      "laughing",
+      "lol",
+      "haha",
+      "funny",
+      "owl"
+     ],
+     "motion": "shake"
+    },
+    {
+     "id": "giggle",
+     "alt": "Owl giggling",
+     "file": "owl/giggle.webp",
+     "thumb": "owl/giggle.t.webp",
+     "tags": [
+      "giggle",
+      "hehe",
+      "funny",
+      "owl"
+     ],
+     "motion": "wiggle"
+    },
+    {
+     "id": "love",
+     "alt": "Owl full of love",
+     "file": "owl/love.webp",
+     "thumb": "owl/love.t.webp",
+     "tags": [
+      "love",
+      "heart",
+      "owl"
+     ],
+     "motion": "beat"
+    },
+    {
+     "id": "thumbs-up",
+     "alt": "Owl giving a thumbs up",
+     "file": "owl/thumbs-up.webp",
+     "thumb": "owl/thumbs-up.t.webp",
+     "tags": [
+      "yes",
+      "like",
+      "good",
+      "ok",
+      "agree",
+      "thumbs",
+      "owl"
+     ],
+     "motion": "bounce"
+    },
+    {
+     "id": "thumbs-down",
+     "alt": "Owl giving a thumbs down",
+     "file": "owl/thumbs-down.webp",
+     "thumb": "owl/thumbs-down.t.webp",
+     "tags": [
+      "no",
+      "nope",
+      "dislike",
+      "thumbs",
+      "owl"
+     ]
+    }
+   ],
+   "icon": "owl/lol.t.webp"
+  },
+  {
+   "id": "bunny",
+   "name": "Bunny reactions",
+   "stickers": [
+    {
+     "id": "lol",
+     "alt": "Bunny laughing out loud",
+     "file": "bunny/lol.webp",
+     "thumb": "bunny/lol.t.webp",
+     "tags": [
+      "laugh",
+      "laughing",
+      "lol",
+      "haha",
+      "funny",
+      "bunny"
+     ],
+     "motion": "shake"
+    },
+    {
+     "id": "giggle",
+     "alt": "Bunny giggling",
+     "file": "bunny/giggle.webp",
+     "thumb": "bunny/giggle.t.webp",
+     "tags": [
+      "giggle",
+      "hehe",
+      "funny",
+      "bunny"
+     ],
+     "motion": "wiggle"
+    },
+    {
+     "id": "love",
+     "alt": "Bunny full of love",
+     "file": "bunny/love.webp",
+     "thumb": "bunny/love.t.webp",
+     "tags": [
+      "love",
+      "heart",
+      "bunny"
+     ],
+     "motion": "beat"
+    },
+    {
+     "id": "thumbs-up",
+     "alt": "Bunny giving a thumbs up",
+     "file": "bunny/thumbs-up.webp",
+     "thumb": "bunny/thumbs-up.t.webp",
+     "tags": [
+      "yes",
+      "like",
+      "good",
+      "ok",
+      "agree",
+      "thumbs",
+      "bunny"
+     ],
+     "motion": "bounce"
+    },
+    {
+     "id": "thumbs-down",
+     "alt": "Bunny giving a thumbs down",
+     "file": "bunny/thumbs-down.webp",
+     "thumb": "bunny/thumbs-down.t.webp",
+     "tags": [
+      "no",
+      "nope",
+      "dislike",
+      "thumbs",
+      "bunny"
+     ]
+    }
+   ],
+   "icon": "bunny/lol.t.webp"
+  },
+  {
+   "id": "treant",
+   "name": "Treant reactions",
+   "stickers": [
+    {
+     "id": "lol",
+     "alt": "Treant laughing out loud",
+     "file": "treant/lol.webp",
+     "thumb": "treant/lol.t.webp",
+     "tags": [
+      "laugh",
+      "laughing",
+      "lol",
+      "haha",
+      "funny",
+      "treant"
+     ],
+     "motion": "shake"
+    },
+    {
+     "id": "giggle",
+     "alt": "Treant giggling",
+     "file": "treant/giggle.webp",
+     "thumb": "treant/giggle.t.webp",
+     "tags": [
+      "giggle",
+      "hehe",
+      "funny",
+      "treant"
+     ],
+     "motion": "wiggle"
+    },
+    {
+     "id": "love",
+     "alt": "Treant full of love",
+     "file": "treant/love.webp",
+     "thumb": "treant/love.t.webp",
+     "tags": [
+      "love",
+      "heart",
+      "treant"
+     ],
+     "motion": "beat"
+    },
+    {
+     "id": "thumbs-up",
+     "alt": "Treant giving a thumbs up",
+     "file": "treant/thumbs-up.webp",
+     "thumb": "treant/thumbs-up.t.webp",
+     "tags": [
+      "yes",
+      "like",
+      "good",
+      "ok",
+      "agree",
+      "thumbs",
+      "treant"
+     ],
+     "motion": "bounce"
+    },
+    {
+     "id": "thumbs-down",
+     "alt": "Treant giving a thumbs down",
+     "file": "treant/thumbs-down.webp",
+     "thumb": "treant/thumbs-down.t.webp",
+     "tags": [
+      "no",
+      "nope",
+      "dislike",
+      "thumbs",
+      "treant"
+     ]
+    }
+   ],
+   "icon": "treant/lol.t.webp"
+  },
+  {
+   "id": "painter",
+   "name": "Painter reactions",
+   "stickers": [
+    {
+     "id": "lol",
+     "alt": "Painter laughing out loud",
+     "file": "painter/lol.webp",
+     "thumb": "painter/lol.t.webp",
+     "tags": [
+      "laugh",
+      "laughing",
+      "lol",
+      "haha",
+      "funny",
+      "painter"
+     ],
+     "motion": "shake"
+    },
+    {
+     "id": "giggle",
+     "alt": "Painter giggling",
+     "file": "painter/giggle.webp",
+     "thumb": "painter/giggle.t.webp",
+     "tags": [
+      "giggle",
+      "hehe",
+      "funny",
+      "painter"
+     ],
+     "motion": "wiggle"
+    },
+    {
+     "id": "love",
+     "alt": "Painter full of love",
+     "file": "painter/love.webp",
+     "thumb": "painter/love.t.webp",
+     "tags": [
+      "love",
+      "heart",
+      "painter"
+     ],
+     "motion": "beat"
+    },
+    {
+     "id": "thumbs-up",
+     "alt": "Painter giving a thumbs up",
+     "file": "painter/thumbs-up.webp",
+     "thumb": "painter/thumbs-up.t.webp",
+     "tags": [
+      "yes",
+      "like",
+      "good",
+      "ok",
+      "agree",
+      "thumbs",
+      "painter"
+     ],
+     "motion": "bounce"
+    },
+    {
+     "id": "thumbs-down",
+     "alt": "Painter giving a thumbs down",
+     "file": "painter/thumbs-down.webp",
+     "thumb": "painter/thumbs-down.t.webp",
+     "tags": [
+      "no",
+      "nope",
+      "dislike",
+      "thumbs",
+      "painter"
+     ]
+    }
+   ],
+   "icon": "painter/lol.t.webp"
+  },
+  {
+   "id": "fisherman",
+   "name": "Fisherman reactions",
+   "stickers": [
+    {
+     "id": "lol",
+     "alt": "Fisherman laughing out loud",
+     "file": "fisherman/lol.webp",
+     "thumb": "fisherman/lol.t.webp",
+     "tags": [
+      "laugh",
+      "laughing",
+      "lol",
+      "haha",
+      "funny",
+      "fisherman"
+     ],
+     "motion": "shake"
+    },
+    {
+     "id": "giggle",
+     "alt": "Fisherman giggling",
+     "file": "fisherman/giggle.webp",
+     "thumb": "fisherman/giggle.t.webp",
+     "tags": [
+      "giggle",
+      "hehe",
+      "funny",
+      "fisherman"
+     ],
+     "motion": "wiggle"
+    },
+    {
+     "id": "love",
+     "alt": "Fisherman full of love",
+     "file": "fisherman/love.webp",
+     "thumb": "fisherman/love.t.webp",
+     "tags": [
+      "love",
+      "heart",
+      "fisherman"
+     ],
+     "motion": "beat"
+    },
+    {
+     "id": "thumbs-up",
+     "alt": "Fisherman giving a thumbs up",
+     "file": "fisherman/thumbs-up.webp",
+     "thumb": "fisherman/thumbs-up.t.webp",
+     "tags": [
+      "yes",
+      "like",
+      "good",
+      "ok",
+      "agree",
+      "thumbs",
+      "fisherman"
+     ],
+     "motion": "bounce"
+    },
+    {
+     "id": "thumbs-down",
+     "alt": "Fisherman giving a thumbs down",
+     "file": "fisherman/thumbs-down.webp",
+     "thumb": "fisherman/thumbs-down.t.webp",
+     "tags": [
+      "no",
+      "nope",
+      "dislike",
+      "thumbs",
+      "fisherman"
+     ]
+    }
+   ],
+   "icon": "fisherman/lol.t.webp"
+  },
+  {
+   "id": "robot",
+   "name": "Robot reactions",
+   "stickers": [
+    {
+     "id": "lol",
+     "alt": "Robot laughing out loud",
+     "file": "robot/lol.webp",
+     "thumb": "robot/lol.t.webp",
+     "tags": [
+      "laugh",
+      "laughing",
+      "lol",
+      "haha",
+      "funny",
+      "robot"
+     ],
+     "motion": "shake"
+    },
+    {
+     "id": "giggle",
+     "alt": "Robot giggling",
+     "file": "robot/giggle.webp",
+     "thumb": "robot/giggle.t.webp",
+     "tags": [
+      "giggle",
+      "hehe",
+      "funny",
+      "robot"
+     ],
+     "motion": "wiggle"
+    },
+    {
+     "id": "love",
+     "alt": "Robot full of love",
+     "file": "robot/love.webp",
+     "thumb": "robot/love.t.webp",
+     "tags": [
+      "love",
+      "heart",
+      "robot"
+     ],
+     "motion": "beat"
+    },
+    {
+     "id": "thumbs-up",
+     "alt": "Robot giving a thumbs up",
+     "file": "robot/thumbs-up.webp",
+     "thumb": "robot/thumbs-up.t.webp",
+     "tags": [
+      "yes",
+      "like",
+      "good",
+      "ok",
+      "agree",
+      "thumbs",
+      "robot"
+     ],
+     "motion": "bounce"
+    },
+    {
+     "id": "thumbs-down",
+     "alt": "Robot giving a thumbs down",
+     "file": "robot/thumbs-down.webp",
+     "thumb": "robot/thumbs-down.t.webp",
+     "tags": [
+      "no",
+      "nope",
+      "dislike",
+      "thumbs",
+      "robot"
+     ]
+    }
+   ],
+   "icon": "robot/lol.t.webp"
+  },
+  {
+   "id": "turtle",
+   "name": "Turtle dragon reactions",
+   "stickers": [
+    {
+     "id": "lol",
+     "alt": "Turtle dragon laughing out loud",
+     "file": "turtle/lol.webp",
+     "thumb": "turtle/lol.t.webp",
+     "tags": [
+      "laugh",
+      "laughing",
+      "lol",
+      "haha",
+      "funny",
+      "turtle"
+     ],
+     "motion": "shake"
+    },
+    {
+     "id": "giggle",
+     "alt": "Turtle dragon giggling",
+     "file": "turtle/giggle.webp",
+     "thumb": "turtle/giggle.t.webp",
+     "tags": [
+      "giggle",
+      "hehe",
+      "funny",
+      "turtle"
+     ],
+     "motion": "wiggle"
+    },
+    {
+     "id": "love",
+     "alt": "Turtle dragon full of love",
+     "file": "turtle/love.webp",
+     "thumb": "turtle/love.t.webp",
+     "tags": [
+      "love",
+      "heart",
+      "turtle"
+     ],
+     "motion": "beat"
+    },
+    {
+     "id": "thumbs-up",
+     "alt": "Turtle dragon giving a thumbs up",
+     "file": "turtle/thumbs-up.webp",
+     "thumb": "turtle/thumbs-up.t.webp",
+     "tags": [
+      "yes",
+      "like",
+      "good",
+      "ok",
+      "agree",
+      "thumbs",
+      "turtle"
+     ],
+     "motion": "bounce"
+    },
+    {
+     "id": "thumbs-down",
+     "alt": "Turtle dragon giving a thumbs down",
+     "file": "turtle/thumbs-down.webp",
+     "thumb": "turtle/thumbs-down.t.webp",
+     "tags": [
+      "no",
+      "nope",
+      "dislike",
+      "thumbs",
+      "turtle"
+     ]
+    }
+   ],
+   "icon": "turtle/lol.t.webp"
+  },
+  {
+   "id": "fox",
+   "name": "Fox reactions",
+   "stickers": [
+    {
+     "id": "lol",
+     "alt": "Fox laughing out loud",
+     "file": "fox/lol.webp",
+     "thumb": "fox/lol.t.webp",
+     "tags": [
+      "laugh",
+      "laughing",
+      "lol",
+      "haha",
+      "funny",
+      "fox"
+     ],
+     "motion": "shake"
+    },
+    {
+     "id": "giggle",
+     "alt": "Fox giggling",
+     "file": "fox/giggle.webp",
+     "thumb": "fox/giggle.t.webp",
+     "tags": [
+      "giggle",
+      "hehe",
+      "funny",
+      "fox"
+     ],
+     "motion": "wiggle"
+    },
+    {
+     "id": "love",
+     "alt": "Fox full of love",
+     "file": "fox/love.webp",
+     "thumb": "fox/love.t.webp",
+     "tags": [
+      "love",
+      "heart",
+      "fox"
+     ],
+     "motion": "beat"
+    },
+    {
+     "id": "thumbs-up",
+     "alt": "Fox giving a thumbs up",
+     "file": "fox/thumbs-up.webp",
+     "thumb": "fox/thumbs-up.t.webp",
+     "tags": [
+      "yes",
+      "like",
+      "good",
+      "ok",
+      "agree",
+      "thumbs",
+      "fox"
+     ],
+     "motion": "bounce"
+    },
+    {
+     "id": "thumbs-down",
+     "alt": "Fox giving a thumbs down",
+     "file": "fox/thumbs-down.webp",
+     "thumb": "fox/thumbs-down.t.webp",
+     "tags": [
+      "no",
+      "nope",
+      "dislike",
+      "thumbs",
+      "fox"
+     ]
+    }
+   ],
+   "icon": "fox/lol.t.webp"
+  },
+  {
+   "id": "classic",
+   "name": "Classic Reactions",
+   "credit": "Fluent Emoji © Microsoft Corporation, MIT License",
+   "stickers": [
+    {
+     "id": "lol",
+     "alt": "Face with tears of joy",
+     "file": "classic/lol.webp",
+     "thumb": "classic/lol.t.webp",
+     "anim": "classic/lol.a.webp",
+     "tags": [
+      "laugh",
+      "lol",
+      "haha"
+     ]
+    },
+    {
+     "id": "giggle",
+     "alt": "Face giggling behind a hand",
+     "file": "classic/giggle.webp",
+     "thumb": "classic/giggle.t.webp",
+     "anim": "classic/giggle.a.webp",
+     "tags": [
+      "giggle",
+      "hehe",
+      "oops"
+     ]
+    },
+    {
+     "id": "love",
+     "alt": "Smiling face with hearts",
+     "file": "classic/love.webp",
+     "thumb": "classic/love.t.webp",
+     "anim": "classic/love.a.webp",
+     "tags": [
+      "love",
+      "adore"
+     ]
+    },
+    {
+     "id": "thumbs-up",
+     "alt": "Thumbs up",
+     "file": "classic/thumbs-up.webp",
+     "thumb": "classic/thumbs-up.t.webp",
+     "anim": "classic/thumbs-up.a.webp",
+     "tags": [
+      "yes",
+      "like",
+      "ok"
+     ]
+    },
+    {
+     "id": "thumbs-down",
+     "alt": "Thumbs down",
+     "file": "classic/thumbs-down.webp",
+     "thumb": "classic/thumbs-down.t.webp",
+     "anim": "classic/thumbs-down.a.webp",
+     "tags": [
+      "no",
+      "dislike"
+     ]
+    },
+    {
+     "id": "praying",
+     "alt": "Folded hands",
+     "file": "classic/praying.webp",
+     "thumb": "classic/praying.t.webp",
+     "anim": "classic/praying.a.webp",
+     "tags": [
+      "pray",
+      "please",
+      "thank",
+      "you"
+     ]
+    },
+    {
+     "id": "wave",
+     "alt": "Waving hand",
+     "file": "classic/wave.webp",
+     "thumb": "classic/wave.t.webp",
+     "anim": "classic/wave.a.webp",
+     "tags": [
+      "hi",
+      "hello",
+      "bye"
+     ]
+    },
+    {
+     "id": "sleepy",
+     "alt": "Sleeping face",
+     "file": "classic/sleepy.webp",
+     "thumb": "classic/sleepy.t.webp",
+     "anim": "classic/sleepy.a.webp",
+     "tags": [
+      "sleep",
+      "tired",
+      "night"
+     ]
+    },
+    {
+     "id": "party",
+     "alt": "Partying face",
+     "file": "classic/party.webp",
+     "thumb": "classic/party.t.webp",
+     "anim": "classic/party.a.webp",
+     "tags": [
+      "party",
+      "celebrate",
+      "birthday",
+      "yay"
+     ]
+    },
+    {
+     "id": "oops",
+     "alt": "Grinning face with sweat",
+     "file": "classic/oops.webp",
+     "thumb": "classic/oops.t.webp",
+     "anim": "classic/oops.a.webp",
+     "tags": [
+      "oops",
+      "phew"
+     ]
+    },
+    {
+     "id": "hug",
+     "alt": "Hugging face",
+     "file": "classic/hug.webp",
+     "thumb": "classic/hug.t.webp",
+     "anim": "classic/hug.a.webp",
+     "tags": [
+      "hug"
+     ]
+    },
+    {
+     "id": "heart",
+     "alt": "Red heart",
+     "file": "classic/heart.webp",
+     "thumb": "classic/heart.t.webp",
+     "anim": "classic/heart.a.webp",
+     "tags": [
+      "love",
+      "heart"
+     ]
+    }
+   ],
+   "icon": "classic/lol.t.webp"
+  }
+ ]
+}

@@ -1,0 +1,50 @@
+# BranchChat Server (native install). Written by install.sh; edit /etc/branch-chat/config.env instead.
+[Unit]
+Description=BranchChat Server
+Documentation=https://github.com/NexusMcNexis/branch-chat-releases
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=branchchat
+Group=branchchat
+Environment=BC_CONFIG=/etc/branch-chat/config.env
+Environment=BC_STATE_DIR=/var/lib/branch-chat
+Environment=BC_APP_DIR=/opt/branch-chat/app
+WorkingDirectory=/opt/branch-chat/app
+ExecStart=/usr/bin/python3 /opt/branch-chat/app/server.py
+# Python exits cleanly on SIGINT.
+KillSignal=SIGINT
+TimeoutStopSec=20
+Restart=on-failure
+RestartSec=2
+StateDirectory=branch-chat
+StateDirectoryMode=0700
+UMask=0077
+
+# Hardening (plan JOB 3.2). The server only needs its state dir, the network and curl for Web Push.
+NoNewPrivileges=yes
+ProtectSystem=strict
+# 0.23.3-beta.15: the Administrator page may rewrite the settings file (in place; backups go to the state dir).
+ReadWritePaths=/etc/branch-chat/config.env
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+[Install]
+WantedBy=multi-user.target

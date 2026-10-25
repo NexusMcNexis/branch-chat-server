@@ -1,0 +1,82 @@
+{
+  "version": "26.10.11",
+  "kicker": "What's new",
+  "title": "Replies, reactions, send animations and faster videos",
+  "intro": "Hi there! This update makes conversations easier to follow, and sending videos a lot quicker. Here’s what’s new.",
+  "sections": [
+    {
+      "heading": "Chatting",
+      "items": [
+        {
+          "icon": "↩️",
+          "title": "Reply to a message",
+          "text": "Tap or right-click a message and choose Reply, or swipe it to the right on your phone. Your reply shows a little quote of the message you’re answering, so everyone knows what you mean."
+        },
+        {
+          "icon": "👆",
+          "title": "Jump to the original",
+          "text": "Tap a quote to scroll back to the original message. It lights up so it’s easy to spot."
+        },
+        {
+          "icon": "🖼️",
+          "title": "Photos and files too",
+          "text": "Reply to a photo, GIF, video or file and the quote shows what it was. Changed your mind? Tap the X or press Esc."
+        },
+        {
+          "icon": "🔒",
+          "title": "Still private",
+          "text": "The quote is end-to-end encrypted along with your message, in one-to-one chats and groups alike."
+        },
+        {
+          "icon": "😍",
+          "title": "See who reacted",
+          "text": "Tap or long-press a message, photo or video and the menu shows each reaction and who used it. No more guessing on a phone or iPad."
+        },
+        {
+          "icon": "✨",
+          "title": "Send animations",
+          "text": "Your messages can now arrive in style! A little robot can print them, an origami crane can fly them in, a snail, beaver or turtle dragon can deliver them, or sparkles can build them. They’re off unless you want them: the first time you send a message, you’ll see one play, then BranchChat asks if you’d like to keep them. Tap Keep them or Turn off, and change your mind any time under Send animations in the menu. Only you see them, and they stay quiet when your sounds are off."
+        },
+        {
+          "icon": "🎬",
+          "title": "Videos send much faster",
+          "text": "Videos are shrunk to a sharp 720p on your own device before they’re sent, so a one-minute video is about 15 MB instead of 100+. You’ll see the progress and the size before and after. Tap the 720p tag to send the original instead."
+        },
+        {
+          "icon": "🤫",
+          "title": "Quieter deletes, if you like",
+          "text": "Prefer not to see the delete animation when someone else removes a message? Turn on “Don’t show animations on other people’s deletes” in the menu. Their messages just disappear, and your own deletes keep their fun."
+        },
+        {
+          "icon": "🔕",
+          "title": "A gentle reminder",
+          "text": "If your notifications are off or paused, a slim bar at the top of the chat lets you know, and shows when they’ll come back on. Tap Turn on to switch them back, or the × to hide it."
+        },
+        {
+          "icon": "✉️",
+          "title": "Your choice of emails",
+          "text": "Don’t want emails like this one? Use the Unsubscribe link at the bottom, or the Feature update emails switch in the menu. Sign-in codes and invites always arrive."
+        }
+      ]
+    },
+    {
+      "heading": "The desktop app",
+      "items": [
+        {
+          "icon": "🔔",
+          "title": "Alerts from all your servers (desktop)",
+          "text": "BranchChat now lets you know about new messages on every server you’ve added, even when another one is open."
+        },
+        {
+          "icon": "✍️",
+          "title": "Spell check (desktop)",
+          "text": "Red underlines on misspelled words, with suggestions when you right-click."
+        }
+      ]
+    }
+  ],
+  "apps": "It works on the web, in the Android app and in the desktop app, with no new download needed.",
+  "thanks": "Thank you for being part of this little community. It means a lot to have you here.",
+  "signoff": "God bless, and happy chatting!",
+  "signer": "Luke"
+}

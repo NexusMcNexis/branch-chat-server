@@ -1,0 +1,78 @@
+{
+  "version": "26.10.13.13",
+  "kicker": "What's new",
+  "title": "A new message menu, a tidier chat list and more",
+  "intro": "Hi there! This update makes BranchChat a little neater everywhere. Here’s what’s new.",
+  "sections": [
+    {
+      "heading": "Chatting",
+      "items": [
+        {
+          "icon": "🌿",
+          "title": "A new message menu",
+          "text": "Press and hold (or tap) a message for a compact menu with your reactions at the top. It always stays on screen."
+        },
+        {
+          "icon": "🗂️",
+          "title": "A tidier chat list",
+          "text": "Pin chats to the top, drag them into any order and tuck old ones away in Archived Chats. The bottom bar is slimmer, with a + for New group and Add friend."
+        },
+        {
+          "icon": "🔗",
+          "title": "Nicer link previews",
+          "text": "Links show a compact preview card, and YouTube videos go full screen in the desktop app."
+        },
+        {
+          "icon": "😀",
+          "title": "Reactions",
+          "text": "Every reaction shows a count, and a + chip adds yours."
+        }
+      ]
+    },
+    {
+      "heading": "Little extras",
+      "items": [
+        {
+          "icon": "🟢",
+          "title": "Round profile pictures",
+          "text": "Drag and zoom to pick the perfect circle, or tap Edit photo first."
+        },
+        {
+          "icon": "🔍",
+          "title": "Display size",
+          "text": "Scale the whole app from 85% to 130%, next to Text size in the menu."
+        },
+        {
+          "icon": "📱",
+          "title": "Phone menus",
+          "text": "On phones the menu and Profile Settings open full screen with a Back button, and Report a bug is now a row in the menu instead of a floating button."
+        },
+        {
+          "icon": "🎞️",
+          "title": "GIFs and iPhone alerts",
+          "text": "Picking a GIF closes the picker, and Safari no longer quietly turns off notifications on iPhone and iPad."
+        },
+        {
+          "icon": "🤖",
+          "title": "Android",
+          "text": "Message alerts keep working while the phone dozes and after a restart, and you can share photos, videos and files into a chat."
+        }
+      ]
+    },
+    {
+      "heading": "Behind the scenes",
+      "items": [
+        {
+          "icon": "📜",
+          "title": "New BranchChat License 2.0",
+          "text": "Free for individuals, churches, approved nonprofits and small businesses. See License in the footer or menu."
+        },
+        {
+          "icon": "🔢",
+          "title": "One version everywhere",
+          "text": "The web, Android, desktop and server apps now share one version number, so update checks agree."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "version": "26.10.13",
+  "kicker": "What's new",
+  "title": "Smileys to emoji, pinned messages, My Stash and more",
+  "intro": "Hi there! This update turns your smileys into emoji, lets you pin messages and save things to your own private My Stash, and tidies up a few settings. Here’s what’s new.",
+  "sections": [
+    {
+      "heading": "Chatting",
+      "items": [
+        {
+          "icon": "🙂",
+          "title": "Smileys become emoji",
+          "text": "Type :) :( :D <3 ;) :P :O :'( or XD and it turns into 🙂 🙁 😃 ❤️ 😉 😛 😮 😢 😆 as soon as you type a space or punctuation, or when you send. It works when replying, editing a message and writing a caption too. Changed your mind? Press Backspace or Ctrl+Z right away to get the text back. It leaves links and `code` alone. Don't want it? Turn off Convert :) to emoji in the menu."
+        },
+        {
+          "icon": "👀",
+          "title": "Read receipts and typing indicators are now always on",
+          "text": "The switches are gone from the menu, so everyone now shares and sees typing and Sent, Delivered and Seen. If you had turned either one off, you'll see them again (and others will see yours). Seen only counts once you've had the chat open and in front of you for about 3 seconds."
+        },
+        {
+          "icon": "📌",
+          "title": "Pin messages",
+          "text": "Tap a message and choose Pin. The latest pin shows in a bar at the top of the chat. Tap it to jump to the message, or tap “pinned” to see them all. Works in one-to-one chats and groups. Tap Unpin to take it down."
+        },
+        {
+          "icon": "🗃️",
+          "title": "My Stash",
+          "text": "My Stash is your own private chat, at the top of your chat list. Only you can see it, and it's end-to-end encrypted to your own devices. Tap any message and choose Save to My Stash, or pick My Stash when you forward or share something."
+        },
+        {
+          "icon": "👑",
+          "title": "Group settings are owner-only",
+          "text": "Only a group's owner can now change its name, picture, members or invite link. Everyone else can still see the group info and member list, and can leave any time."
+        }
+      ]
+    },
+    {
+      "heading": "Animations",
+      "items": [
+        {
+          "icon": "⏩",
+          "title": "Send animation speed",
+          "text": "Send animations now play a bit quicker. Use the new Speed slider under Send animations to go from very fast to slow, and tap Speed to go back to the default. Sparkles always plays at normal speed."
+        },
+        {
+          "icon": "↔️",
+          "title": "Tidier animation lists",
+          "text": "In Delete animations and Send animations, Off is now at the end of the list, after Take turns."
+        }
+      ]
+    },
+    {
+      "heading": "Photos and attachments",
+      "items": [
+        {
+          "icon": "🖼️",
+          "title": "A clearer photo editor, plus Vignette",
+          "text": "Each adjustment in the photo editor now has its own row: a small icon, the name and a live number (like +12 or -30) above its slider, with a thin line between rows. There's also a new Vignette slider: slide right to darken the edges, or left to fade them to white. What you see is what gets sent."
+        },
+        {
+          "icon": "📎",
+          "title": "Bigger attachment previews",
+          "text": "After you attach a photo, video, GIF or file, its preview is now much bigger, and the edit, quality (Original, HD, SD), remove and retry buttons are easy to tap."
+        }
+      ]
+    }
+  ],
+  "apps": "It works on the web, in the Android app and in the desktop app, with no new download needed.",
+  "thanks": "Thank you for being part of this little community. It means a lot to have you here.",
+  "signoff": "God bless, and happy chatting!",
+  "signer": "Luke"
+}

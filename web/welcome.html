@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/static/icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon-180.png">
+<link rel="manifest" href="/manifest.webmanifest?v={{BC_ASSET}}">
+<!-- 26.10.5: Apple/mobile PWA meta so Add-to-Home-Screen opens standalone (chromeless) on iPad/iPhone. This is the only way to get full screen there, because iOS has no web Fullscreen API. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="BranchChat">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>BranchChat</title>
+<meta property="og:site_name" content="BranchChat">
+<meta property="og:title" content="BranchChat">
+<meta property="og:description" content="A private, invite-only chat for family and friends.">
+<meta property="og:type" content="website">
+<!-- 26.10.3: link previews need a full address; the server swaps in its own (BC_PUBLIC_URL). -->
+<meta property="og:image" content="http://localhost:8766/static/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="BranchChat: private chat for family and friends">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BranchChat">
+<meta name="twitter:image" content="http://localhost:8766/static/og-image.jpg">
+<meta name="description" content="A private, invite-only chat for family and friends.">
+<link rel="stylesheet" href="/static/gate.css?v={{BC_ASSET}}">
+<script src="/static/vt-quiet.js?v={{BC_ASSET}}"></script>
+</head>
+<body>
+<form id="welcome" novalidate>
+  <div class="brand">
+    <img src="/favicon.png" alt="" width="48" height="48">
+    <!-- The BranchChat wordmark, same markup as the sign-in page: bold "Branch", thin green "Chat", small TM (styles in gate.css). -->
+    <h1><span class="bc-logo"><b>Branch</b><i>Chat</i><sup class="tm" aria-label="trademark">TM</sup></span></h1>
+  </div>
+  <p class="secure"><span id="secure-led" class="led"></span><span id="secure-text">Not a secure connection</span></p>
+  <p class="ok" id="invited-by"></p>
+  <p>Choose a username and password. This link stops working after you use it.</p>
+  <label for="username">Username</label>
+  <input id="username" autocomplete="username" minlength="3" maxlength="32" required aria-describedby="username-hint">
+  <p class="hint" id="username-hint">3–32 characters: letters, numbers, dots, dashes or underscores, starting with a letter or number.</p>
+  <!-- Invite without email: the email is asked for here, on the new-account page, and it is required. -->
+  <label for="email">Email</label>
+  <input id="email" type="email" autocomplete="email" maxlength="200" required aria-describedby="email-hint">
+  <p class="hint" id="email-hint">Used for sign-in codes. It can't already be on another BranchChat account.</p>
+  <label for="password">Password</label>
+  <input id="password" type="password" autocomplete="new-password" minlength="8" maxlength="200" required aria-describedby="password-hint">
+  <p class="hint" id="password-hint">At least 8 characters (up to 200).<span id="password-count"></span></p>
+  <label for="again">Type the password again</label>
+  <input id="again" type="password" autocomplete="new-password" minlength="8" maxlength="200" required>
+  <button type="submit">Create account</button>
+  <div class="msg" id="msg" role="status"></div>
+</form>
+<!-- Footer: only the small trademark line here, in very small print (Oct 18 2026). The full footer with the
+     1 John 1:7 verse and the memorial line now appears on the About page only, so the other pages stay uncluttered. -->
+<footer id="bc-footer" class="bc-mini">
+  <p class="legal">&copy; 2026 BranchChat. BranchChat&trade; is a trademark of BranchChat. <a class="bc-license-link" href="/license">License</a></p>
+</footer>
+<script src="/static/welcome.js?v={{BC_ASSET}}"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+/* Branch Chat motion (v0.23.3-beta.4): one set of open/close transitions for every menu and pop-up.
+   Menus slide in from the edge they are anchored to; other pop-ups (dialogs, viewer, camera, toast) fade.
+   Only opacity and the individual translate/scale properties animate, so nothing re-lays out and an element's own
+   transform (e.g. the toast's centring) is left alone. motion.js plays the close half: it keeps a just-closed menu or
+   dialog painted (hidden/closed for the app, no clicks, aria-hidden) for the length of the close animation.
+   To use on a new element: add data-bc-motion="menu" (plus --bc-from-x / --bc-from-y for its edge) or "fade". */
+:root {
+  /* Base timings at 1x. the upcoming "Animation speed" setting (localStorage bc-anim-speed: 0.25, 0.5, 1, 2, 4; higher = faster)
+     sets --bc-anim-scale = 1 / speed on <html> (motion.js), so 2x speed halves every duration, 4x quarters it and 0.5x doubles it. */
+  --bc-anim-scale: 1;
+  --bc-dur-menu-base: 240ms;        /* menus, drawers, pickers, sheets: open */
+  --bc-dur-menu-out-base: 170ms;    /* ... close */
+  --bc-dur-fade-base: 220ms;        /* dialogs and other pop-ups: open */
+  --bc-dur-fade-out-base: 160ms;    /* ... close */
+  --bc-dur-menu: calc(var(--bc-dur-menu-base) * var(--bc-anim-scale, 1));
+  --bc-dur-menu-out: calc(var(--bc-dur-menu-out-base) * var(--bc-anim-scale, 1));
+  --bc-dur-fade: calc(var(--bc-dur-fade-base) * var(--bc-anim-scale, 1));
+  --bc-dur-fade-out: calc(var(--bc-dur-fade-out-base) * var(--bc-anim-scale, 1));
+  --bc-ease-out: cubic-bezier(.2, .8, .2, 1);
+  --bc-ease-in: cubic-bezier(.4, 0, .9, .6);
+  --bc-anim-menu: bc-m-slide-in var(--bc-dur-menu) var(--bc-ease-out) both;
+  --bc-anim-menu-out: bc-m-slide-out var(--bc-dur-menu-out) var(--bc-ease-in) both;
+  --bc-anim-fade: bc-m-fade-in var(--bc-dur-fade) var(--bc-ease-out) both;
+  --bc-anim-fade-out: bc-m-fade-out var(--bc-dur-fade-out) var(--bc-ease-in) both;
+}
+@keyframes bc-m-slide-in { from { opacity: 0; translate: var(--bc-from-x, 0px) var(--bc-from-y, 8px); } }
+@keyframes bc-m-slide-out { from { opacity: 1; } to { opacity: 0; translate: var(--bc-from-x, 0px) var(--bc-from-y, 8px); } }
+@keyframes bc-m-fade-in { from { opacity: 0; scale: var(--bc-fade-scale, .98); } }
+@keyframes bc-m-fade-out { from { opacity: 1; } to { opacity: 0; scale: var(--bc-fade-scale, .98); } }
+@keyframes bc-m-scrim-in { from { opacity: 0; } }
+@keyframes bc-m-scrim-out { from { opacity: 1; } to { opacity: 0; } }
+
+/* Where each menu comes from (its anchor edge). */
+#app-menu { --bc-from-x: 24px; --bc-from-y: 0px; }      /* hamburger: in from the right, where it is pinned */
+#profile-pop { --bc-from-x: 0px; --bc-from-y: 16px; }    /* up from the profile dock */
+#react-pop { --bc-from-x: 0px; --bc-from-y: 8px; }       /* long-press / context menu: short lift */
+#friend-pick { --bc-from-x: 0px; --bc-from-y: -8px; }    /* dropdown list: short drop from its field */
+#picker { --bc-from-x: 0px; --bc-from-y: 24px; }         /* emoji / GIF panel: up from the bottom */
+#cam-view { --bc-fade-scale: 1; }                         /* full screen: opacity only */
+
+/* Open. */
+[data-bc-motion="menu"]:not([hidden]) { animation: var(--bc-anim-menu); }
+[data-bc-motion="fade"]:not([hidden]), dialog[open] { animation: var(--bc-anim-fade); }
+dialog[open]::backdrop { animation: bc-m-scrim-in var(--bc-dur-fade) var(--bc-ease-out) both; }
+/* Close (motion.js adds .bc-m-leave for the length of the animation). */
+.bc-m-leave { pointer-events: none !important; }
+[data-bc-motion="menu"].bc-m-leave { animation: var(--bc-anim-menu-out); }
+:is([data-bc-motion="fade"], [data-bc-motion="toast"], dialog).bc-m-leave { animation: var(--bc-anim-fade-out); }
+#toast.bc-m-leave { transform: translate(-50%, 0); }
+.bc-m-scrim { position: fixed; inset: 0; z-index: 2147481999; pointer-events: none; background: rgba(0, 0, 0, .45);
+  animation: bc-m-scrim-out var(--bc-dur-fade-out) var(--bc-ease-in) both; }
+
+/* Existing transitions that now share the same timings. */
+#toast { transition-duration: var(--bc-dur-fade); }
+#attach-sheet { transition-duration: var(--bc-dur-menu); }   /* bottom sheet slide-up (app.js hides it 230 ms after close) */
+#attach-scrim { transition-duration: var(--bc-dur-fade); }
+
+/* Reduced motion: no movement at all, just a short cross-fade. */
+@media (prefers-reduced-motion: reduce) {
+  /* Fixed short fades; the speed setting does not apply here (reduced motion wins). */
+  :root { --bc-dur-menu: 140ms; --bc-dur-menu-out: 120ms; --bc-dur-fade: 140ms; --bc-dur-fade-out: 120ms; }
+  [data-bc-motion], dialog { --bc-from-x: 0px !important; --bc-from-y: 0px !important; --bc-fade-scale: 1 !important; }
+}
+/* Wide-screen attach popover keeps its quicker 160 ms, scaled like everything else. */
+#attach-sheet.ad-pop { transition-duration: calc(160ms * var(--bc-anim-scale, 1)); }

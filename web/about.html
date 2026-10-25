@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="system" data-palette="huzz" data-scheme="dark">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About BranchChat</title>
+<script src="/static/scheme.js?v={{BC_ASSET}}"></script>
+<link rel="stylesheet" href="/static/app.css?v={{BC_ASSET}}">
+<link rel="stylesheet" href="/static/kofi-modal.css?v={{BC_ASSET}}">
+<script defer src="/static/kofi-modal.js?v={{BC_ASSET}}"></script>
+<link rel="stylesheet" href="/static/patch-notes.css?v={{BC_ASSET}}">
+</head>
+<body class="pn-page">
+<header>
+  <div>
+    <div class="brand">
+      <span class="bc-icon"><img src="/favicon.png" alt="BranchChat icon" width="32" height="32"></span>
+      <strong><a class="home" href="/" title="Back to BranchChat"><span class="bc-logo"><b>Branch</b><i>Chat</i><sup class="tm" aria-label="trademark">TM</sup></span></a> <a class="ver" href="/patch-notes" title="Patch notes" aria-label="Version {{BC_VERSION_SPOKEN}}, view patch notes">v{{BC_VERSION}}</a></strong>
+    </div>
+  </div>
+</header>
+<main class="pn-panel">
+  <h1>About BranchChat</h1>
+  <div class="notes-list about">
+<section>
+<h2>What BranchChat is</h2>
+<p>BranchChat is a small, private, invite-only chat for family and friends. Messages, photos, and videos are locked end to end, so only the people in the chat can read them.</p>
+<p>Each BranchChat server is run by its owner, not by a big company's cloud. You can use it in your browser, or with the phone and desktop apps.</p>
+</section>
+<section>
+<h2>What matters here</h2>
+<ul>
+<li>Privacy by default. Your email and phone number stay hidden unless you choose to share them. No ads, no tracking.</li>
+<li>A calm forest campsite look, like gathering around a fire.</li>
+<li>Gentle sounds, which you can turn off any time.</li>
+<li>A little fun, like the snapping helper that clears away deleted messages.</li>
+<li>Easy on everyone: readable text, and less motion if your device asks for it.</li>
+<li>Simple to get around: your chat list is home, and Back always brings you there.</li>
+</ul>
+</section>
+<!-- Personal "about the maker" text is not part of the shared code (public pages carry no personal names or addresses).
+     A server can add its own section here with BC_CREDITS_FILE (see config.env.example); with none, nothing shows. -->
+<!--bc-about-family-->
+<section class="made-with-love">
+<span class="bc-icon about-icon"><img src="/favicon.png" alt="BranchChat icon" width="112" height="112"></span>
+<!--bc-icon-credit-->
+<p class="thanks">Thanks for being here. Pull up a log by the fire.</p>
+<!-- 26.10.4: the optional emoji styles (Menu > Colors and Themes > Emoji style). Their licences ask for this credit.
+     The pictures are unchanged apart from being made smaller (svgo); "Device" uses your own phone or computer's emoji. -->
+<p class="emoji-credit"><strong>Emoji styles:</strong>
+<a href="https://github.com/jdecked/twemoji">Twemoji</a> &copy; Twitter, Inc and other contributors, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+<a href="https://github.com/googlefonts/noto-emoji">Noto Emoji</a> &copy; Google LLC, licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a> (flags: public domain).
+<a href="https://github.com/microsoft/fluentui-emoji">Fluent Emoji</a> &copy; Microsoft Corporation, <a href="https://github.com/microsoft/fluentui-emoji/blob/main/LICENSE">MIT License</a>.
+Pictures optimized for size only.</p>
+<p class="sounds-credit"><strong>Sounds:</strong> Forest ambience &ldquo;wind in trees&rdquo; by <a href="https://freesound.org/people/chimerical/sounds/104282/">chimerical</a> on Freesound, CC0 (public domain).</p>
+<!-- 26.10.4: sticker credits. Our own character stickers are original BranchChat art; the Classic Reactions pack is
+     Microsoft Fluent Emoji under the MIT License, whose notice must travel with it (full text below and in THIRD-PARTY-NOTICES.md). -->
+<p class="sounds-credit"><strong>Stickers:</strong> the character stickers are original BranchChat art. Classic Reactions stickers are <a href="https://github.com/microsoft/fluentui-emoji-animated">Fluent Emoji</a> &copy; Microsoft Corporation, MIT License.</p>
+<details class="sounds-credit license-text"><summary>MIT License (Fluent Emoji)</summary><pre>MIT License
+
+Copyright (c) Microsoft Corporation.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE</pre></details>
+<!-- Contact link slot: shown only when the server sets BC_CONTACT_EMAIL (empty = no link). -->
+<p class="small-links"><a href="/patch-notes">Patch notes</a> &middot; <a id="about-license" href="/license">License</a> &middot; <a href="/license/third-party">Third-party notices</a><!--bc-contact--></p>
+<!-- Subtle donate link (Oct 19 2026).
+     Shown inside the native apps too (Luke's call, Oct 19 2026). CAVEAT: App Store / Play Store rules restrict
+     links to outside payments - revisit before any store submission. -->
+<p class="small-links bc-donate-link"><a href="https://ko-fi.com/branchchat" target="_blank" rel="noopener noreferrer">Support BranchChat &#9749;</a></p>
+</section>
+  </div>
+  <a class="btn solid" href="/">Return to BranchChat</a>
+</main>
+<!-- Full footer (verse, memorial line, trademark): shown on this About page only (Oct 18 2026).
+     Every other page carries just the trademark line in very small print. -->
+<footer id="bc-footer">
+  <p class="verse">&ldquo;But if we walk in the light, as he is in the light, we have fellowship with one another.&rdquo; <span class="ref">1 John 1:7</span></p>
+  <p class="memorial">In loving memory of our family in heaven &mdash; held safely in His hands.</p>
+  <p class="legal">&copy; 2026 BranchChat. BranchChat&trade; is a trademark of BranchChat. <a class="bc-license-link" href="/license">License</a></p>
+</footer>
+</body>
+</html>

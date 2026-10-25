@@ -1,0 +1,43 @@
+{
+  "version": "26.10.10",
+  "kicker": "What's new",
+  "title": "Lots of new things to try",
+  "intro": "Hi there! We’ve been busy making BranchChat nicer to use every day. Here’s a quick look at what’s new.",
+  "sections": [
+    {
+      "heading": "Phones and notifications",
+      "items": [
+        {"icon": "🔔", "title": "Better phone notifications", "text": "On Android, new messages show the sender’s picture and the message, grouped by chat. Reply or mark as read right from the notification."},
+        {"icon": "🔕", "title": "Mute really means quiet", "text": "Turn notifications off for 30 minutes (or longer) and your phone stays quiet too."},
+        {"icon": "📲", "title": "Notifications on iPhone", "text": "If you added BranchChat to your iPhone’s Home Screen, turning on notifications in the menu now brings up the iPhone’s Allow prompt the way it should."},
+        {"icon": "🔗", "title": "Invite links open the app", "text": "Tap an invite link on Android and it opens straight in the BranchChat app. Sign up in your browser and you can hop into the app already signed in."},
+        {"icon": "⬇️", "title": "Easy updates", "text": "The Android and desktop apps tell you when a new version is out, and there’s a Check for updates button in the menu."},
+        {"icon": "💾", "title": "Save pictures on Android", "text": "Download a photo or file in the Android app and it saves to your phone’s Gallery or Downloads."}
+      ]
+    },
+    {
+      "heading": "The desktop app",
+      "items": [
+        {"icon": "🖥️", "title": "A desktop app that stays handy", "text": "Close the window to keep it in your tray, have it start when you log in, and get notifications right away. It also reopens the server you used last."},
+        {"icon": "🔀", "title": "Switch server", "text": "Belong to more than one BranchChat server? Open the menu and tap Server to see them all and hop between them, still signed in to each. It’s in the desktop app now and comes to the Android app with its next update."}
+      ]
+    },
+    {
+      "heading": "Chatting",
+      "items": [
+        {"icon": "🙂", "title": "Your friend’s profile card", "text": "In a one-to-one chat, tap your friend’s picture or name to see their card and give them a nickname only you see."},
+        {"icon": "🖼️", "title": "Photos that just work", "text": "Send several photos at once, including iPhone HEIC photos, and they show as quick-loading pictures. No more profile picture flicker, either."},
+        {"icon": "🔥", "title": "A cozier campfire", "text": "The forest camp background now moves gently: flickering fire, floating embers and a breeze in the trees. Chats can also keep their own background."},
+        {"icon": "😄", "title": "Lots more clean jokes", "text": "The Joker bot learned over 250 new family-friendly jokes, from groan-worthy dad jokes to clean Chuck Norris ones. Type #joke in a chat to try it."},
+        {"icon": "✅", "title": "Gentler delete", "text": "Deleting a message asks “Are you sure?” in a big, easy-to-tap bubble."},
+        {"icon": "🔢", "title": "Copy-friendly codes", "text": "Sign-in codes in emails are one unbroken number, so they’re easy to copy and paste."},
+        {"icon": "📱", "title": "iPad and iPhone fixes", "text": "The screen no longer gets squashed after the keyboard closes, and the message box stays right above the keyboard."},
+        {"icon": "🐞", "title": "Report a bug", "text": "See something broken? Tap the little bug button and tell us what happened. Screenshots are optional."}
+      ]
+    }
+  ],
+  "apps": "Android and desktop (Linux) apps are at branchchat.app. Already have the app? It will offer the update for you.",
+  "thanks": "Thank you for being part of this little community. It means a lot to have you here.",
+  "signoff": "God bless, and happy chatting!",
+  "signer": "Luke"
+}

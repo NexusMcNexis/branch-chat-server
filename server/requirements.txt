@@ -1,0 +1,3 @@
+# BranchChat Server runtime dependencies (everything else is the Python standard library).
+# cryptography: Web Push (VAPID signing and payload encryption) in web/webpush.py.
+cryptography>=42,<47

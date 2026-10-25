@@ -1,0 +1,31 @@
+Woodland delete-character sounds (Branch Chat): sources and licences. Mixed with small per-sound scripts
+(layering, EQ, gentle room); the mixing and any synthesised parts are ours, dedicated CC0 1.0.
+
+bunny-sfx.mp3 (Bunny delete animation, redone 0.23.3): fully synthesised by make_bunny.py (no samples, nothing
+  from Freesound or OpenGameArt any more) -> ours, dedicated CC0 1.0, no attribution required.
+
+owl-sfx.mp3 (Owl delete animation, redone 0.23.3): fully synthesised by make_owl.py (no samples, nothing
+  from Freesound any more) -> ours, dedicated CC0 1.0, no attribution required.
+
+badger-sfx.mp3 (Badger delete animation, redone 0.23.3): fully synthesised by make_badger.py (no samples, nothing
+  from Freesound any more) -> ours, dedicated CC0 1.0, no attribution required.
+
+painter-sfx.mp3 (Painter delete animation, redone 0.23.3): fully synthesised by make_painter.py (no samples)
+  -> ours, dedicated CC0 1.0, no attribution required.
+
+robot-sfx.mp3 (Robot delete animation): fully synthesised by make_robot.py (no samples) -> ours, dedicated CC0 1.0.
+
+v2 animations (Oct 2026): painter-sfx.mp3, badger-sfx.mp3 and fisherman-sfx.mp3 were re-synthesised by make_v2.py for
+  the new timings (birds, the old badger's cane, the outboard motor and the fish): no samples -> ours, dedicated CC0 1.0.
+
+Spoken lines (26.10.2):
+  badger-voice.mp3: made on our own machine with Parler-TTS mini v1 (parler-tts/parler-tts-mini-v1; code and weights
+  under the Apache License 2.0), speaker "Gary" (take B) described as a kindly elderly man, plus two tongue clicks synthesised by
+  us; trimmed, EQ, gentle room and loudness by us. Ours, dedicated CC0 1.0.
+  painter-voice.mp3: made on our own machine with Parler-TTS mini v1 (parler-tts/parler-tts-mini-v1; code and weights
+  under the Apache License 2.0), speaker "Gary" described as a kind grandfather: "Oops." (take S) and "Well you're a
+  bird now" (take P). Only trimmed, short fades, a plain volume match and joined into one file by us; no EQ, echo,
+  pitch or speed change. Ours, dedicated CC0 1.0.
+
+turtle-sfx.mp3 (Turtle Dragon delete animation, 26.10.2): fully synthesised by make_turtle.py (kept in
+  /workspace/anim-sound/sfx; no samples, nothing from Freesound) -> ours, dedicated CC0 1.0, no attribution required.

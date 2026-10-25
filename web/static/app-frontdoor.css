@@ -1,0 +1,298 @@
+/* Branch Chat front door (branchchat.app first screen, apps and browsers). frontdoor.py adds data-bc-fd="1" to <html>
+   (and data-bc-app="android|desktop" inside the apps) and renders this screen instead of the download page.
+   Approved design: Oct 17 6:23 PM (open sign-up + log in) + Oct 17 10:45 PM (username first, Create account primary,
+   Sign in secondary, hand-off pop-up) + the 07 front-door "Server: branchchat.app / Use my own server" row. */
+html[data-bc-fd], html[data-bc-fd] body { height: 100%; }
+html[data-bc-fd] body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center;
+  padding: max(18px, env(safe-area-inset-top)) 20px max(10px, env(safe-area-inset-bottom)); box-sizing: border-box; overflow-x: hidden; }
+.fd { flex: 1 0 auto; width: min(400px, 100%); display: flex; flex-direction: column; justify-content: center; }
+.fd-hero { text-align: center; margin: 0 0 16px; }
+.fd-hero .bc-icon { display: inline-flex; filter: drop-shadow(0 4px 10px rgba(0,0,0,.45)); }
+.fd-hero img { width: 72px; height: 72px; border-radius: 18px; object-fit: cover; background: #000; box-shadow: 0 0 0 1px rgba(255,255,255,.12); }
+.fd-hero h1 { margin: 10px 0 0; font-size: 34px; line-height: 1.1; font-weight: inherit; }
+.fd-hero h1 .bc-logo { font-size: 1em; }
+.fd-line { margin: 6px 0 0; font-size: 15.5px; color: var(--muted); text-shadow: 0 1px 4px rgba(0,0,0,.5); }
+html[data-bc-fd] form { width: 100%; box-sizing: border-box; padding: 16px 18px 14px; }
+html[data-bc-fd] form[hidden] { display: none !important; }
+html[data-bc-fd] form p { margin: 0; }
+html[data-bc-fd] .fd-title { font-size: 19px; font-weight: 600; margin: 0 0 2px; }
+html[data-bc-fd] label { display: block; margin: 12px 0 5px; font-size: 15px; }
+html[data-bc-fd] input { box-sizing: border-box; min-height: 46px; font-size: 16px; }
+html[data-bc-fd] .hint { font-size: 13px; color: var(--muted); margin: 5px 0 0; }
+html[data-bc-fd] button[type=submit] { width: 100%; min-height: 48px; margin-top: 16px; font-weight: 600; font-size: 17px; }
+html[data-bc-fd] .fd-alt { display: block; width: 100%; margin: 12px 0 0; text-align: center; font-size: 15px; color: var(--muted); }
+html[data-bc-fd] .fd-alt button.linkish { display: inline; margin: 0; font-size: inherit; color: var(--blue); text-decoration: none; font-weight: 600; }
+html[data-bc-fd] .fd-forgot { display: block; margin: 10px auto 0 !important; text-align: center !important; font-size: 14px; text-decoration: none !important; }
+.fd-server { display: flex; align-items: center; gap: 10px; margin: 12px 0 0; padding: 9px 12px; border-radius: 12px; font-size: 14px;
+  border: 1px solid rgba(255,255,255,.1); background: color-mix(in srgb, var(--card) 35%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.fd-server svg { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--muted); stroke-width: 1.8; stroke-linecap: round; }
+.fd-server .grow { flex: 1; min-width: 0; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fd-server b { color: var(--text); font-weight: 600; }
+.fd-server a { color: var(--blue); text-decoration: none; font-weight: 600; white-space: nowrap; }
+.fd-foot { flex: none; margin: 10px 0 0; font-size: 12.5px; text-align: center; color: var(--muted); opacity: .8; }
+.fd-foot a { color: inherit; text-decoration: none; padding: 6px 4px; }
+/* hand-off pop-up (Oct 17 10:45 PM): org icon + name, "You're being redirected to <org>" */
+.fd-modal { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(5,8,12,.55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); padding: 24px; z-index: 10; }
+.fd-modal[hidden] { display: none; }
+.fd-modal-card { width: min(320px, 100%); text-align: center; padding: 24px 20px 22px; border-radius: 18px; background: color-mix(in srgb, var(--card) 92%, transparent);
+  border: 1px solid rgba(255,255,255,.1); box-shadow: 0 18px 50px rgba(0,0,0,.5); }
+.fd-modal-card img { width: 72px; height: 72px; border-radius: 18px; box-shadow: 0 4px 14px rgba(0,0,0,.4); }
+.fd-modal-card .org { margin: 10px 0 0; font-size: 20px; font-weight: 650; }
+.fd-modal-card h2 { margin: 8px 0 4px; font-size: 16px; font-weight: 500; }
+.fd-modal-card .host { margin: 0; font-size: 13px; color: var(--muted); }
+.fd-spin { display: inline-block; width: 22px; height: 22px; margin-top: 14px; border-radius: 50%; border: 3px solid rgba(158,192,255,.25); border-top-color: var(--blue); }
+/* light */
+html[data-bc-fd][data-scheme="light"] .fd-line { text-shadow: 0 1px 3px rgba(255,255,255,.6); }
+html[data-bc-fd][data-scheme="light"] .fd-hero img { box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+html[data-bc-fd][data-scheme="light"] .fd-hero .bc-icon { filter: drop-shadow(0 4px 10px rgba(0,0,0,.2)); }
+html[data-bc-fd][data-scheme="light"] .fd-server { background: rgba(255,255,255,.8); border-color: rgba(0,0,0,.08); }
+html[data-bc-fd][data-scheme="light"] .fd-foot { opacity: 1; }
+html[data-bc-fd][data-scheme="light"] .fd-modal { background: rgba(22,32,43,.3); }
+html[data-bc-fd][data-scheme="light"] .fd-modal-card { background: #fff; border-color: #c9d3df; box-shadow: 0 18px 50px rgba(0,0,0,.18); }
+/* short screens (landscape, small desktop windows): shrink the hero instead of scrolling */
+@media (max-height: 700px) {
+  .fd-hero img { width: 56px; height: 56px; border-radius: 14px; }
+  .fd-hero h1 { font-size: 30px; margin-top: 6px; }
+  .fd-hero { margin-bottom: 12px; }
+}
+@media (max-height: 560px) { .fd-hero .bc-icon, .fd-line { display: none; } html[data-bc-fd] label { margin-top: 8px; } }
+html[data-bc-fd] .msg:empty, html[data-bc-fd] .ok:empty { display: none; }
+@media (max-width: 380px) { .fd-server { gap: 8px; padding: 9px 11px; font-size: 13.5px; } .fd-server svg { display: none; } }
+.fd-modal-card { background: color-mix(in srgb, var(--card) 97%, transparent); }
+
+/* ---- built version (Oct 18): extra pieces beyond the mockup ---- */
+html[data-bc-fd] body { margin: 0; }
+html[data-bc-fd] form .brand { display: none; }                  /* later login.js steps: the hero above is the brand */
+html[data-bc-fd] form { margin: 0; max-width: none; }
+.fd-sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+html[data-bc-fd] .fd-who { margin: 6px 0 0; font-size: 14.5px; color: var(--muted); }
+html[data-bc-fd] .fd-who b { color: var(--text); }
+html[data-bc-fd] .fd-who button.linkish { display: inline; margin: 0 0 0 6px; padding: 0; font-size: inherit; color: var(--blue); text-decoration: none; font-weight: 600; width: auto; }
+html[data-bc-fd] .fd-note { color: var(--muted); font-size: 13px; }
+html[data-bc-fd] label.su-check { display: flex; gap: 10px; align-items: flex-start; margin: 12px 0 0; font-size: 14px; line-height: 1.35; color: var(--muted); cursor: pointer; }
+html[data-bc-fd] label.su-check input { width: 20px; height: 20px; min-height: 0; margin: 1px 0 0; flex: none; accent-color: var(--blue); }
+html[data-bc-fd] .su-turnstile { margin-top: 10px; }
+html[data-bc-fd] .msg { margin-top: 10px; }
+html[data-bc-fd] button[type=submit]:disabled { opacity: .7; }
+html[data-bc-fd] .fd-alt button.linkish, html[data-bc-fd] .fd-forgot { width: auto; padding: 0; background: none; border: 0; }
+html[data-bc-fd] #own .fd-alt button.linkish { font-weight: 500; }
+html[data-bc-fd] input[aria-invalid="true"] { border-color: var(--red); }
+/* step 2 has more fields: the hero gets smaller instead of the page scrolling */
+html[data-bc-fd][data-fd-step="2"][data-fd-view="signup"] .fd-line,
+html[data-bc-fd][data-fd-view="step"] .fd-line { display: none; }
+html[data-bc-fd][data-fd-step="2"][data-fd-view="signup"] .fd-hero img,
+html[data-bc-fd][data-fd-view="step"] .fd-hero img { width: 52px; height: 52px; border-radius: 13px; }
+html[data-bc-fd][data-fd-step="2"][data-fd-view="signup"] .fd-hero h1 { font-size: 28px; margin-top: 4px; }
+html[data-bc-fd][data-fd-step="2"][data-fd-view="signup"] .fd-hero { margin-bottom: 10px; }
+html[data-bc-fd][data-fd-step="2"][data-fd-view="signup"] label { margin-top: 9px; }
+html[data-bc-fd][data-fd-view="own"] .fd-server { display: none; }
+/* the server row is part of the first screen, not of the later sign-in steps */
+html[data-bc-fd][data-fd-view="step"] .fd-server { display: none; }
+.fd-getapp a { font-weight: 600; }
+html[data-bc-app] .fd-getapp { display: none !important; }      /* belt and braces: the server already leaves it out */
+body.handing { overflow: hidden; }
+/* wide screens: same single column, a little more air */
+@media (min-width: 900px) and (min-height: 760px) { .fd-hero { margin-bottom: 22px; } .fd-hero img { width: 80px; height: 80px; border-radius: 20px; } .fd-hero h1 { font-size: 38px; } }
+/* ---- choose step (12:07 PM): invite / find my family or group / public server ---- */
+html[data-bc-fd] .fd-ask { margin: 12px 0 8px; font-size: 15px; font-weight: 600; }
+.fd-opts { display: flex; flex-direction: column; gap: 8px; }
+html[data-bc-fd] button.fd-opt { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 58px; margin: 0; padding: 9px 12px;
+  text-align: left; border-radius: 12px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); color: var(--text); font: inherit; cursor: pointer; }
+html[data-bc-fd] button.fd-opt:hover, html[data-bc-fd] button.fd-opt:focus-visible { border-color: var(--blue); background: rgba(158,192,255,.1); outline: none; }
+html[data-bc-fd] button.fd-opt[aria-busy="true"] { opacity: .65; }
+.fd-opt-ico { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: rgba(158,192,255,.14); }
+.fd-opt-ico svg { width: 20px; height: 20px; fill: none; stroke: var(--blue); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.fd-opt-txt { display: flex; flex-direction: column; min-width: 0; }
+.fd-opt-txt b { font-size: 15.5px; font-weight: 600; }
+.fd-opt-txt small { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html[data-bc-fd][data-scheme="light"] button.fd-opt { background: rgba(255,255,255,.75); border-color: #c9d3df; color: var(--text); }
+html[data-bc-fd][data-scheme="light"] button.fd-opt:hover, html[data-bc-fd][data-scheme="light"] button.fd-opt:focus-visible { border-color: var(--blue); background: #fff; }
+html[data-bc-fd][data-scheme="light"] .fd-opt-ico { background: rgba(47,111,214,.1); }
+html[data-bc-fd] #su-go[hidden] { display: none; }
+html[data-bc-fd][data-fd-step="choose"][data-fd-view="signup"] .fd-line { display: none; }
+html[data-bc-fd][data-fd-step="choose"][data-fd-view="signup"] .fd-hero { margin-bottom: 10px; }
+/* ---- footer (12:10 PM): the existing verse / memorial / "trademark", small, below the sign-in.
+   Same pill look as before (gate.css #bc-footer). Browsers: all three lines. Apps: the one compact legal line. ---- */
+html[data-bc-fd] #bc-footer.fd-foot { margin: 10px auto 0; padding: 5px 12px 6px; opacity: 1; font-size: 11px; line-height: 1.35; max-width: min(440px, 100%); }
+html[data-bc-fd] .fd-foot .fd-links { font-size: 11.5px; margin: 0 0 2px; }
+html[data-bc-fd] .fd-foot .fd-links a { padding: 4px 3px; }
+html[data-bc-fd] .fd-legal p { margin: 0; }
+html[data-bc-fd] .fd-legal .verse { font-size: 10.5px; }
+html[data-bc-fd] .fd-legal .memorial { font-size: 10px; }
+html[data-bc-fd] .fd-legal .legal { font-size: 10px; }
+html[data-bc-fd] .fd-legal .legal a { color: inherit; text-decoration: underline; text-underline-offset: 2px; padding: 0; }
+/* short phone screens on the longer steps: the verse and memorial step aside so nothing scrolls; the legal line stays */
+@media (max-height: 760px) {
+  html[data-bc-fd][data-fd-step="2"][data-fd-view="signup"] .fd-legal .verse,
+  html[data-bc-fd][data-fd-step="2"][data-fd-view="signup"] .fd-legal .memorial,
+  html[data-bc-fd][data-fd-view="step"] .fd-legal .verse,
+  html[data-bc-fd][data-fd-view="step"] .fd-legal .memorial { display: none; }
+}
+/* Batch 1 item 3 (Oct 17 11:03/11:18 PM decision, kept subtle for the one-screen design): directory + public Lobby entry points.
+   Only on the first screen (username step and Log in); the choose step already has "Find my family or group". */
+.fd-explore { display: flex; gap: 8px; margin: 8px 0 0; }
+.fd-explore a { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 8px 10px;
+  border-radius: 12px; font-size: 13.5px; font-weight: 600; color: var(--blue); text-decoration: none; white-space: nowrap;
+  border: 1px solid rgba(255,255,255,.1); background: color-mix(in srgb, var(--card) 35%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.fd-explore svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.fd-explore span { display: inline-flex; }
+html[data-bc-fd][data-scheme="light"] .fd-explore a { background: rgba(255,255,255,.8); border-color: rgba(0,0,0,.08); }
+html[data-bc-fd]:not([data-fd-view="signup"]):not([data-fd-view="login"]) .fd-explore,
+html[data-bc-fd][data-fd-view="signup"][data-fd-step]:not([data-fd-step="1"]) .fd-explore { display: none; }
+html[data-bc-fd][data-signup="0"] #fd-lobby { display: none; }
+@media (max-width: 380px) { .fd-explore a { font-size: 13px; padding: 8px 6px; gap: 5px; } .fd-explore svg { width: 14px; height: 14px; } }
+/* Leave room for the footer (verse, memorial, trademark) coming back: on shorter screens the row stays on Create account only. */
+@media (max-height: 799px) { html[data-bc-fd][data-fd-view="login"] .fd-explore { display: none; } .fd-explore a { padding: 7px 10px; } }
+/* Sign-up closed (BC_OPEN_SIGNUP off, e.g. until email works): Log in only, no "New here? Create account". */
+html[data-bc-fd][data-signup="0"] #login .fd-alt { display: none; }
+/* ---- Apple install directions (fd-install.js, Oct 19 2026): replaces "Get the app" on iPhone / iPad / Mac ---- */
+.fd-install { margin: 10px 0 0; padding: 8px 12px; border: 1px solid rgba(255,255,255,.14); border-radius: 12px; background: rgba(0,0,0,.18); font-size: 14px; line-height: 1.4; }
+html[data-bc-fd][data-scheme="light"] .fd-install { background: rgba(255,255,255,.8); border-color: rgba(0,0,0,.08); }
+.fd-install summary { cursor: pointer; font-weight: 600; text-align: center; }
+.fd-install ol { margin: 8px 0 4px; padding-left: 22px; }
+.fd-install li { margin: 3px 0; }
+.fd-install-after { margin: 6px 0 2px; font-size: 13px; opacity: .85; }
+html[data-bc-app] .fd-install { display: none !important; }
+html[data-bc-fd]:not([data-fd-view="signup"]):not([data-fd-view="login"]) .fd-install,
+html[data-bc-fd][data-fd-view="signup"][data-fd-step]:not([data-fd-step="1"]) .fd-install { display: none; }
+@media (display-mode: standalone) { .fd-install { display: none !important; } }
+/* ---- Ko-fi donate link (Oct 19 2026): footer link + small pill under the install steps. Low-key, on-brand. ---- */
+.fd-install-donate { margin: 8px 0 2px; text-align: center; }
+.fd-install .bc-kofi { display: inline-block; padding: 5px 14px; border-radius: 999px; border: 1px solid currentColor; color: inherit; font-size: 13px; font-weight: 600; text-decoration: none; opacity: .85; }
+.fd-install .bc-kofi:hover, .fd-install .bc-kofi:focus-visible { opacity: 1; }
+html[data-bc-app] .fd-donate { display: none !important; }
+html[data-bc-fd][data-fd-view="signup"][data-fd-step]:not([data-fd-step="1"]) .fd-kofi-hero { display: none; }
+.fd-kofi-hero { margin: 10px 0 0; text-align: center; }
+.fd-kofi-hero a { --rose: #ff7a8c; display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px; border-radius: 999px; color: var(--rose); font-size: 13px; font-weight: 600; letter-spacing: .02em; text-decoration: none;
+  background: color-mix(in srgb, var(--rose) 12%, transparent); border: 1px solid color-mix(in srgb, var(--rose) 35%, transparent); transition: background-color .15s; }
+html[data-scheme="light"] .fd-kofi-hero a { --rose: #c4183a; background: rgba(255,255,255,.75); }
+.fd-kofi-hero a:hover, .fd-kofi-hero a:focus-visible { background: color-mix(in srgb, var(--rose) 22%, transparent); }
+/* ---- Two-column front door + download grid (Oct 19 2026, feat/mac-frontdoor-two-column) ----
+   Right column (.fd-side): the install card (fd-install.js) + the old "all platforms" tiles (.plats from downloads.css).
+   Narrow screens: one column as before. Grid: desktops (fine pointer) always; tablets only when wide+tall (iPad
+   landscape); never iPhone (data-fd-os) or phones (short in landscape, narrow in portrait) or inside the apps. */
+.fd-side { display: flex; flex-direction: column; gap: 10px; }
+.fd-side:empty { display: none; }
+.fd-side .fd-install { margin: 10px 0 0; }
+.fd-dl { display: none; margin: 4px 0 0; padding: 14px 16px 12px; border-radius: 16px; border: 1px solid rgba(255,255,255,.1);
+  background: color-mix(in srgb, var(--card) 35%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.fd-dl-title { margin: 0 0 10px; font-size: 16px; font-weight: 600; }
+.fd-dl .plats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.fd-dl .plat { min-height: 52px; }
+.fd-dl-more { margin: 10px 0 0; text-align: center; font-size: 13.5px; }
+.fd-dl-more a { color: var(--blue); text-decoration: none; font-weight: 600; }
+html[data-bc-fd][data-scheme="light"] .fd-dl { background: rgba(255,255,255,.8); border-color: rgba(0,0,0,.08); }
+@media (pointer: fine), (min-width: 900px) and (min-height: 600px) { .fd-dl { display: block; } }
+html[data-fd-os="iphone"] .fd-dl, html[data-bc-app] .fd-side { display: none !important; }
+html[data-bc-fd]:not([data-fd-view="signup"]):not([data-fd-view="login"]) .fd-dl,
+html[data-bc-fd][data-fd-view="signup"][data-fd-step]:not([data-fd-step="1"]) .fd-dl { display: none; }
+@media (min-width: 1000px) and (min-height: 600px) {
+  .fd { width: min(980px, 100%); display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 440px);
+    column-gap: clamp(40px, 7vw, 120px); justify-content: center; align-content: center; }
+  .fd > * { grid-column: 1; }
+  /* Right column starts level with the top of the login card (row 2, under the logo/title), not centered. */
+  .fd > .fd-side { grid-column: 2; grid-row: 2 / span 29; align-self: start; }
+  .fd-side .fd-install { margin-top: 0; }
+  .fd-side .fd-install summary { text-align: left; }
+  html[data-bc-fd]:not([data-fd-view="signup"]):not([data-fd-view="login"]) .fd,
+  html[data-bc-fd][data-fd-view="signup"][data-fd-step]:not([data-fd-step="1"]) .fd { grid-template-columns: minmax(0, 400px); }
+}
+.fd-dl-soon { color: var(--muted); font-size: 12.5px; margin-top: 8px; }
+
+/* ---- 26.10.6: Chromium/Android "Install app" button (fd-install.js, beforeinstallprompt) ---- */
+.fd-pwa { margin: 10px 0 0; padding: 10px 12px; border: 1px solid rgba(255,255,255,.14); border-radius: 12px; background: rgba(0,0,0,.18); text-align: center; font-size: 14px; line-height: 1.4; }
+html[data-bc-fd][data-scheme="light"] .fd-pwa { background: rgba(255,255,255,.8); border-color: rgba(0,0,0,.08); }
+html[data-bc-fd] button.fd-pwa-btn { width: auto; min-height: 42px; margin: 0; padding: 8px 26px; border-radius: 999px; border: 1px solid var(--blue); background: rgba(158,192,255,.12); color: var(--blue); font-weight: 600; font-size: 15px; cursor: pointer; }
+html[data-bc-fd] button.fd-pwa-btn:hover, html[data-bc-fd] button.fd-pwa-btn:focus-visible { background: rgba(158,192,255,.22); outline: none; }
+.fd-side .fd-pwa { margin-top: 0; }
+html[data-bc-app] .fd-pwa { display: none !important; }
+html[data-bc-fd]:not([data-fd-view="signup"]):not([data-fd-view="login"]) .fd-pwa,
+html[data-bc-fd][data-fd-view="signup"][data-fd-step]:not([data-fd-step="1"]) .fd-pwa { display: none; }
+@media (display-mode: standalone) { .fd-pwa { display: none !important; } }
+
+/* ---- Mockup v3 (frontdoor-get-mockup): the download column is the /get page's own section, unchanged
+   (downloads.section(), styled by downloads.css): LEFT on wide screens, sign-in RIGHT. The front door's own small hero steps
+   aside on that first screen so the logo/title appear once. Phones: the /get column first, then sign-in. ---- */
+html[data-bc-fd]:not([data-bc-app]) .fd-hero { display: none; }
+html[data-bc-fd]:not([data-fd-view="signup"]):not([data-fd-view="login"]) .fd-hero,
+html[data-bc-fd][data-fd-view="signup"][data-fd-step]:not([data-fd-step="1"]) .fd-hero { display: block; }
+html[data-bc-fd]:not([data-fd-view="signup"]):not([data-fd-view="login"]) .fd-side,
+html[data-bc-fd][data-fd-view="signup"][data-fd-step]:not([data-fd-step="1"]) .fd-side { display: none; }
+@media (max-width: 999px), (max-height: 599px) { .fd > .fd-side { order: -1; margin-bottom: 18px; } }
+@media (min-width: 1000px) and (min-height: 600px) {
+  .fd { width: min(1100px, 100%); grid-template-columns: minmax(0, 600px) minmax(0, 400px); align-items: center; }
+  .fd > * { grid-column: 2; }
+  .fd > .fd-side { grid-column: 1; grid-row: 1 / span 30; align-self: center; }
+}
+/* Mockup v4: Luke - the sign-in card sat above the left column's text. Drop it so its top lines up with the
+   "Get BranchChat" headline (just under the eyebrow); only the visible form of the right column is shown at a time. */
+@media (min-width: 1000px) and (min-height: 600px) {
+  html[data-bc-fd]:not([data-bc-app]) .fd > form { margin-top: 64px; }   /* v5: 28 -> 64px, Luke: still too high */
+}
+/* Mockup v6: BranchChat app icon centred at the top of the sign-in card (Create account / Welcome back). */
+.fd-card-icon { display: flex; justify-content: center; margin: 0 0 12px; }
+.fd-card-icon img { width: 64px; height: 64px; border-radius: 16px; object-fit: cover; background: #000;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.12), 0 4px 10px rgba(0,0,0,.35); }
+html[data-bc-fd][data-fd-view="signup"][data-fd-step]:not([data-fd-step="1"]) .fd-card-icon { display: none; }
+
+/* ---- Mobile tidy (frontdoor-mobile-tidy, Oct 20 2026). Phones only (<= 700px wide); desktop untouched.
+   Luke: the phone front door was a cluster and the sign-up card sat below the fold. Order on a phone is now:
+   compact Install prompt (when the browser offers one) -> Create account / Log in card -> advanced stuff
+   (server row, Browse groups / Lobby, the /get downloads, footer). Repeats are hidden on phones: the "Use in
+   your browser" button + tile (the card right there IS the browser version), "or log in here" (the card has
+   Log in), the browser explainer paragraph and the host-your-own line (the footer has Host your own). ---- */
+@media (max-width: 700px) {
+  html[data-bc-fd]:not([data-bc-app]) body { padding-top: max(10px, env(safe-area-inset-top)); }
+  html[data-bc-fd]:not([data-bc-app]) .fd { justify-content: flex-start; }
+  /* Let the install card and the downloads section be ordered separately from each other. */
+  html[data-bc-fd]:not([data-bc-app]) .fd > .fd-side { display: contents; }
+  html[data-bc-fd]:not([data-bc-app]) .fd-side > .fd-pwa,
+  html[data-bc-fd]:not([data-bc-app]) .fd-side > .fd-install { order: -2; margin: 0 0 10px; }
+  html[data-bc-fd]:not([data-bc-app]) .fd-side > .fd-get { order: 50; margin-top: 22px; }
+  /* Compact install prompt: one row, button + short line. */
+  html[data-bc-fd] .fd-pwa { display: flex; align-items: center; gap: 10px; padding: 7px 10px; text-align: left; }
+  html[data-bc-fd] .fd-pwa .fd-install-after { margin: 0; font-size: 12.5px; line-height: 1.3; opacity: .85; }
+  html[data-bc-fd] button.fd-pwa-btn { flex: none; min-height: 36px; padding: 6px 16px; font-size: 14px; }
+  html[data-bc-fd] .fd-install { padding: 7px 12px; }
+  /* Card: smaller icon, tighter spacing. */
+  .fd-card-icon { margin-bottom: 8px; }
+  .fd-card-icon img { width: 48px; height: 48px; border-radius: 12px; }
+  /* Downloads section on phones: heading + platform tiles + "on the way" line only. */
+  .fd-get .eyebrow, .fd-get .lead, .fd-get .dl-primary, .fd-get .dl-meta, .fd-get .plats li:has(.plat.web),
+  .fd-get .login-jump, .fd-get .dl-web, .fd-get .bc-host-more { display: none !important; }
+  .fd-get #dl-title { font-size: 22px; margin: 0 0 10px; }
+}
+
+/* 26.10.12: front-door gate */
+.fd-gate{display:flex;flex-direction:column;gap:10px;margin:12px auto;max-width:360px}
+.fd-gate button{width:100%}
+#fd-pick small{opacity:.7}
+
+/* directory-signin (Oct 21 2026): Browse groups pop-up behind "Sign in here" (browsers). */
+.fd-browse { width: min(440px, calc(100vw - 24px)); max-height: min(640px, calc(100dvh - 32px)); padding: 18px 18px 14px; border: 1px solid rgba(255,255,255,.14);
+  border-radius: 18px; background: rgba(22,28,26,.97); color: #eef3ef; box-shadow: 0 18px 50px rgba(0,0,0,.45); overflow: auto; }
+.fd-browse::backdrop { background: rgba(0,0,0,.55); }
+html[data-scheme="light"] .fd-browse { background: rgba(252,253,252,.98); color: #17221c; border-color: rgba(0,0,0,.08); }
+.fdb-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.fdb-head h2 { margin: 0; font-size: 19px; }
+.fdb-x { width: 36px; min-width: 36px; height: 36px; padding: 0; border-radius: 50%; font-size: 22px; line-height: 1; background: transparent; color: inherit; border: 1px solid currentColor; opacity: .7; }
+.fdb-lead { margin: 6px 0 10px; font-size: 14px; opacity: .8; }
+#fdb-search { width: 100%; box-sizing: border-box; margin: 0 0 10px; }
+.fdb-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.fdb-item { width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px 12px; text-align: left; border-radius: 14px;
+  background: rgba(255,255,255,.06); color: inherit; border: 1px solid rgba(255,255,255,.12); cursor: pointer; }
+html[data-scheme="light"] .fdb-item { background: #fff; border-color: rgba(0,0,0,.1); }
+.fdb-item:hover, .fdb-item:focus-visible { border-color: #3d8f5a; }
+.fdb-item img { width: 40px; height: 40px; border-radius: 10px; flex: none; object-fit: cover; }
+.fdb-text { display: flex; flex-direction: column; min-width: 0; }
+.fdb-text b { font-size: 15px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; overflow-wrap: anywhere; }
+.fdb-text small { font-size: 12.5px; opacity: .75; overflow-wrap: anywhere; }
+.fdb-text small.on::first-letter { color: #3fb36a; }
+.fdb-tag { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 999px; border: 1px solid currentColor; opacity: .75; }
+.fdb-empty { padding: 10px 4px; opacity: .75; font-size: 14px; }
+.fdb-alt { margin: 12px 0 0; text-align: center; font-size: 14px; }
+
+/* licensing: small License link in the trademark footer line (every server, links to /license) */
+#bc-footer .bc-license-link, .fd-legal .bc-license-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; opacity: .9; margin-left: .35em; }

@@ -1,0 +1,116 @@
+/* "Host your own Branch Chat" (public server only, BC_HOST_LINK): top link on the sign-in page, menu row in the app,
+   the server pop-up under the app downloads, and the /host explainer. Works in dark and light (html[data-scheme]). */
+:root { --h-bg: #10141a; --h-card: #1a212b; --h-line: #354153; --h-text: #f2f6fb; --h-muted: #b9c5d3; --h-accent: #9ec0ff; --h-on-accent: #07110c; --h-soon: #2a3442; }
+html[data-scheme="light"] { --h-bg: #eef2f6; --h-card: #ffffff; --h-line: #c9d3df; --h-text: #16202b; --h-muted: #4a5868; --h-accent: #2f6fd6; --h-on-accent: #ffffff; --h-soon: #e3e9f1; }
+.bc-host-ico, .bc-host-ext, .bc-host-x svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* --- sign-in page: slim link at the top --- */
+html[data-bc-host] body:has(> .bc-host-bar) { padding-top: 64px; }
+.bc-host-bar { position: absolute; top: 12px; right: 14px; z-index: 5; max-width: calc(100% - 28px); }
+.bc-host-link { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 7px 14px 7px 10px; border-radius: 999px;
+  color: var(--h-text); text-decoration: none; font-size: 14px; font-weight: 600; line-height: 1.2;
+  background: color-mix(in srgb, var(--h-card) 72%, transparent); border: 1px solid color-mix(in srgb, var(--h-accent) 45%, var(--h-line));
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 4px 16px rgba(0,0,0,.18); }
+.bc-host-link:hover { border-color: var(--h-accent); background: color-mix(in srgb, var(--h-card) 88%, transparent); }
+.bc-host-link:focus-visible { outline: 2px solid var(--h-accent); outline-offset: 2px; }
+.bc-host-link .bc-host-ico { width: 20px; height: 20px; flex: none; color: var(--h-accent); }
+.bc-host-link .bc-host-ext { width: 14px; height: 14px; flex: none; opacity: .75; }
+.bc-host-sub { font-weight: 500; font-size: 12px; color: var(--h-muted); padding-left: 8px; border-left: 1px solid var(--h-line); }
+@media (max-width: 600px) {
+  .bc-host-bar { left: 50%; right: auto; transform: translateX(-50%); top: 10px; width: max-content; }
+  .bc-host-link { font-size: 13px; min-height: 36px; padding: 6px 12px 6px 9px; }
+  .bc-host-sub { font-size: 11px; }
+}
+@media (max-width: 380px) { .bc-host-sub { display: none; } }
+
+/* --- in the app: menu row (same shape as Invite, quieter colour) --- */
+#app-menu #menu-host.menu-row { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 48px; margin: 4px 0; padding: 8px 10px 8px 8px; box-sizing: border-box;
+  border: 1px solid var(--line); border-radius: 12px; background: color-mix(in srgb, var(--card) 70%, transparent); color: var(--text);
+  font-weight: 600; text-decoration: none; text-align: left; -webkit-tap-highlight-color: transparent; transition: background-color .15s ease, border-color .15s ease; }
+#app-menu #menu-host.menu-row:hover, #app-menu #menu-host.menu-row:focus-visible { background: color-mix(in srgb, var(--accent) 12%, var(--card)); border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+#app-menu #menu-host.menu-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#menu-host .menu-row-ico { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 18%, var(--card)); color: var(--accent); }
+#menu-host .menu-row-ico svg { width: 19px; height: 19px; }
+#menu-host .menu-row-label { flex: 1 1 auto; min-width: 0; line-height: 1.25; overflow-wrap: anywhere; }
+#menu-host .menu-host-sub { display: block; font-size: 12px; font-weight: 500; color: var(--muted); text-shadow: none; }
+#menu-host .menu-row-chev { flex: none; display: grid; place-items: center; width: 20px; height: 20px; color: var(--muted); }
+#menu-host .menu-row-chev svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+/* --- under the app downloads: link + pop-up --- */
+.bc-host-more { margin: 14px 0 0; font-size: 14px; color: var(--muted, var(--h-muted)); }
+.bc-host-more a { color: var(--blue, var(--h-accent)); font-weight: 600; text-underline-offset: 3px; }
+html.bc-host-lock, html.bc-host-lock body { overflow: hidden !important; overscroll-behavior: none; }
+.bc-host-dialog { width: min(560px, calc(100vw - 24px)); max-height: min(86vh, 760px); max-height: min(86dvh, 760px); padding: 0; border: 1px solid var(--h-line); border-radius: 18px;
+  background: var(--h-card); color: var(--h-text); box-shadow: 0 24px 70px rgba(0,0,0,.45); overflow: hidden; overscroll-behavior: contain; }
+.bc-host-dialog[open] { display: flex; flex-direction: column; }
+.bc-host-dialog::backdrop { background: rgba(6,10,14,.62); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+html[data-scheme="light"] .bc-host-dialog::backdrop { background: rgba(30,40,55,.38); }
+.bc-host-dhead { display: flex; align-items: center; gap: 12px; padding: 16px 14px 10px 20px; border-bottom: 1px solid var(--h-line); }
+.bc-host-dhead h2 { flex: 1; margin: 0; font-size: 20px; line-height: 1.25; color: var(--h-text); text-shadow: none; }
+.bc-host-x { flex: none; display: grid; place-items: center; width: 40px; height: 40px; margin: 0; padding: 0; border-radius: 999px; border: 1px solid var(--h-line); background: transparent; color: var(--h-text); cursor: pointer; }
+.bc-host-x:hover { background: color-mix(in srgb, var(--h-accent) 14%, transparent); }
+.bc-host-x:focus-visible { outline: 2px solid var(--h-accent); outline-offset: 2px; }
+.bc-host-x svg { width: 20px; height: 20px; }
+.bc-host-dbody { padding: 12px 20px 20px; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.bc-host-lead { margin: 0 0 12px; color: var(--h-muted); font-size: 15px; }
+.bc-host-plats { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 8px; }
+.bc-host-plat { padding: 10px 12px; border: 1px solid var(--h-line); border-radius: 12px; background: color-mix(in srgb, var(--h-bg) 35%, var(--h-card)); }
+.bc-host-plat b { font-size: 15px; color: var(--h-text); }
+.bc-host-plat > span { display: block; font-size: 13.5px; color: var(--h-muted); margin-top: 2px; }
+.bc-host-plat code, .bc-host-card pre { display: block; margin-top: 6px; padding: 6px 9px; border-radius: 8px; font: 13px/1.4 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  background: color-mix(in srgb, var(--h-bg) 80%, transparent); color: var(--h-text); border: 1px solid var(--h-line); overflow-x: auto; white-space: pre; }
+.bc-host-plat.is-soon, .bc-host-card.is-soon { opacity: .72; border-style: dashed; }
+.bc-host-soon { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; vertical-align: 2px;
+  color: var(--h-muted); border: 1px solid var(--h-line); }
+.bc-host-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.bc-host-primary { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; border-radius: 12px; font-weight: 600; font-size: 16px; text-decoration: none;
+  background: var(--h-accent); color: var(--h-on-accent); }
+.bc-host-primary .bc-host-ext { width: 16px; height: 16px; }
+.bc-host-primary:focus-visible, .bc-host-secondary:focus-visible { outline: 2px solid var(--h-accent); outline-offset: 3px; }
+.bc-host-primary.is-soon { background: var(--h-soon); color: var(--h-muted); border: 1px dashed var(--h-line); cursor: default; }
+.bc-host-secondary { color: var(--h-accent); font-weight: 600; font-size: 15px; text-underline-offset: 3px; }
+.bc-host-note { margin: 10px 0 0; font-size: 13px; color: var(--h-muted); }
+@media (max-width: 600px) {
+  .bc-host-dialog { width: calc(100vw - 16px); max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); border-radius: 16px; }
+  .bc-host-dhead { padding: 12px 10px 8px 16px; }
+  .bc-host-dhead h2 { font-size: 18px; }
+  .bc-host-dbody { padding: 10px 14px 16px; }
+  .bc-host-primary { width: 100%; justify-content: center; }
+}
+
+/* --- /host explainer page --- */
+body.bc-host-page { margin: 0; min-height: 100vh; background: var(--h-bg); color: var(--h-text); font: 16px/1.5 "Segoe UI", "Noto Sans", "Liberation Sans", system-ui, sans-serif; }
+.bc-host-main { width: min(960px, 100%); margin: 0 auto; padding: 24px 18px 48px; box-sizing: border-box; }
+.bc-host-main h1 { margin: 6px 0 8px; font-size: clamp(28px, 5vw, 40px); line-height: 1.15; }
+.bc-host-main > .bc-host-lead { font-size: 17px; max-width: 46em; margin-bottom: 18px; }
+.bc-host-back a, .bc-host-foot a { color: var(--h-accent); }
+.bc-host-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; margin-top: 22px; }
+.bc-host-card { padding: 16px; border: 1px solid var(--h-line); border-radius: 14px; background: var(--h-card); }
+.bc-host-card h2 { margin: 0 0 6px; font-size: 18px; }
+.bc-host-card p { margin: 0 0 8px; color: var(--h-muted); font-size: 14.5px; }
+.bc-host-card .bc-host-req { font-size: 13.5px; }
+.bc-host-card .bc-host-req b { color: var(--h-text); }
+.bc-host-card ol { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
+.bc-host-card pre { margin: 8px 0; }
+.bc-host-card pre code { font: inherit; }
+.bc-host-foot { margin-top: 26px; font-size: 14px; color: var(--h-muted); }
+@media (prefers-reduced-motion: reduce) { .bc-host-link, #menu-host { transition: none !important; } }
+
+/* 26.10.2 (Oct 18 2026): the host page ends with the same tiny trademark line as every other page. */
+#bc-footer.host-mini { margin: 18px auto 12px; padding: 2px 10px; text-align: center; font-size: 10px; line-height: 1.3; opacity: .75; }
+#bc-footer.host-mini p { margin: 0; }
+#bc-footer.host-mini a { color: inherit; }
+
+/* /host page heading + pop-up title: the BranchChat wordmark (bold "Branch", thin green "Chat", small TM). The standalone
+   /host page loads only this file, so it carries its own copy of the wordmark styles; in the app, app.css/gate.css win. */
+@font-face { font-family: "BC Outfit"; src: url("/static/outfit.woff?v=1") format("woff"); font-weight: 100 900; font-display: swap; }
+.bc-host-page .bc-logo { font-family: "BC Outfit", "Segoe UI", "Noto Sans", sans-serif; letter-spacing: -.005em; white-space: nowrap; }
+.bc-host-page .bc-logo b { font-weight: 700; color: #f1f5f2; }
+.bc-host-page .bc-logo i { font-style: normal; font-weight: 300; color: #7cc98c; }
+.bc-host-page .bc-logo .tm { font-size: .32em; font-weight: 500; letter-spacing: .02em; vertical-align: top; position: relative; top: .25em; margin-left: .08em; opacity: .7; color: inherit; line-height: 1; }
+html[data-scheme="light"] .bc-host-page .bc-logo b { color: #1b2a20; }
+html[data-scheme="light"] .bc-host-page .bc-logo i { color: #2e7d48; }
+#bc-host-title .bc-logo { font-size: 1em; }
+
+/* licensing: small License link in the trademark footer line (every server, links to /license) */
+#bc-footer .bc-license-link, .fd-legal .bc-license-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; opacity: .9; margin-left: .35em; }

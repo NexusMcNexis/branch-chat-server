@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" type="image/png" href="/favicon.png">
+<title>BranchChat directory</title>
+<!-- 26.10.3: link preview card (full image address filled in by the server). -->
+<meta property="og:site_name" content="BranchChat">
+<meta property="og:title" content="BranchChat directory">
+<meta property="og:type" content="website">
+<meta property="og:image" content="http://localhost:8766/static/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="BranchChat: private chat for family and friends">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BranchChat directory">
+<meta name="twitter:image" content="http://localhost:8766/static/og-image.jpg">
+<meta name="description" content="BranchChat servers that chose to be listed. Join one with an invite, or sign in.">
+<link rel="stylesheet" href="/static/dir.css?v={{BC_ASSET}}">
+<script src="/static/vt-quiet.js?v={{BC_ASSET}}"></script>
+</head>
+<body class="dir-body">
+<main class="dir-page">
+  <header class="dir-head">
+    <p class="dir-kicker"><img src="/favicon.png" alt="" width="20" height="20"> <a href="/"><span class="bc-logo"><b>Branch</b><i>Chat</i><sup class="tm" aria-label="trademark">TM</sup></span></a></p>
+    <h1>Directory</h1>
+    <p class="note">Servers that chose to be listed and checked in during the last <span id="ttl">15 minutes</span>. Each one runs its own accounts: sign in there, or ask someone on it for an invite.</p>
+  </header>
+  <p class="dir-how" id="dir-how">Pick a server, then Continue to its sign-in page.</p>
+  <label class="dir-search-l" for="dir-search">Search</label>
+  <input id="dir-search" class="dir-search" type="search" placeholder="Family, church or group name" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <ul class="dir-list" id="list" role="listbox" aria-label="Servers" aria-live="polite"><li class="dir-empty">Loading…</li></ul>
+  <div class="dir-go"><button type="button" id="dir-continue" disabled>Continue</button></div>
+  <p class="fine">Run your own server? Set <code>BC_DIRECTORY_REPORT=1</code> to be listed. Only the name, icon, sign-in address and online status are shared.</p>
+</main>
+<div class="modal" id="hand" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="hand-title">
+    <span class="org-icon big"><img id="hand-icon" src="/favicon.png" alt="" width="72" height="72"></span>
+    <p class="hand-name" id="hand-name"></p>
+    <h2 id="hand-title" aria-live="polite" aria-atomic="true">Loading sign-in page</h2>
+    <p class="hand-host" id="hand-host"></p>
+    <span class="spinner" aria-hidden="true"></span>
+  </div>
+</div>
+<script src="/static/directory.js?v={{BC_ASSET}}"></script>
+<!-- Footer: just the small trademark line, in very small print (Oct 18 2026: the full footer is on About only;
+     every page, including the directory, carries this one line at the bottom). -->
+<footer id="bc-footer" class="bc-mini dir-mini">
+  <p class="legal">&copy; 2026 BranchChat. BranchChat&trade; is a trademark of BranchChat. <a class="bc-license-link" href="/license">License</a></p>
+</footer>
+</body>
+</html>

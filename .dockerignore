@@ -1,0 +1,9 @@
+# Only web/ and server/requirements.txt are needed in the image.
+*
+!web/
+!server/requirements.txt
+!VERSION
+web/**/__pycache__
+web/**/*.pyc
+web/**/*.bak*
+web/**/*.tmp

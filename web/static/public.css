@@ -1,0 +1,100 @@
+/* Branch Chat public mode (v0.22.8-public.4). Loaded only when PUBLIC_MODE or a public flag is on. */
+
+/* ---------- Sign-in page: Sign up / Log in tabs ---------- */
+html[data-signup] body { align-content: center; gap: 0; }
+.auth-tabs { width: min(440px, 100%); display: flex; gap: 6px; margin: 0 auto 10px; padding: 4px; border-radius: 14px;
+  background: color-mix(in srgb, var(--card) 70%, transparent); border: 1px solid var(--line);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.auth-tabs[hidden] { display: none !important; }
+.auth-tabs button { flex: 1; margin: 0; padding: 9px 12px; border-radius: 10px; background: transparent; color: var(--text); border: 0; font-weight: 600; }
+.auth-tabs button[aria-selected="true"] { background: var(--blue); color: #07110c; }
+.auth-tabs button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.su-check { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; color: var(--text); line-height: 1.4; cursor: pointer; }
+.su-check input { width: 18px; height: 18px; margin: 3px 0 0; flex: none; }
+.su-turnstile { margin-top: 14px; min-height: 65px; }
+#signup button[type="submit"] { width: 100%; }
+
+/* Light scheme for the sign-in page (public mode only; the private gate stays dark). */
+html[data-signup][data-scheme="light"] { --bg:#eef2f6; --card:#ffffff; --line:#c9d3df; --text:#16202b; --muted:#4a5868; --blue:#2f6fd6; --red:#c62828; color-scheme: light; }
+html[data-signup][data-scheme="light"] body { background: radial-gradient(900px 420px at 10% -10%, #dfe9f5 0%, transparent 55%), var(--bg); }
+html[data-signup][data-scheme="light"] body::before { background-image: url("/static/forest-bg-light.webp?v=1"); }
+html[data-signup][data-scheme="light"] form { background: color-mix(in srgb, #fff 86%, transparent); box-shadow: 0 10px 30px rgba(0,0,0,.12); }
+html[data-signup][data-scheme="light"] input, html[data-signup][data-scheme="light"] textarea { background-color: rgba(255,255,255,.85); color: var(--text); }
+html[data-signup][data-scheme="light"] button { color: #fff; }
+html[data-signup][data-scheme="light"] button.ghost, html[data-signup][data-scheme="light"] button.linkish { color: var(--text); }
+html[data-signup][data-scheme="light"] button.linkish { color: var(--blue); }
+html[data-signup][data-scheme="light"] .auth-tabs { background: color-mix(in srgb, #fff 80%, transparent); }
+html[data-signup][data-scheme="light"] .auth-tabs button { color: var(--text); }
+html[data-signup][data-scheme="light"] .auth-tabs button[aria-selected="true"] { color: #fff; }
+html[data-signup][data-scheme="light"] .hint.is-ok { color: #1f7a45; }
+
+/* ---------- App: message menu ---------- */
+#react-report, #react-block {
+  display: block; width: 100%; margin-top: 6px; text-align: left;
+  background: transparent; border: 0; border-radius: 8px; padding: 8px; color: var(--text);
+}
+#react-block { color: var(--danger); }
+#react-report[hidden], #react-block[hidden] { display: none !important; }
+#react-report:hover, #react-block:hover, #react-report:focus-visible, #react-block:focus-visible { background: color-mix(in srgb, var(--text) 8%, transparent); }
+
+/* Hidden rows (blocked senders) */
+.bc-hidden { display: none !important; }
+
+/* ---------- Dialogs ---------- */
+.pub-reasons { border: 0; padding: 0; margin: 8px 0 0; }
+.pub-reasons legend { padding: 0; margin-bottom: 6px; color: var(--text); font-weight: 600; }
+.pub-radio, .pub-check { display: flex; gap: 10px; align-items: center; padding: 6px 0; color: var(--text); cursor: pointer; }
+.pub-radio input, .pub-check input { width: 18px; height: 18px; margin: 0; flex: none; }
+.pub-msgbox { margin-top: 10px; padding: 10px; border: 1px solid var(--line); border-radius: 12px; }
+.pub-msgbox[hidden] { display: none !important; }
+.pub-quote { margin: 8px 0; padding: 8px 10px; border-left: 3px solid var(--accent); border-radius: 6px;
+  background: color-mix(in srgb, var(--text) 6%, transparent); color: var(--text); white-space: pre-wrap; word-break: break-word; max-height: 160px; overflow: auto; }
+.pub-small { font-size: 13px; margin: 4px 0; }
+#pub-report-note { width: 100%; min-height: 70px; margin-top: 8px; }
+#pub-report-dialog .actions, #pub-block-dialog .actions, #pub-person-dialog .actions, #pub-delete-dialog .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; flex-wrap: wrap; }
+.pub-list { margin: 8px 0; padding-left: 20px; color: var(--muted); }
+.pub-person-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.pub-wide { width: 100%; text-align: left; }
+.pub-safety-btn { display: inline-flex; align-items: center; justify-content: center; }
+.pub-safety-btn svg { width: 18px; height: 18px; }
+#pub-report-note-out:empty, #pub-block-out:empty, #pub-reports-note:empty { display: none; }
+
+/* ---------- Settings: Safety and Reports ---------- */
+.pub-h { margin: 14px 0 6px; font-size: 15px; color: var(--text); }
+.pub-blocked, .pub-reports { list-style: none; margin: 6px 0; padding: 0; }
+.pub-blocked li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.pub-blocked li:last-child { border-bottom: 0; }
+.pub-report { padding: 10px; margin: 8px 0; border: 1px solid var(--line); border-radius: 12px; }
+.pub-report.open { border-color: color-mix(in srgb, var(--danger) 55%, var(--line)); }
+.pub-report-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pub-tag { font-size: 12px; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, var(--text) 10%, transparent); color: var(--text); }
+.pub-tag.is-open { background: color-mix(in srgb, var(--danger) 22%, transparent); }
+.pub-tag.is-done { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.pub-report-acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.pub-report-acts button { margin: 0; }
+#delete-factor { width: 100%; margin-top: 6px; }
+#menu-delete { color: var(--danger); }
+
+/* ---------- 0.22.8-public.4: locked mature-language setting (public server) ---------- */
+.pub-check.pub-locked { cursor: not-allowed; opacity: .62; flex-wrap: wrap; row-gap: 4px; filter: saturate(.4); }
+.pub-check.pub-locked input { cursor: not-allowed; pointer-events: none; }
+.pub-check.pub-locked > span:first-of-type { color: var(--muted); }
+.pub-lock-tag { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  color: var(--text); border: 1px solid var(--line); background: color-mix(in srgb, var(--card) 80%, transparent); white-space: nowrap; }
+.pub-lock-ico { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 420px) { .pub-lock-tag { margin-left: 28px; } }
+
+/* ---------- Lobby rules note above the composer (public server, Lobby only) ---------- */
+.pub-lobby-note { margin: 0 10px 6px; padding: 6px 10px; border-radius: 10px; font-size: 12.5px; line-height: 1.35; color: var(--muted);
+  background: color-mix(in srgb, var(--card) 72%, transparent); border: 1px solid color-mix(in srgb, var(--line) 80%, transparent); text-shadow: none; }
+.pub-lobby-note[hidden] { display: none; }
+
+/* 26.10.2 group safety: the Report group / Leave and block row in Group info, the small shield on each
+   member row, and the red text used for the "Leave and block" button. Kept small so Group info stays tidy. */
+.pub-gsafety-bar { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; margin: 10px 0 2px; }
+.pub-gsafety-bar button { min-height: 36px; }
+.pub-danger-text { color: var(--danger, #c0392b); }
+.ginfo-row .pub-gsafety { margin-left: auto; padding: 4px; min-width: 32px; min-height: 32px; display: inline-flex; align-items: center; justify-content: center; opacity: .75; }
+.ginfo-row .pub-gsafety:hover, .ginfo-row .pub-gsafety:focus-visible { opacity: 1; }
+.ginfo-row .ginfo-remove + .pub-gsafety { margin-left: 4px; }
+.pub-group-line { font-style: italic; }

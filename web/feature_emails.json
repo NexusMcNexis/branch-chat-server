@@ -1,0 +1,18 @@
+[
+ {
+  "id": "26.10.4",
+  "date": "2026-10-19",
+  "version": "26.10.4",
+  "note": "Placeholder seed until the approved announcement in /workspace/announce-email/draft.* replaces this text. Add future updates as new entries with a newer date; the newest date is the one new members get.",
+  "subject": "Welcome to BranchChat! Here's what's new",
+  "headline": "Welcome! Here\u2019s what\u2019s new",
+  "paragraphs": [
+   "Welcome to BranchChat! We're so glad you're here. BranchChat is a private, friendly place to chat, share photos and keep up with the people you care about.",
+   "Meet your new friend, the BranchChat Helper bot. You'll find it in your chat list. It's there to show you around: say hi to it, and it will walk you through adding friends, starting a group, reacting to messages and setting up your picture.",
+   "What's new lately: a sound settings panel with six button sounds and separate volume sliders, a Frequently used row and tabs in the emoji picker, a GIF button, and a cleaner, easier-to-read look across the app.",
+   "Thanks for joining us. We hope BranchChat feels like a cozy spot by the fire for you and your family."
+  ],
+  "button_label": "Open BranchChat",
+  "button_url": "{site}"
+ }
+]

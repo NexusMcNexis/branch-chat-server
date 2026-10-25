@@ -1,0 +1,85 @@
+/* Administrator page (0.23.3-beta.15). Builds on app.css (colours, buttons, folds) and patch-notes.css (banner + glass panel).
+   The panel scrolls by itself; the Apply / Cancel bar sticks to its bottom edge while changes are staged. */
+/* Anything this page hides with the hidden attribute stays hidden, even where a rule below sets display. */
+.ap-panel [hidden], .ap-panel[hidden] { display: none !important; }
+.ap-panel { overflow-y: auto; overscroll-behavior: contain; display: block; padding-bottom: 0; }
+.ap-panel > h1 { margin-bottom: 2px; }
+.ap-card { margin: 12px 0; padding: 14px 16px; border-radius: 14px; background: color-mix(in srgb, var(--card) 70%, transparent); border: 1px solid var(--line); }
+.ap-card h2 { margin: 0 0 6px; font-size: 17px; }
+.ap-card h3 { margin: 14px 0 6px; font-size: 15px; }
+.ap-card .sub, .ap-panel p.sub { color: var(--muted); font-size: 13px; margin: 4px 0; }
+.ap-note { min-height: 1.2em; }
+.ap-note.is-bad, .ap-err { color: var(--danger); }
+.ap-err { margin: 4px 0 0; font-size: 13px; }
+.ap-err:empty { display: none; }
+.ap-form label { display: block; margin: 10px 0 4px; font-weight: 600; font-size: 14px; }
+.ap-form input, .ap-field input, .ap-field select, #ap-search, .ap-invite input, .ap-invite select, .ap-type input {
+  width: 100%; box-sizing: border-box; padding: 9px 11px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--text); font: inherit; font-size: 15px; }
+.ap-field input:disabled, .ap-field select:disabled { opacity: .65; }
+.ap-tabs { display: flex; gap: 6px; margin: 10px 0 2px; flex-wrap: wrap; }
+.ap-tab { flex: 1 1 160px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--text); font: inherit; font-size: 14px; cursor: pointer; }
+.ap-tab.is-on { background: var(--accent); color: var(--on-accent); border-color: transparent; font-weight: 600; }
+.ap-bigcode { font-size: 30px; font-weight: 700; letter-spacing: .12em; text-align: center; margin: 12px 0 4px; font-variant-numeric: tabular-nums; }
+.ap-session { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 6px 0; }
+.ap-nav { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+.ap-nav a { padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); color: var(--text); text-decoration: none; font-size: 13px; }
+.ap-nav a:hover, .ap-nav a:focus-visible { background: var(--pill); }
+.ap-facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 6px 0; font-size: 14px; }
+.ap-facts dt { color: var(--muted); }
+.ap-facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 480px) { .ap-facts { grid-template-columns: 1fr; gap: 0; } .ap-facts dd { margin-bottom: 6px; } }
+code, .ap-key { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; overflow-wrap: anywhere; }
+.ap-file code { padding: 2px 6px; border-radius: 6px; background: var(--pill); }
+.ap-file p { margin: 4px 0; }
+.ap-mini { padding: 5px 10px !important; font-size: 13px; border-radius: 9px; }
+.ap-left { justify-content: flex-start; }
+.ap-invite { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+.ap-invite input { flex: 1 1 220px; width: auto; }
+.ap-invite select { flex: 0 0 auto; width: auto; }
+.ap-users { list-style: none; margin: 8px 0 0; padding: 0; }
+.ap-user { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 8px 0; border-top: 1px solid var(--line); }
+.ap-user.is-disabled { opacity: .6; }
+.ap-user-info { display: flex; flex-direction: column; min-width: 0; flex: 1 1 200px; }
+.ap-user-info strong { overflow-wrap: anywhere; }
+.ap-user-tools { display: flex; gap: 6px; flex-wrap: wrap; }
+.ap-group { margin-top: 10px; }
+.ap-group summary { font-weight: 600; }
+.ap-field { padding: 10px 0 12px; border-top: 1px dashed color-mix(in srgb, var(--line) 70%, transparent); }
+.ap-group > .ap-field:first-of-type { border-top: 0; }
+.ap-field-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.ap-field-head label { font-weight: 600; font-size: 14px; }
+.ap-key { display: block; color: var(--muted); margin: 1px 0 3px; }
+.ap-help { margin: 0 0 6px !important; }
+.ap-src { font-size: 11.5px; padding: 1px 8px; border-radius: 999px; background: var(--pill); color: var(--muted); white-space: nowrap; }
+.ap-src-file { color: var(--text); }
+.ap-locked { font-style: italic; }
+.ap-field.is-changed { box-shadow: inset 3px 0 0 var(--accent); padding-left: 10px; }
+.ap-field.is-danger .ap-field-head label::after { content: " ⚠"; color: var(--danger); }
+.ap-secret { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.ap-secret input { flex: 1 1 200px; width: auto; }
+.ap-secret-state { font-size: 14px; color: var(--muted); min-width: 8em; }
+.ap-backups ul { margin: 6px 0; padding-left: 20px; }
+.ap-bar { position: sticky; bottom: 0; z-index: 5; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 -20px; padding: 10px 20px calc(10px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--card) 92%, transparent); border-top: 1px solid var(--line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.ap-bar #ap-bar-text { flex: 1 1 auto; font-weight: 600; }
+@media (max-width: 800px) { .ap-bar { margin: 0 -14px; padding-left: 14px; padding-right: 14px; } }
+.ap-dialog { max-width: min(520px, calc(100vw - 32px)); border: 1px solid var(--line); border-radius: 16px; background: var(--card); color: var(--text); padding: 18px; }
+.ap-dialog::backdrop { background: rgba(0,0,0,.5); }
+.ap-dialog h2 { margin: 0 0 8px; font-size: 18px; }
+.ap-dialog p { margin: 0 0 8px; color: var(--muted); }
+.ap-change-list { margin: 6px 0; padding-left: 18px; font-size: 14px; overflow-wrap: anywhere; max-height: 40vh; overflow-y: auto; }
+.ap-warn { color: var(--danger); font-weight: 600; }
+.ap-type label { display: block; margin: 8px 0 4px; font-size: 14px; }
+.ap-restart { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: rgba(0,0,0,.55); padding: 16px; }
+.ap-restart[hidden] { display: none; }
+.ap-restart .ap-card { max-width: 420px; background: var(--card); }
+.admin-page #bc-footer { flex: none; }
+
+/* 26.10.13.8: email line in the accounts list; long addresses wrap instead of widening the card. */
+.ap-user-email { display: block; overflow-wrap: anywhere; word-break: break-word; max-width: 100%; }
+.ap-user-info { min-width: 0; }
+.ap-user-email { font-size: 13px; }
+
+/* licensing: small License link in the trademark footer line (every server, links to /license) */
+#bc-footer .bc-license-link, .fd-legal .bc-license-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; opacity: .9; margin-left: .35em; }

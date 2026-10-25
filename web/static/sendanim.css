@@ -1,0 +1,11 @@
+/* 26.10.11: the one-time "Keep send animations on?" prompt after the first-send demo (app.js sendDemoAsk). */
+.sendanim-ask{position:relative;margin:6px 10px;padding:12px 40px 12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);box-shadow:0 4px 18px rgba(0,0,0,.14);animation:sendanim-ask-in .22s ease-out}
+.sendanim-ask-title{margin:0 0 2px;font-weight:600}
+.sendanim-ask-note{margin:0 0 10px;font-size:.85em;color:var(--muted)}
+.sendanim-ask-btns{display:flex;gap:8px;flex-wrap:wrap}
+.sendanim-ask-btns button{border-radius:999px;padding:7px 16px;font:inherit;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--text)}
+.sendanim-ask-btns .sendanim-keep{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.sendanim-ask-x{position:absolute;top:6px;right:6px;width:30px;height:30px;border:0;border-radius:50%;background:transparent;color:var(--muted);font-size:20px;line-height:1;cursor:pointer}
+.sendanim-ask-x:hover{background:var(--line)}
+@keyframes sendanim-ask-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.sendanim-ask{animation:none}}
