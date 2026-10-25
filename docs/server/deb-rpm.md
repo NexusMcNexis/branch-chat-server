@@ -1,5 +1,8 @@
 # Installing with a .deb or .rpm package
 
+> **Coming soon.** The packages are not published yet; this page describes how they will work.
+> For now use the one-command install, the tarball or [git](from-git.md).
+
 One package works on every CPU (Raspberry Pi, Intel/AMD PCs) because the server is pure Python.
 
 | System | File | Install |

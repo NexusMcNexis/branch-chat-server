@@ -23,10 +23,10 @@ Update later: run the same line with `-s -- update` on the end (`... | sudo bash
 
 | Your setup | Easiest way | Other ways | Guide |
 |---|---|---|---|
-| Debian, Ubuntu (VPS, PC or bare metal) | one command | `.deb`, tarball, git | [debian-ubuntu.md](docs/server/debian-ubuntu.md) |
-| Raspberry Pi OS (64-bit recommended) | one command | `.deb`, tarball | [raspberry-pi.md](docs/server/raspberry-pi.md) |
-| Fedora, RHEL, Rocky, AlmaLinux | one command | `.rpm`, tarball | [fedora-rhel.md](docs/server/fedora-rhel.md) |
-| openSUSE | one command | `.rpm` | [fedora-rhel.md](docs/server/fedora-rhel.md) |
+| Debian, Ubuntu (VPS, PC or bare metal) | one command | tarball, git (`.deb` coming soon) | [debian-ubuntu.md](docs/server/debian-ubuntu.md) |
+| Raspberry Pi OS (64-bit recommended) | one command | tarball (`.deb` coming soon) | [raspberry-pi.md](docs/server/raspberry-pi.md) |
+| Fedora, RHEL, Rocky, AlmaLinux | one command | tarball (`.rpm` coming soon) | [fedora-rhel.md](docs/server/fedora-rhel.md) |
+| openSUSE | one command | `.rpm` coming soon | [fedora-rhel.md](docs/server/fedora-rhel.md) |
 | Arch Linux, Manjaro | one command | tarball | [arch.md](docs/server/arch.md) |
 | Proxmox | Debian 12 VM or LXC, then one command | | [proxmox.md](docs/server/proxmox.md) |
 | Any Linux with Docker | install tarball with `--mode docker` | docker-compose bundle | [self-hosting.md](docs/self-hosting.md#docker) |
@@ -39,13 +39,12 @@ Not tested on real hardware yet: openSUSE, Arch, Windows, macOS. Tested in conta
 | File | For |
 |---|---|
 | `branch-chat-server-<version>-install.tar.gz` | every Linux above (also `branch-chat-server-latest-install.tar.gz`) |
-| `branch-chat-server_<version>-1_all.deb` | Debian / Ubuntu / Pi OS package, any CPU ([how](docs/server/deb-rpm.md)) |
-| `branch-chat-server-<version>-1.noarch.rpm` | Fedora / RHEL / openSUSE package, any CPU ([how](docs/server/deb-rpm.md)) |
+| `.deb` / `.rpm` packages | coming soon |
 | `branch-chat-server-<version>-docker-compose.tar.gz` | Docker Compose / Docker Desktop |
 | `SHA256SUMS` | check files: `sha256sum -c SHA256SUMS --ignore-missing` |
 
 Files named `...-latest...` are copies of the newest release's files, so links like
-`releases/latest/download/branch-chat-server-latest_all.deb` always work.
+`releases/latest/download/branch-chat-server-latest-install.tar.gz` always work.
 
 ## Install by hand (tarball)
 
@@ -64,7 +63,7 @@ sudo ./server/install.sh
 - [Debian / Ubuntu (VPS and bare metal)](docs/server/debian-ubuntu.md)
 - [Fedora / RHEL / Rocky / openSUSE](docs/server/fedora-rhel.md)
 - [Arch Linux](docs/server/arch.md)
-- [.deb and .rpm packages](docs/server/deb-rpm.md)
+- .deb and .rpm packages: coming soon
 - [From git](docs/server/from-git.md)
 
 ## License

@@ -24,16 +24,16 @@ personalises it, and gets it online.
 
 | Platform | How to install | Guide | Tested |
 |---|---|---|---|
-| Debian 12, Ubuntu 24.04 (VPS or bare metal) | one-command, `.deb`, tarball, git | [debian-ubuntu.md](server/debian-ubuntu.md) | Debian 12 + Ubuntu 24.04 containers |
-| Raspberry Pi OS (Pi 3/4/5) | one-command, `.deb`, tarball | [raspberry-pi.md](server/raspberry-pi.md) | not re-tested for packages |
-| Fedora / RHEL / Rocky / Alma | one-command, `.rpm`, tarball | [fedora-rhel.md](server/fedora-rhel.md) | Fedora 40 container |
-| openSUSE | one-command, `.rpm` | [fedora-rhel.md](server/fedora-rhel.md) | not yet |
+| Debian 12, Ubuntu 24.04 (VPS or bare metal) | one-command, tarball, git (`.deb` coming soon) | [debian-ubuntu.md](server/debian-ubuntu.md) | Debian 12 + Ubuntu 24.04 containers |
+| Raspberry Pi OS (Pi 3/4/5) | one-command, tarball (`.deb` coming soon) | [raspberry-pi.md](server/raspberry-pi.md) | not re-tested for packages |
+| Fedora / RHEL / Rocky / Alma | one-command, tarball (`.rpm` coming soon) | [fedora-rhel.md](server/fedora-rhel.md) | Fedora 40 container |
+| openSUSE | one-command (`.rpm` coming soon) | [fedora-rhel.md](server/fedora-rhel.md) | not yet |
 | Arch Linux | one-command, tarball | [arch.md](server/arch.md) | not yet |
 | Proxmox | Debian 12 VM/LXC, then Debian steps | [proxmox.md](server/proxmox.md) | not re-tested |
 | Any Linux with Docker | Docker Compose | [Docker](#docker) | not re-tested |
 | Windows / macOS | Docker Desktop | [docker-desktop.md](server/docker-desktop.md) | not yet |
 | From source | `git clone` | [from-git.md](server/from-git.md) | not yet |
-| Packages explained | `.deb` / `.rpm` | [deb-rpm.md](server/deb-rpm.md) | — |
+| Packages | `.deb` / `.rpm` | coming soon | — |
 
 ## What you need
 
