@@ -5,9 +5,10 @@ any Debian/Ubuntu machine, or anywhere Docker runs. One setup script asks a few 
 personalises it, and gets it online.
 
 > Status: preview. The installer works from an unpacked release package
-> (https://github.com/NexusMcNexis/branch-chat-releases/releases/latest). A ready-made Docker image is planned.
+> (https://github.com/NexusMcNexis/branch-chat-server/releases/latest). A ready-made Docker image is planned.
 
 ## Contents
+- [Supported platforms](#supported-platforms)
 - [What you need](#what-you-need)
 - [Quick start (Raspberry Pi / Debian / Ubuntu)](#quick-start)
 - [How people reach your server](#access-modes): Cloudflare Tunnel, LAN-only, bring-your-own proxy
@@ -18,6 +19,21 @@ personalises it, and gets it online.
 - [Where things live](#where-things-live)
 - [Security notes](#security-notes)
 - [Troubleshooting](#troubleshooting)
+
+## Supported platforms
+
+| Platform | How to install | Guide | Tested |
+|---|---|---|---|
+| Debian 12, Ubuntu 24.04 (VPS or bare metal) | one-command, `.deb`, tarball, git | [debian-ubuntu.md](server/debian-ubuntu.md) | Debian 12 + Ubuntu 24.04 containers |
+| Raspberry Pi OS (Pi 3/4/5) | one-command, `.deb`, tarball | [raspberry-pi.md](server/raspberry-pi.md) | not re-tested for packages |
+| Fedora / RHEL / Rocky / Alma | one-command, `.rpm`, tarball | [fedora-rhel.md](server/fedora-rhel.md) | Fedora 40 container |
+| openSUSE | one-command, `.rpm` | [fedora-rhel.md](server/fedora-rhel.md) | not yet |
+| Arch Linux | one-command, tarball | [arch.md](server/arch.md) | not yet |
+| Proxmox | Debian 12 VM/LXC, then Debian steps | [proxmox.md](server/proxmox.md) | not re-tested |
+| Any Linux with Docker | Docker Compose | [Docker](#docker) | not re-tested |
+| Windows / macOS | Docker Desktop | [docker-desktop.md](server/docker-desktop.md) | not yet |
+| From source | `git clone` | [from-git.md](server/from-git.md) | not yet |
+| Packages explained | `.deb` / `.rpm` | [deb-rpm.md](server/deb-rpm.md) | — |
 
 ## What you need
 
@@ -42,7 +58,7 @@ On the Pi (or server), as a user with `sudo`:
 
 ```bash
 # download branch-chat-server-<version>-install.tar.gz from
-# https://github.com/NexusMcNexis/branch-chat-releases/releases/latest
+# https://github.com/NexusMcNexis/branch-chat-server/releases/latest
 tar xzf branch-chat-server-*-install.tar.gz
 cd branch-chat-server-*/
 sudo ./server/install.sh

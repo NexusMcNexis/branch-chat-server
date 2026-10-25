@@ -4,18 +4,50 @@ Host your own BranchChat: a self-hosted, end-to-end encrypted chat server for a 
 This repo holds the **server downloads** (on the [Releases](https://github.com/NexusMcNexis/branch-chat-server/releases) page)
 and the setup guides. The phone and desktop apps are in [branch-chat-releases](https://github.com/NexusMcNexis/branch-chat-releases/releases/latest).
 
-## Which file do I need?
+## Install (recommended): one command
 
-| Your setup | File (from the latest release) |
+On a Linux computer, Raspberry Pi or server, paste this into the terminal:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/NexusMcNexis/branch-chat-server/main/install.sh | sudo bash
+```
+
+It works out which Linux you have, installs what it needs, downloads the latest server, checks the download
+is genuine (SHA256), and starts the setup. The setup asks 6 short questions (install method, group name and look,
+admin account, how people reach it, email for sign-in codes, backups), shows a summary and asks before changing
+anything. After that, manage settings from `/admin` in your browser.
+
+Update later: run the same line with `-s -- update` on the end (`... | sudo bash -s -- update`).
+
+## Supported platforms
+
+| Your setup | Easiest way | Other ways | Guide |
+|---|---|---|---|
+| Debian, Ubuntu (VPS, PC or bare metal) | one command | `.deb`, tarball, git | [debian-ubuntu.md](docs/server/debian-ubuntu.md) |
+| Raspberry Pi OS (64-bit recommended) | one command | `.deb`, tarball | [raspberry-pi.md](docs/server/raspberry-pi.md) |
+| Fedora, RHEL, Rocky, AlmaLinux | one command | `.rpm`, tarball | [fedora-rhel.md](docs/server/fedora-rhel.md) |
+| openSUSE | one command | `.rpm` | [fedora-rhel.md](docs/server/fedora-rhel.md) |
+| Arch Linux, Manjaro | one command | tarball | [arch.md](docs/server/arch.md) |
+| Proxmox | Debian 12 VM or LXC, then one command | | [proxmox.md](docs/server/proxmox.md) |
+| Any Linux with Docker | install tarball with `--mode docker` | docker-compose bundle | [self-hosting.md](docs/self-hosting.md#docker) |
+| Windows or macOS (not yet tested) | Docker Desktop | | [docker-desktop.md](docs/server/docker-desktop.md) |
+
+Not tested on real hardware yet: openSUSE, Arch, Windows, macOS. Tested in containers: Debian 12, Ubuntu 24.04, Fedora 40.
+
+## Release files
+
+| File | For |
 |---|---|
-| Raspberry Pi OS, Debian or Ubuntu, plain install (amd64, arm64, armhf: one file for all) | `branch-chat-server-<version>-install.tar.gz` |
-| Linux with Docker (amd64 or arm64; the image is built on your machine) | `branch-chat-server-<version>-install.tar.gz` with `--mode docker`, or `branch-chat-server-<version>-docker-compose.tar.gz` |
-| Proxmox | a Debian 12 VM or LXC, then the Linux steps ([guide](docs/server/proxmox.md)) |
-| Windows or macOS (Docker Desktop, not yet tested) | `branch-chat-server-<version>-docker-compose.tar.gz` ([guide](docs/server/docker-desktop.md)) |
+| `branch-chat-server-<version>-install.tar.gz` | every Linux above (also `branch-chat-server-latest-install.tar.gz`) |
+| `branch-chat-server_<version>-1_all.deb` | Debian / Ubuntu / Pi OS package, any CPU ([how](docs/server/deb-rpm.md)) |
+| `branch-chat-server-<version>-1.noarch.rpm` | Fedora / RHEL / openSUSE package, any CPU ([how](docs/server/deb-rpm.md)) |
+| `branch-chat-server-<version>-docker-compose.tar.gz` | Docker Compose / Docker Desktop |
+| `SHA256SUMS` | check files: `sha256sum -c SHA256SUMS --ignore-missing` |
 
-Each release has a `SHA256SUMS` file: `sha256sum -c SHA256SUMS` (macOS: `shasum -a 256 -c SHA256SUMS`).
+Files named `...-latest...` are copies of the newest release's files, so links like
+`releases/latest/download/branch-chat-server-latest_all.deb` always work.
 
-## Quick install (Linux)
+## Install by hand (tarball)
 
 ```sh
 tar -xzf branch-chat-server-<version>-install.tar.gz
@@ -23,16 +55,17 @@ cd branch-chat-server-<version>
 sudo ./server/install.sh
 ```
 
-The installer asks 6 short questions (install method, group name and look, admin account, how people reach it,
-email for sign-in codes, backups), shows a summary and asks before changing anything. After that, manage
-settings from `/admin` in your browser.
-
 ## Guides
 
 - [Self-hosting guide](docs/self-hosting.md)
 - [Raspberry Pi](docs/server/raspberry-pi.md)
 - [Proxmox](docs/server/proxmox.md)
 - [Windows / macOS with Docker Desktop](docs/server/docker-desktop.md)
+- [Debian / Ubuntu (VPS and bare metal)](docs/server/debian-ubuntu.md)
+- [Fedora / RHEL / Rocky / openSUSE](docs/server/fedora-rhel.md)
+- [Arch Linux](docs/server/arch.md)
+- [.deb and .rpm packages](docs/server/deb-rpm.md)
+- [From git](docs/server/from-git.md)
 
 ## License
 
