@@ -244,7 +244,7 @@ An individual contractor working inside a client's organization uses that client
 
 16.4 **Fair use.** These terms do not limit any fair use or other rights you have under law that cannot be waived.
 
-16.5 **Governing law.** The law of the State of [STATE TO BE CONFIRMED] governs, without regard to conflict-of-laws rules, with exclusive venue in the state and federal courts located in that state, except that the Licensor may seek an injunction anywhere. The UN Convention on Contracts for the International Sale of Goods does not apply. Government Entities that by law cannot accept these terms are governed by the law that applies to them, as set out in their Commercial License Agreement.
+16.5 **Governing law.** The law of the State of Washington governs, without regard to conflict-of-laws rules, with exclusive venue in the state courts located in Spokane County, Washington, or the United States District Court for the Eastern District of Washington, except that the Licensor may seek an injunction anywhere. The UN Convention on Contracts for the International Sale of Goods does not apply. Government Entities that by law cannot accept these terms are governed by the law that applies to them, as set out in their Commercial License Agreement.
 
 16.6 **Severability.** If any part is unenforceable, it is changed to the minimum extent needed to make it enforceable, and the rest stays in effect.
 
